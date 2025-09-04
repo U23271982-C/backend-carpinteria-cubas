@@ -19,10 +19,7 @@
 	<developers>
 		<developer/>
 	</developers>
-    <modules>
-        <module>descubridor-servicio</module>
-    </modules>
-    <scm>
+	<scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>
@@ -34,6 +31,11 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+    <modules>
+        <module>api-gateway</module>
+        <module>descubridor-servicio</module>
+    </modules>
 
 	<dependencies>
 
