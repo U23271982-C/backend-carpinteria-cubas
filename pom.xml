@@ -35,6 +35,7 @@
     <modules>
         <module>api-gateway</module>
         <module>descubridor-servicio</module>
+        <module>trabajador-servicio</module>
     </modules>
 
 	<dependencies>
