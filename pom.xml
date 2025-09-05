@@ -36,6 +36,7 @@
         <module>api-gateway</module>
         <module>descubridor-servicio</module>
         <module>trabajador-servicio</module>
+        <module>inventario-stock-servicio</module>
     </modules>
 
 	<dependencies>
