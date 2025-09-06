@@ -1,0 +1,8 @@
+services:
+  employee-service:
+    build:
+      context: .
+      dockerfile: trabajador-servicio/Dockerfile
+    container_name: employee-service
+    ports:
+      - "8081:8081"
