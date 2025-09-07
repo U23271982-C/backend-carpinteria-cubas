@@ -8,4 +8,5 @@ public class AddressDTO {
     private String number;
     private String reference;
     private DistrictDTO id_Distric;
+    private StateDTO id_State;
 }

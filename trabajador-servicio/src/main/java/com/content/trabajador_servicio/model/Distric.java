@@ -1,16 +1,23 @@
 package com.content.trabajador_servicio.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Setter
+@Entity
+@Table(name = "Distric")
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Distric {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
+    private Integer id;
+    @Column(name = "distric", nullable = false, length = 100)
     private String name_Distric;
-    private int id_Province;
+    @Column(name = "province_id", nullable = false)
+    private Integer id_Province;
+    @Column(name = "state_id", nullable = false)
+    private Integer id_State;
 }

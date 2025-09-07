@@ -5,4 +5,5 @@ public class ContactDTO {
     private EmployeeDTO id_Employee;
     private String telephone;
     private String email;
+    private StateDTO id_State;
 }

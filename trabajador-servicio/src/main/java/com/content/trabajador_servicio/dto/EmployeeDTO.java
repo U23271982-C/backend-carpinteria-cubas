@@ -11,4 +11,5 @@ public class EmployeeDTO {
     private PositionDTO id_Position;
     private IdentificationDTO id_Identification;
     private ContractDTO id_Contract;
+    private StateDTO id_State;
 }

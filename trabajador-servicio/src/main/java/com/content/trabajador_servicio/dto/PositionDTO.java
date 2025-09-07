@@ -4,4 +4,5 @@ public class PositionDTO {
     private int id;
     private String name_Position;
     private String description;
+    private StateDTO id_State;
 }

@@ -4,22 +4,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "Contact")
+@Table(name = "ContractType")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Contact {
+public class ContractType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer id;
-    @Column(name = "employee_id", nullable = false)
-    private Integer id_Employee;
-    @Column(name = "telephone", nullable = false, length = 9)
-    private String telephone;
-    @Column(name = "email", nullable = false, length = 100)
-    private String email;
+    @Column(name = "contract_type", nullable = false, length = 100)
+    private String contract_Type;
+    @Column(name = "description", nullable = false, length = 250)
+    private String descripcion;
     @Column(name = "state_id", nullable = false)
     private Integer id_State;
 }

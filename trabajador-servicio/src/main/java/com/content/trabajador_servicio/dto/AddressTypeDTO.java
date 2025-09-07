@@ -4,4 +4,5 @@ public class AddressTypeDTO {
     private int id;
     private String nameAddressType;
     private String description;
+    private StateDTO id_State;
 }

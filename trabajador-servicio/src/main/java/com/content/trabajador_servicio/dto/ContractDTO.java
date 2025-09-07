@@ -9,4 +9,5 @@ public class ContractDTO {
     private LocalDateTime finish_Date;
     private String contract_Type;
     private double salary;
+    private StateDTO id_State;
 }
