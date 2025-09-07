@@ -37,8 +37,7 @@ services:
       - SERVER_PORT=${API_GATEWAY_SERVICE_PORT}
       - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
-      discovery-service:
-        condition: service_healthy
     # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
-      employee-service:
-        condition: service_healthy
+      - discovery-service
+      - employee-service
+
