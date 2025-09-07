@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "Contract")
@@ -22,10 +23,18 @@ public class Contract {
     private LocalDateTime start_Date;
     @Column(name = "finish_date", nullable = false)
     private LocalDateTime finish_Date;
-    @Column(name = "contract_type", nullable = false)
-    private Integer contract_Type;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_type", nullable = false)
+    private ContractType contractType;
+
     @Column(name = "salary", nullable = false)
     private double salary;
-    @Column(name = "state_id", nullable = false)
-    private Integer id_State;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id", nullable = false)
+    private State state;
+
+    @OneToMany(mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Employee> employees;
 }

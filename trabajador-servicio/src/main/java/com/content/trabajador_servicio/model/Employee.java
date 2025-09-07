@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "Employees")
+@Table(name = "Employee")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,12 +26,26 @@ public class Employee {
     private LocalDateTime dateBirth;
     @Column(name = "date_admission", nullable = false)
     private LocalDateTime dateAdmission;
-    @Column(name = "position_id", nullable = false)
-    private Integer idPosition;
-    @Column(name = "identification_id", nullable = false)
-    private Integer idIdentification;
-    @Column(name = "contract_id", nullable = false)
-    private Integer idContract;
-    @Column(name = "state_id", nullable = false)
-    private Integer idState;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id", nullable = false)
+    private Position position;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "identification_id", nullable = false)
+    private Identification identification;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contract_id", nullable = false)
+    private Contract contract;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id", nullable = false)
+    private State state;
+
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Contact> contacts;
+
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Address> addresses;
 }

@@ -3,6 +3,8 @@ package com.content.trabajador_servicio.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "AddressType")
 @Getter
@@ -18,6 +20,11 @@ public class AddressType {
     private String nameAddressType;
     @Column(name = "description", nullable = true, length = 255)
     private String description;
-    @Column(name = "state_id", nullable = false)
-    private Integer id_State;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id", nullable = false)
+    private State state;
+
+    @OneToMany(mappedBy = "addressType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Address> addresses;
 }

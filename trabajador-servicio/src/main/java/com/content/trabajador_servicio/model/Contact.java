@@ -14,12 +14,17 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer id;
-    @Column(name = "employee_id", nullable = false)
-    private Integer id_Employee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
+
     @Column(name = "telephone", nullable = false, length = 9)
     private String telephone;
     @Column(name = "email", nullable = false, length = 100)
     private String email;
-    @Column(name = "state_id", nullable = false)
-    private Integer id_State;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id", nullable = false)
+    private State state;
 }

@@ -3,6 +3,8 @@ package com.content.trabajador_servicio.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "State")
 @Getter
@@ -17,6 +19,30 @@ public class State {
     @Column(name = "state", nullable = false, length = 100)
     private String name_State;
 
-    @OneToMany(targetEntity = Department.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Department department;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Department> department;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Province> province;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Position> position;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PersonType> personType;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<IdentificationType> identificationType;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Identification> identification;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Employee> employee;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Distric> distric;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ContractType> contractType;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Contract> contract;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Contact> contact;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AddressType> addressType;
+    @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Address> address;
 }

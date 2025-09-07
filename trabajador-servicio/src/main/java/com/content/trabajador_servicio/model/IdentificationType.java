@@ -3,6 +3,8 @@ package com.content.trabajador_servicio.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "IdentificationType")
 @Getter
@@ -16,8 +18,15 @@ public class IdentificationType {
     private Integer id;
     @Column(name = "identification_type", nullable = false, length = 100)
     private String identification_type;
-    @Column(name = "person_type_id", nullable = false)
-    private Integer id_Person_Type;
-    @Column(name = "state_id", nullable = false)
-    private Integer id_State;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "person_type_id", nullable = false)
+    private PersonType personType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id", nullable = false)
+    private State state;
+
+    @OneToMany(mappedBy = "identificationType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Identification> identifications  ;
 }
