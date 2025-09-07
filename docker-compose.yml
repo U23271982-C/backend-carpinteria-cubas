@@ -1,8 +1,12 @@
 services:
   employee-service:
+    container_name: employee-service-container
+    image: employee-service-image
     build:
       context: .
       dockerfile: trabajador-servicio/Dockerfile
-    container_name: employee-service
     ports:
-      - "8081:8081"
+      - "${EMPLOYEE_SERVICE_PORT}:${EMPLOYEE_SERVICE_PORT}"
+    environment:
+      - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
+      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
