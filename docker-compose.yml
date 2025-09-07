@@ -23,6 +23,20 @@ services:
       - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
       - discovery-service
+  inventory-stock-service:
+    container_name: inventary-stock-service-container
+    image: inventary-stock-service-image
+    build:
+      context: .
+      dockerfile: inventario-stock-servicio/Dockerfile
+    ports:
+      - "${INVENTORY_SOTCK_SERVICE_PORT}:${INVENTORY_SOTCK_SERVICE_PORT}"
+    environment:
+      - SERVER_PORT=${INVENTORY_SOTCK_SERVICE_PORT}
+      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+    depends_on:
+     - discovery-service
+     - employee-service
 
   api-gateway:
     container_name: api-gateway-container
@@ -39,4 +53,5 @@ services:
     # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
       - discovery-service
       - employee-service
+      - inventory-stock-service
 
