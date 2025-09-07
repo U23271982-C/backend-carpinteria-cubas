@@ -1,0 +1,57 @@
+services:
+  discovery-service:
+    container_name: discovery-service-container
+    image: discovery-service-image
+    build:
+      context: .
+      dockerfile: descubridor-servicio/Dockerfile
+    ports:
+      - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
+    environment:
+      - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
+
+  employee-service:
+    container_name: employee-service-container
+    image: employee-service-image
+    build:
+      context: .
+      dockerfile: trabajador-servicio/Dockerfile
+    ports:
+      - "${EMPLOYEE_SERVICE_PORT}:${EMPLOYEE_SERVICE_PORT}"
+    environment:
+      - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
+      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+    depends_on:
+      - discovery-service
+  inventory-stock-service:
+    container_name: inventary-stock-service-container
+    image: inventary-stock-service-image
+    build:
+      context: .
+      dockerfile: inventario-stock-servicio/Dockerfile
+    ports:
+      - "${INVENTORY_SOTCK_SERVICE_PORT}:${INVENTORY_SOTCK_SERVICE_PORT}"
+    environment:
+      - SERVER_PORT=${INVENTORY_SOTCK_SERVICE_PORT}
+      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+    depends_on:
+     - discovery-service
+     - employee-service
+
+  api-gateway:
+    container_name: api-gateway-container
+    image: api-gateway-image
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    ports:
+      - "${API_GATEWAY_SERVICE_PORT}:${API_GATEWAY_SERVICE_PORT}"
+    environment:
+      - SERVER_PORT=${API_GATEWAY_SERVICE_PORT}
+      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+    depends_on:
+    # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
+      - discovery-service
+      - employee-service
+      - inventory-stock-service
+

@@ -1,5 +1,5 @@
 server:
-  port: 8089
+  port: ${SERVER_PORT}
 spring:
   application:
     name: descubridor-servicio
@@ -14,7 +14,5 @@ eureka:
 
 logging:
   level:
-    com:
-      netflix:
-        eureka: info
-        discovery: info
+    com.netflix.eureka: info
+    com.netflix.discovery: info
