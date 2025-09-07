@@ -9,6 +9,7 @@ services:
       - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
     environment:
       - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
+
   employee-service:
     container_name: employee-service-container
     image: employee-service-image
@@ -20,3 +21,24 @@ services:
     environment:
       - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
       - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+
+  api-gateway:
+    container_name: api-gateway-container
+    image: api-gateway-image
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    ports:
+      - "${API_GATEWAY_SERVICE_PORT}:${API_GATEWAY_SERVICE_PORT}"
+    environment:
+      - SERVER_PORT=${API_GATEWAY_SERVICE_PORT}
+      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
+      employee-service:
+        condition: service_healthy
