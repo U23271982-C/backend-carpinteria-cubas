@@ -14,7 +14,5 @@ eureka:
 
 logging:
   level:
-    com:
-      netflix:
-        eureka: info
-        discovery: info
+    com.netflix.eureka: info
+    com.netflix.discovery: info
