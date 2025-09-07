@@ -22,8 +22,7 @@ services:
       - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
       - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
-      discovery-service:
-        condition: service_healthy
+      - discovery-service
 
   api-gateway:
     container_name: api-gateway-container
