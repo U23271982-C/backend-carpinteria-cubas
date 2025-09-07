@@ -36,6 +36,5 @@ COPY --from=builder /mainApp/app/target/*.jar app.jar
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8081/actuator/health || exit 1
 
-EXPOSE 8081
 ENTRYPOINT ["java", "-jar"]
 CMD ["app.jar"]
