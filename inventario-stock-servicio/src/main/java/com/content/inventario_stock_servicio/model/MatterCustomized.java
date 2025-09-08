@@ -1,17 +1,31 @@
 package com.content.inventario_stock_servicio.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Setter
+@Entity
+@Table(name = "MatterCustomized")
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class MatterCustomized {
-    private int id;
-    private int id_Matter;
-    private int currently_stock;
-    private int min_stock;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @OneToOne
+    @JoinColumn(name = "matter_id", nullable = false, unique = true)
+    private Matter Matter;
+
+    @Column(name = "currently_stock", nullable = false)
+    private Integer currently_stock;
+
+    @Column(name = "min_stock", nullable = false)
+    private Integer min_stock;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="state_id", nullable = false)
+    private State state;
 }

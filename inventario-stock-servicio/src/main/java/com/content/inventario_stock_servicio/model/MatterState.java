@@ -1,15 +1,29 @@
 package com.content.inventario_stock_servicio.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Setter
+import java.util.List;
+
+@Entity
+@Table(name = "MatterState")
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class MatterState {
-    private int id;
-    private String name_MatterState;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "matterstate_name", nullable = false)
+    private String matterstate_name;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="state_id", nullable = false)
+    private State state;
+
+    @OneToMany(mappedBy = "matterstate_id" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Matter> matters;
 }
