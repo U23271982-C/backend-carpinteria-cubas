@@ -1,4 +1,16 @@
 services:
+  db_mysql:
+    container_name: db_mysql_container
+    image: mysql:8.0
+    ports:
+      - "${SERVICE_MYSQL_PORT}:${SERVICE_MYSQL_PORT}"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${SERVICE_MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${SERVICE_MYSQL_DATABASE}
+      - MYSQL_USER=${SERVICE_MYSQL_USER}
+      - MYSQL_PASSWORD=${SERVICE_MYSQL_USER_PASSWORD}
+    volumes:
+      - ./docker-vol-data/mysql:/var/lib/mysql  # ← Bind mount para desarrollo
   discovery-service:
     container_name: discovery-service-container
     image: discovery-service-image
@@ -54,4 +66,5 @@ services:
       - discovery-service
       - employee-service
       - inventory-stock-service
+
 
