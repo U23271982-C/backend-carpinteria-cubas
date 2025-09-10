@@ -5,10 +5,9 @@ services:
     ports:
       - "${SERVICE_MYSQL_PORT}:${SERVICE_MYSQL_PORT}"
     environment:
-      - MYSQL_ROOT_PASSWORD=${SERVICE_MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASS_MAIN_DEV}
       - MYSQL_DATABASE=${SERVICE_MYSQL_DATABASE}
-      - MYSQL_USER=${SERVICE_MYSQL_USER}
-      - MYSQL_PASSWORD=${SERVICE_MYSQL_USER_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=no
     volumes:
       - ./docker-vol-data/mysql:/var/lib/mysql  # ← Bind mount para desarrollo
   discovery-service:
@@ -33,6 +32,12 @@ services:
     environment:
       - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
       - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+      - DB_URL=${SPRING_DATASOURCE_URL_EMPLOYEE}
+      - DB_USER=${MYSQL_USER_MAIN_DEV}
+      - DB_PASSWORD=${MYSQL_PASS_MAIN_DEV}
+      - DDL_AUTO=${DDL_AUTO}
+      - SHOW-SQL=${SHOW_SQL}
+      - DIALECT=${DIALECT}
     depends_on:
       - discovery-service
   inventory-stock-service:
