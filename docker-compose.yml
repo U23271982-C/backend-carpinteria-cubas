@@ -36,7 +36,7 @@ services:
       - DB_USER=${MYSQL_USER_MAIN_DEV}
       - DB_PASSWORD=${MYSQL_PASS_MAIN_DEV}
       - DDL_AUTO=${DDL_AUTO}
-      - SHOW-SQL=${SHOW_SQL}
+      - SHOW_SQL=${SHOW_SQL}
       - DIALECT=${DIALECT}
     depends_on:
       - discovery-service
