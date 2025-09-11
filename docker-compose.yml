@@ -1,3 +1,18 @@
+#variable comunes mysql
+x-common-mysql: &common-mysql
+  environment:
+    - SPRING_DATASOURCE_USERNAME=${MYSQL_USER_MAIN_DEV}
+    - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASS_MAIN_DEV}
+    - SPRING_JPA_HIBERNATE_DDL_AUTO=${DDL_AUTO}
+    - SPRING_JPA_SHOW_SQL=true
+    - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=${DIALECT}
+
+#varaibles comunes microservicios implementan mysql
+x-common-cliente: &common-mysql-microservice-client
+  <<: *common-mysql
+  depends_on:
+    - discovery-service
+
 services:
   db_mysql:
     container_name: db_mysql_container
@@ -9,7 +24,7 @@ services:
       - MYSQL_DATABASE=${SERVICE_MYSQL_DATABASE}
       - MYSQL_ALLOW_EMPTY_PASSWORD=no
     volumes:
-      - ./docker-vol-data/mysql:/var/lib/mysql  # ← Bind mount para desarrollo
+      - mysql_data:/var/lib/mysql # ← Volumen Nombrado
   discovery-service:
     container_name: discovery-service-container
     image: discovery-service-image
@@ -22,6 +37,7 @@ services:
       - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
 
   employee-service:
+    <<: *common-mysql-microservice-client
     container_name: employee-service-container
     image: employee-service-image
     build:
@@ -32,14 +48,7 @@ services:
     environment:
       - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
       - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
-      - DB_URL=${SPRING_DATASOURCE_URL_EMPLOYEE}
-      - DB_USER=${MYSQL_USER_MAIN_DEV}
-      - DB_PASSWORD=${MYSQL_PASS_MAIN_DEV}
-      - DDL_AUTO=${DDL_AUTO}
-      - SHOW_SQL=${SHOW_SQL}
-      - DIALECT=${DIALECT}
-    depends_on:
-      - discovery-service
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL_EMPLOYEE}
   inventory-stock-service:
     container_name: inventary-stock-service-container
     image: inventary-stock-service-image
@@ -71,5 +80,6 @@ services:
       - discovery-service
       - employee-service
       - inventory-stock-service
-
+volumes:
+  mysql_data:
 
