@@ -46,8 +46,8 @@ services:
     ports:
       - "${INVENTORY_SOTCK_SERVICE_PORT}:${INVENTORY_SOTCK_SERVICE_PORT}"
     environment:
-      - SERVER_PORT=${INVENTORY_SOTCK_SERVICE_PORT}
-      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SERVER_PORT: ${INVENTORY_SOTCK_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
      - discovery-service
      - employee-service
