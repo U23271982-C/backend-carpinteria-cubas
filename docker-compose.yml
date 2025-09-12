@@ -19,7 +19,7 @@ services:
     ports:
       - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
     environment:
-      - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
+      SERVER_PORT: ${DISCOVERY_SERVICE_PORT}
   employee-service:
     container_name: employee-service-container
     image: employee-service-image
