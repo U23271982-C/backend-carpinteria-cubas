@@ -1,14 +1,3 @@
-#variable comunes mysql
-#x-common-mysql: &common-mysql
-
-#varaibles comunes microservicios implementan mysql
-x-common-cliente: &common-cliente
-  #<<: *common-mysql
-  environment:
-    COSAS: "8080"
-  depends_on:
-    - discovery-service
-
 services:
   db_mysql:
     container_name: db_mysql_container
@@ -32,7 +21,6 @@ services:
     environment:
       - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
   employee-service:
-    <<: *common-cliente
     container_name: employee-service-container
     image: employee-service-image
     build:
