@@ -1,15 +1,11 @@
 #variable comunes mysql
-x-common-mysql: &common-mysql
-  environment:
-    - SPRING_DATASOURCE_USERNAME=${MYSQL_USER_MAIN_DEV}
-    - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASS_MAIN_DEV}
-    - SPRING_JPA_HIBERNATE_DDL_AUTO=${DDL_AUTO}
-    - SPRING_JPA_SHOW_SQL=true
-    - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=${DIALECT}
+#x-common-mysql: &common-mysql
 
 #varaibles comunes microservicios implementan mysql
-x-common-cliente: &common-mysql-microservice-client
-  <<: *common-mysql
+x-common-cliente: &common-cliente
+  #<<: *common-mysql
+  environment:
+    COSAS: "8080"
   depends_on:
     - discovery-service
 
@@ -35,9 +31,8 @@ services:
       - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
     environment:
       - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
-
   employee-service:
-    <<: *common-mysql-microservice-client
+    <<: *common-cliente
     container_name: employee-service-container
     image: employee-service-image
     build:
@@ -49,6 +44,11 @@ services:
       - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
       - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL_EMPLOYEE}
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER_MAIN_DEV}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASS_MAIN_DEV}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${DDL_AUTO}
+      - SPRING_JPA_SHOW_SQL=${SHOW_SQL}
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=${DIALECT}
   inventory-stock-service:
     container_name: inventary-stock-service-container
     image: inventary-stock-service-image
