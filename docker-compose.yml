@@ -61,8 +61,8 @@ services:
     ports:
       - "${API_GATEWAY_SERVICE_PORT}:${API_GATEWAY_SERVICE_PORT}"
     environment:
-      - SERVER_PORT=${API_GATEWAY_SERVICE_PORT}
-      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SERVER_PORT: ${API_GATEWAY_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
     # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
       - discovery-service
