@@ -5,9 +5,9 @@ services:
     ports:
       - "${SERVICE_MYSQL_PORT}:${SERVICE_MYSQL_PORT}"
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_PASS_MAIN_DEV}
-      - MYSQL_DATABASE=${SERVICE_MYSQL_DATABASE}
-      - MYSQL_ALLOW_EMPTY_PASSWORD=no
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
+      MYSQL_DATABASE: ${SERVICE_MYSQL_DATABASE}
+      MYSQL_ALLOW_EMPTY_PASSWORD: no
     volumes:
       - mysql_data:/var/lib/mysql # ← Volumen Nombrado
   discovery-service:
