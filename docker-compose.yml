@@ -1,4 +1,15 @@
 services:
+  db_mysql:
+    container_name: db_mysql_container
+    image: mysql:8.0
+    ports:
+      - "${SERVICE_MYSQL_PORT}:${SERVICE_MYSQL_PORT}"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
+      MYSQL_DATABASE: ${SERVICE_MYSQL_DATABASE}
+      MYSQL_ALLOW_EMPTY_PASSWORD: no
+    volumes:
+      - mysql_data:/var/lib/mysql # ← Volumen Nombrado
   discovery-service:
     container_name: discovery-service-container
     image: discovery-service-image
@@ -8,8 +19,7 @@ services:
     ports:
       - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
     environment:
-      - SERVER_PORT=${DISCOVERY_SERVICE_PORT}
-
+      SERVER_PORT: ${DISCOVERY_SERVICE_PORT}
   employee-service:
     container_name: employee-service-container
     image: employee-service-image
@@ -19,8 +29,14 @@ services:
     ports:
       - "${EMPLOYEE_SERVICE_PORT}:${EMPLOYEE_SERVICE_PORT}"
     environment:
-      - SERVER_PORT=${EMPLOYEE_SERVICE_PORT}
-      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SERVER_PORT: ${EMPLOYEE_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_EMPLOYEE}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER_MAIN_DEV}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
     depends_on:
       - discovery-service
   inventory-stock-service:
@@ -32,8 +48,8 @@ services:
     ports:
       - "${INVENTORY_SOTCK_SERVICE_PORT}:${INVENTORY_SOTCK_SERVICE_PORT}"
     environment:
-      - SERVER_PORT=${INVENTORY_SOTCK_SERVICE_PORT}
-      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SERVER_PORT: ${INVENTORY_SOTCK_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
      - discovery-service
      - employee-service
@@ -47,11 +63,13 @@ services:
     ports:
       - "${API_GATEWAY_SERVICE_PORT}:${API_GATEWAY_SERVICE_PORT}"
     environment:
-      - SERVER_PORT=${API_GATEWAY_SERVICE_PORT}
-      - DISCOVERY_SERVER_URL=${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SERVER_PORT: ${API_GATEWAY_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
     # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
       - discovery-service
       - employee-service
       - inventory-stock-service
+volumes:
+  mysql_data:
 
