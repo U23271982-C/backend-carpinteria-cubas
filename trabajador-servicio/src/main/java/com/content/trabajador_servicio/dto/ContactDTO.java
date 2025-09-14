@@ -1,9 +1,21 @@
 package com.content.trabajador_servicio.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ContactDTO {
-    private int id;
-    private EmployeeDTO id_Employee;
+
+    private Integer id;
+
+    private Integer id_Employee;
+
     private String telephone;
+
     private String email;
-    private StateDTO id_State;
+
+    private Integer id_State;
 }

@@ -1,8 +1,24 @@
 package com.content.trabajador_servicio.dto;
 
+import com.content.trabajador_servicio.model.Address;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddressTypeDTO {
-    private int id;
+
+    private Integer id;
+
     private String nameAddressType;
+
     private String description;
-    private StateDTO id_State;
+
+    private List<Address> addresses;
+
+    private Integer id_State;
 }
