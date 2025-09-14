@@ -20,12 +20,12 @@ public class MovementType {
     private String movement_type_name;
 
     @OneToMany(mappedBy = "movementstockprefabricated_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockPrefabricated> movementStockPrefabricated;
+    private List<MovementStockPrefabricated> MovementStockPrefabricated;
 
     @OneToMany(mappedBy = "movementstockcustomized_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockCustomized> movementStockCustomized;
+    private List<MovementStockCustomized> MovementStockCustomized;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State state;
+    private State State;
 }

@@ -43,7 +43,7 @@ public class Matter {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State state;
+    private State State;
 
     @OneToOne(mappedBy = "matter_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MatterCustomized MatterCustomized;

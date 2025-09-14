@@ -17,12 +17,12 @@ public class MatterState {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "matterstate_name", nullable = false)
-    private String matterstate_name;
+    @Column(name = "matterState_name", nullable = false)
+    private String matterState_name;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State state;
+    private State State;
 
     @OneToMany(mappedBy = "matterstate_id" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Matter> matters;

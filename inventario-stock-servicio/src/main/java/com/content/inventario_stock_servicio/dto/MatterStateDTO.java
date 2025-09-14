@@ -11,14 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class MatterTypeDTO {
+public class MatterStateDTO {
 
     private Integer id;
 
-    private String mattertype_name;
-
-    private List<Matter> Matter;
+    private String matterState_name;
 
     private Integer State_id;
 
+    private List<Matter> Matters;
 }
