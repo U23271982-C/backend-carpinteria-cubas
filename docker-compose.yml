@@ -39,6 +39,7 @@ services:
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
     depends_on:
       - discovery-service
+      - db_mysql
   inventory-stock-service:
     container_name: inventary-stock-service-container
     image: inventary-stock-service-image
@@ -52,6 +53,7 @@ services:
       DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
     depends_on:
      - discovery-service
+     - db_mysql
      - employee-service
 
   api-gateway:
