@@ -37,6 +37,11 @@
         <module>descubridor-servicio</module>
         <module>trabajador-servicio</module>
         <module>inventario-stock-servicio</module>
+        <module>sale-service</module>
+        <module>payment-gateway-service</module>
+        <module>report-service</module>
+        <module>customer-service</module>
+        <module>authentication-service</module>
     </modules>
 
 	<dependencies>
