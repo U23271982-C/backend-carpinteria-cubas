@@ -20,6 +20,7 @@ services:
       - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
     environment:
       SERVER_PORT: ${DISCOVERY_SERVICE_PORT}
+
   employee-service:
     container_name: employee-service-container
     image: employee-service-image
@@ -51,6 +52,12 @@ services:
     environment:
       SERVER_PORT: ${INVENTORY_SOTCK_SERVICE_PORT}
       DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_INVENTORY_STOCK}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER_MAIN_DEV}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
     depends_on:
      - discovery-service
      - db_mysql
