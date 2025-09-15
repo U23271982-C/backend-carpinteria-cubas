@@ -1,6 +1,6 @@
 package com.content.trabajador_servicio.dto;
 
-import com.content.trabajador_servicio.model.Address;
+import com.content.trabajador_servicio.model.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +16,7 @@ public class DistrictDTO {
 
     private String name_Distric;
 
-    private Integer id_Province;
-
-    private List<Address> addresses;
+    private List<Employee> employees;
 
     private Integer id_State;
 }

@@ -3,7 +3,6 @@ package com.content.trabajador_servicio.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.content.trabajador_servicio.model.Address;
 import com.content.trabajador_servicio.model.Contact;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +23,10 @@ public class EmployeeDTO {
 
     private LocalDateTime date_Admission;
 
+    private String address_Employee;
+
+    private Integer id_Distric;
+
     private Integer id_Position;
 
     private Integer id_Identification;
@@ -31,8 +34,6 @@ public class EmployeeDTO {
     private Integer id_Contract;
 
     private List<Contact> contacts;
-
-    private List<Address> addresses;
 
     private Integer id_State;
 }

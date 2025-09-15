@@ -17,17 +17,11 @@ public class StateDTO {
 
     private String name_State;
 
-    private List<Address> Address;
-
-    private List<AddressType> Addresstype;
-
     private List<Contact> Contact;
 
     private List<Contract> Contract;
 
     private List<ContractType> Contracttype;
-
-    private List<Department> Department;
 
     private List<Distric> Distric;
 
@@ -40,7 +34,4 @@ public class StateDTO {
     private List<PersonType> Persontype;
 
     private List<Position> Position;
-
-    private List<Province> Province;
-
 }
