@@ -26,6 +26,12 @@ public class Employee {
     private LocalDateTime dateBirth;
     @Column(name = "date_admission", nullable = false)
     private LocalDateTime dateAdmission;
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "district_id", nullable = false)
+    private Distric distric;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", nullable = false)
@@ -46,6 +52,4 @@ public class Employee {
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Contact> contacts;
 
-    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Address> addresses;
 }

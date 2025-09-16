@@ -1,24 +1,22 @@
 package com.content.inventario_stock_servicio.dto;
 
-import com.content.inventario_stock_servicio.model.Matter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class MatterTypeDTO {
+public class MatterCustomizedDTO {
 
     private Integer id;
 
-    private String mattertype_name;
+    private Integer Matter_id;
 
-    private List<Matter> Matter;
+    private Integer currently_stock;
+
+    private Integer min_stock;
 
     private Integer State_id;
-
 }

@@ -1,15 +1,39 @@
 package com.content.trabajador_servicio.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.content.trabajador_servicio.model.Contact;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmployeeDTO {
-    private int id;
+
+    private Integer id;
+
     private String firtsname_Employee;
+
     private String lastname_Employee;
+
     private LocalDateTime date_Birth;
+
     private LocalDateTime date_Admission;
-    private PositionDTO id_Position;
-    private IdentificationDTO id_Identification;
-    private ContractDTO id_Contract;
-    private StateDTO id_State;
+
+    private String address_Employee;
+
+    private Integer id_Distric;
+
+    private Integer id_Position;
+
+    private Integer id_Identification;
+
+    private Integer id_Contract;
+
+    private List<Contact> contacts;
+
+    private Integer id_State;
 }
