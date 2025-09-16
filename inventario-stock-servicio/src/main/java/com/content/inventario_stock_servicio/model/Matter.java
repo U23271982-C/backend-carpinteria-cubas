@@ -51,10 +51,10 @@ public class Matter {
     @OneToOne(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MatterPrefabricated matterPrefabricated;
 
-    @OneToMany(mappedBy = "matter_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MovementStockPrefabricated> movementStockPrefabricated;
 
-    @OneToMany(mappedBy = "matter_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MovementStockCustomized> movementStockCustomized;
 
     @OneToMany(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
