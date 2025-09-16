@@ -5,6 +5,12 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Enitdad que representa el estado de una entidad
+ * 0: ELIMINADO
+ * 1: ACTIVO
+ * 2: INACTIVO
+ */
 @Entity
 @Table(name = "StateEntity")
 @Getter

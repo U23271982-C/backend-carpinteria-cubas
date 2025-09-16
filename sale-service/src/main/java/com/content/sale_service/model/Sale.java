@@ -32,12 +32,6 @@ public class Sale {
 
     // id_cliente (traemos datos de una api o que)
 
-    /**
-     * Estado de la venta.
-     * 0: eliminiado
-     * 1: activo
-     * 2: inactivo
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_state_id", nullable = false)
     private SaleState saleState;
