@@ -16,8 +16,8 @@ public class MatterPrefabricated {
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "matter_id", nullable = false,unique = true)
-    private Matter Matter;
+    @JoinColumn(name = "matter_id", nullable = false, unique = true)
+    private Matter matter;   // ✅ same correction
 
     @Column(name = "currently_stock", nullable = false)
     private Integer currently_stock;
@@ -27,5 +27,6 @@ public class MatterPrefabricated {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State State;
+    private State state;
 }
+

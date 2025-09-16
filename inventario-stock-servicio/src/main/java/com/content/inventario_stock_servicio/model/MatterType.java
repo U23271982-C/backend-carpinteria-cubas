@@ -21,11 +21,11 @@ public class MatterType {
     @Column(name = "mattertype_name", nullable = false)
     private String mattertype_name;
 
-    @OneToMany(mappedBy = "matter_id",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Matter> Matter;
+    // mappedBy debe coincidir con el atributo en Matter
+    @OneToMany(mappedBy = "matterType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Matter> matters;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State State;
-
+    private State state;
 }

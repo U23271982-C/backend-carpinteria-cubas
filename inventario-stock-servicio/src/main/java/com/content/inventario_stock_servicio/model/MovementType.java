@@ -19,13 +19,15 @@ public class MovementType {
     @Column(name = "movement_type_name", nullable = false)
     private String movement_type_name;
 
-    @OneToMany(mappedBy = "movementstockprefabricated_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockPrefabricated> MovementStockPrefabricated;
+    // mappedBy debe ser el atributo en MovementStockPrefabricated
+    @OneToMany(mappedBy = "movementType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MovementStockPrefabricated> movementStockPrefabricated;
 
-    @OneToMany(mappedBy = "movementstockcustomized_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockCustomized> MovementStockCustomized;
+    // mappedBy debe ser el atributo en MovementStockCustomized
+    @OneToMany(mappedBy = "movementType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MovementStockCustomized> movementStockCustomized;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State State;
+    private State state;
 }

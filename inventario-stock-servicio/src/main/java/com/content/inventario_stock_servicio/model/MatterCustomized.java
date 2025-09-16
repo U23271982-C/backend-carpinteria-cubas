@@ -17,7 +17,7 @@ public class MatterCustomized {
 
     @OneToOne
     @JoinColumn(name = "matter_id", nullable = false, unique = true)
-    private Matter Matter;
+    private Matter matter;   // ✅ field name should be lowercase "matter"
 
     @Column(name = "currently_stock", nullable = false)
     private Integer currently_stock;
@@ -27,5 +27,5 @@ public class MatterCustomized {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State State;
+    private State state;
 }

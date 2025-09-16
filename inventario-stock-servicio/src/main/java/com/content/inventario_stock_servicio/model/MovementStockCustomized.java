@@ -17,11 +17,11 @@ public class MovementStockCustomized {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matter_id", nullable = false)
-    private Matter Matter;
+    private Matter matter;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "movementtype_id", nullable = false)
-    private MovementType MovementType;
+    private MovementType movementType;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
@@ -37,5 +37,5 @@ public class MovementStockCustomized {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State State;
+    private State state;
 }

@@ -13,38 +13,40 @@ import java.util.List;
 @Builder
 public class State {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(name = "state", nullable = false, length = 100)
     private String name_State;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Matter> Matters;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Matter> matters;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterCustomized> Matterscustomized;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MatterCustomized> mattersCustomized;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterPrefabricated> Mattersprefabricated;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MatterPrefabricated> mattersPrefabricated;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterState> Matterstate;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MatterState> matterStates;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterSupplier> Matterssupplier;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MatterSupplier> mattersSupplier;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterType> Matterstype;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MatterType> mattersType;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockCustomized> Movementstockcustomized;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MovementStockCustomized> movementStockCustomized;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockPrefabricated> Movementstockprefabricated;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MovementStockPrefabricated> movementStockPrefabricated;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementType> Movementtype;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MovementType> movementTypes;
 
-    @OneToMany(mappedBy = "state_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Supplier> Supplier;
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Supplier> suppliers;
 }
+

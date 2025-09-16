@@ -19,11 +19,11 @@ public class MatterSupplier {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "supplier_id", nullable = false)
-    private Supplier Supplier;
+    private Supplier supplier;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "matter_id", nullable = false)
-    private Matter Matter;
+    private Matter matter;
 
     @Column(name = "unit_price", nullable = false)
     private double unit_price;
@@ -42,5 +42,5 @@ public class MatterSupplier {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State State;
+    private State state;
 }

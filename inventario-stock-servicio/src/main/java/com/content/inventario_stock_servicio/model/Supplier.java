@@ -26,10 +26,11 @@ public class Supplier {
     @Column(name = "cell", nullable = false, length = 9)
     private String cell;
 
-    @OneToMany(mappedBy = "supplier_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<MatterSupplier> MatterSupplier;
+    // mappedBy debe ser el atributo en MatterSupplier
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<MatterSupplier> matterSuppliers;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State State;
+    private State state;
 }
