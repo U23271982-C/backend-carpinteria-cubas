@@ -26,9 +26,29 @@ public class Sale {
     @Column(name = "hour_sale")
     private LocalTime hour_sale;
     @Column(name = "subtotal")
-    private Double subtotal;
-    @Column()
+    private double subtotal;
+    @Column(name = "total")
+    private double total;
 
-    @OneToMany(mappedBy = "sale_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    // id_cliente (traemos datos de una api o que)
+
+    /**
+     * Estado de la venta.
+     * 0: eliminiado
+     * 1: activo
+     * 2: inactivo
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_state_id", nullable = false)
+    private SaleState saleState;
+
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SaleDetail> saleDetail;
+
+    @OneToMany(mappedBy = "sale")
+    private List<SaleStateRecord> saleStateRecord;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_entity_id", nullable = false)
+    private StateEntity stateEntity;
 }
