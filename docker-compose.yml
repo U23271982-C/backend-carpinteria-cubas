@@ -62,6 +62,28 @@ services:
      - discovery-service
      - db_mysql
      - employee-service
+  sale-service:
+    container_name: sale-service-container
+    image: sale-service-image
+    build:
+      context: .
+      dockerfile: sale-service/Dockerfile
+    ports:
+      - "${SALE_SERVICE_PORT}:${SALE_SERVICE_PORT}"
+    environment:
+      SERVER_PORT: ${SALE_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_SALE}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER_MAIN_DEV}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
+    depends_on:
+      - discovery-service
+      - db_mysql
+      - employee-service
+      - inventory-stock-service
 
   api-gateway:
     container_name: api-gateway-container
@@ -79,6 +101,7 @@ services:
       - discovery-service
       - employee-service
       - inventory-stock-service
+      - sale-service
 volumes:
   mysql_data:
 
