@@ -19,8 +19,11 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "number_sale")
-    private Integer number_sale;
+    /**
+     * Codigo de la venta, para identificar la venta
+     */
+    @Column(name = "number_sale", length = 20)
+    private String number_sale;
     @Column(name = "date_sale")
     private LocalDate date_sale;
     @Column(name = "hour_sale")
@@ -30,7 +33,11 @@ public class Sale {
     @Column(name = "total")
     private double total;
 
-    // id_cliente (traemos datos de una api o que)
+    /**
+     * id_cliente del microservicio customer-service
+     */
+    @Column(name = "client_id")
+    private int client_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_state_id", nullable = false)
