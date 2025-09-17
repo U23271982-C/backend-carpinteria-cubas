@@ -20,8 +20,8 @@ public class MovementStockPrefabricated {
     private Matter matter;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "movementtype_id", nullable = false)
-    private MovementType movementType;
+    @JoinColumn(name = "movement_type_id", nullable = false)
+    private MovementType movement_type;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;

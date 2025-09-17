@@ -22,8 +22,8 @@ public class MatterType {
     private String mattertype_name;
 
     // mappedBy debe coincidir con el atributo en Matter
-    @OneToMany(mappedBy = "matterType", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Matter> matters;
+    @OneToMany(mappedBy = "matter_type", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Matter> matter;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)

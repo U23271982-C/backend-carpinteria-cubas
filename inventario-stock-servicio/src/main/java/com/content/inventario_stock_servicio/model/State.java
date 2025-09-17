@@ -23,28 +23,28 @@ public class State {
     private List<Matter> matters;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterCustomized> mattersCustomized;
+    private List<MatterCustomized> matters_customized;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterPrefabricated> mattersPrefabricated;
+    private List<MatterPrefabricated> matters_prefabricated;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterState> matterStates;
+    private List<MatterState> matter_states;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterSupplier> mattersSupplier;
+    private List<MatterSupplier> matters_supplier;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MatterType> mattersType;
+    private List<MatterType> matters_type;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockCustomized> movementStockCustomized;
+    private List<MovementStockCustomized> movement_stock_customized;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockPrefabricated> movementStockPrefabricated;
+    private List<MovementStockPrefabricated> movement_stock_prefabricated;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementType> movementTypes;
+    private List<MovementType> movement_types;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Supplier> suppliers;
