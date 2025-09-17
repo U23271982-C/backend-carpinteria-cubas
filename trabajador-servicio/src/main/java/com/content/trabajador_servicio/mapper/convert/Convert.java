@@ -1,4 +1,4 @@
-package com.content.trabajador_servicio.mapper;
+package com.content.trabajador_servicio.mapper.convert;
 
 /**
  * Interface that combines ConvertModel and ConvertDTO interfaces for bidirectional conversion.
