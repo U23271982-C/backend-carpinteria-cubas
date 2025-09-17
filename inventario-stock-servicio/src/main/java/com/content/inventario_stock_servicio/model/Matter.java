@@ -47,7 +47,7 @@ public class Matter {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State state;
+    private StateEntity state_entity;
 
     // ✅ Correct bidirectional One-to-One
     @OneToOne(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

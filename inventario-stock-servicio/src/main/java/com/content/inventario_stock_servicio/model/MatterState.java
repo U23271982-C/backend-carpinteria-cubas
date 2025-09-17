@@ -22,7 +22,7 @@ public class MatterState {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State state;
+    private StateEntity state_entity;
 
     // mappedBy debe ser el nombre del atributo en Matter
     @OneToMany(mappedBy = "matter_state", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

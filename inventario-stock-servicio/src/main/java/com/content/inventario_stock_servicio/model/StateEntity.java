@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class State {
+public class StateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -27,6 +27,6 @@ public class MatterPrefabricated {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State state;
+    private StateEntity state_entity;
 }
 
