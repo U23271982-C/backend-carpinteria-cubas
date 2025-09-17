@@ -2,8 +2,12 @@ package com.content.trabajador_servicio.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
+
+/**
+ *
+ * Entidad que representa una identificación en el sistema.
+ */
 
 @Entity
 @Table(name = "Identification")

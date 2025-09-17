@@ -1,22 +1,26 @@
-package com.content.trabajador_servicio.dto;
+package com.content.trabajador_servicio.dto.Request;
 
 import com.content.trabajador_servicio.model.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
+
+/**
+ * Data Transfer Object para la entidad Position.
+ * Este DTO incluye lista de las entidades relaciones.
+ */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IdentificationDTO {
+public class PositionDTO {
 
     private Integer id;
 
-    private String name_Identification;
+    private String name_Position;
 
-    private Integer id_Identification_Type;
+    private String description;
 
     private List<Employee> employees;
 

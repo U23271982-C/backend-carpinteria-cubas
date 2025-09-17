@@ -1,4 +1,4 @@
-package com.content.trabajador_servicio.dto;
+package com.content.trabajador_servicio.dto.Request;
 
 import com.content.trabajador_servicio.model.Employee;
 import lombok.AllArgsConstructor;
@@ -7,16 +7,19 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object para la entidad District.
+ * Este DTO incluye lista de las entidades relaciones.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PositionDTO {
+public class DistrictDTO {
 
     private Integer id;
 
-    private String name_Position;
-
-    private String description;
+    private String name_Distric;
 
     private List<Employee> employees;
 

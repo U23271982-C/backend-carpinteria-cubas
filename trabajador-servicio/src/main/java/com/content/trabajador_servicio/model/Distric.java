@@ -2,8 +2,12 @@ package com.content.trabajador_servicio.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
+
+/**
+ *
+ * Entidad que representa un distrito en el departamento de Lambayeque.
+ */
 
 @Entity
 @Table(name = "Distric")

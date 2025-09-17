@@ -1,6 +1,13 @@
 package com.content.trabajador_servicio.mapper;
 
-public interface Convert <T, D>{
-    D convertDTO(T modelo);
-    T convertModel(D dto);
+/**
+ * Interface that combines ConvertModel and ConvertDTO interfaces for bidirectional conversion.
+ *
+ * @param <M>   Modelo
+ * @param <DRQ> DTO REQUEST.
+ * @param <DRE> DTO RESPONSE.
+ */
+
+public interface Convert<M, DRQ, DRE> extends ConvertModel<M, DRQ>, ConvertDTO<M, DRE> {
+
 }

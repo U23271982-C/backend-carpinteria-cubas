@@ -1,11 +1,15 @@
-package com.content.trabajador_servicio.dto;
+package com.content.trabajador_servicio.dto.Request;
 
 import com.content.trabajador_servicio.model.Identification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
+
+/**
+ * Data Transfer Object para la entidad IdentificationType.
+ * Este DTO incluye lista de las entidades relaciones.
+ */
 
 @Data
 @NoArgsConstructor

@@ -5,6 +5,11 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ *
+ * Entidad que representa un tipo de contrato.
+ */
+
 @Entity
 @Table(name = "ContractType")
 @Getter

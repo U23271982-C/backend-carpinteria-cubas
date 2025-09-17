@@ -2,9 +2,13 @@ package com.content.trabajador_servicio.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+/**
+ *
+ * Entidad que representa un empleado en el sistema.
+ */
 
 @Entity
 @Table(name = "Employee")

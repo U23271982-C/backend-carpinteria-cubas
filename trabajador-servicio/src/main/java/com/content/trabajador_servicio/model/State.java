@@ -5,8 +5,13 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Entidad que representa el estado de diferentes entidades en el sistema (0: Eliminado; 1: Activo; 2: Inactivo).
+ * Las relaciones están configuradas para carga perezosa y cascada en todas las operaciones.
+ */
+
 @Entity
-@Table(name = "State")
+@Table(name = "StateEntity")
 @Getter
 @Setter
 @NoArgsConstructor

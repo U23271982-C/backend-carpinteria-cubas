@@ -3,6 +3,11 @@ package com.content.trabajador_servicio.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ *
+ * Entidad que representa la información de contacto de un empleado.
+ */
+
 @Entity
 @Table(name = "Contact")
 @Getter

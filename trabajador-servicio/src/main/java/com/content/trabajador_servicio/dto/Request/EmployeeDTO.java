@@ -1,4 +1,4 @@
-package com.content.trabajador_servicio.dto;
+package com.content.trabajador_servicio.dto.Request;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,6 +7,11 @@ import com.content.trabajador_servicio.model.Contact;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+/**
+ * Data Transfer Object para la entidad Employee.
+ * Este DTO incluye lista de las entidades relaciones.
+ */
 
 @Data
 @NoArgsConstructor
