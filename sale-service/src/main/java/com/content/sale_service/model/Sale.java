@@ -34,15 +34,15 @@ public class Sale {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_state_id", nullable = false)
-    private SaleState saleState;
+    private SaleState sale_state;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<SaleDetail> saleDetail;
+    private List<SaleDetail> sale_detail;
 
     @OneToMany(mappedBy = "sale")
-    private List<SaleStateRecord> saleStateRecord;
+    private List<SaleStateRecord> sale_state_record;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
-    private StateEntity stateEntity;
+    private StateEntity state_entity;
 }

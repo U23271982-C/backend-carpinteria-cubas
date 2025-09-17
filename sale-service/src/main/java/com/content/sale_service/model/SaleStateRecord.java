@@ -19,7 +19,7 @@ public class SaleStateRecord {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_state_id", nullable = false)
-    private SaleState saleState;
+    private SaleState sale_state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sale_id", nullable = false)
@@ -33,5 +33,5 @@ public class SaleStateRecord {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
-    private StateEntity stateEntity;
+    private StateEntity state_entity;
 }

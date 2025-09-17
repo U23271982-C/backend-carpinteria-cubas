@@ -23,15 +23,15 @@ public class StateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private int id;
 
-    @OneToMany(mappedBy = "stateEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Sale> sale;
 
-    @OneToMany(mappedBy = "stateEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SaleDetail> saleDetails;
 
-    @OneToMany(mappedBy = "stateEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SaleState> saleStates;
 
-    @OneToMany(mappedBy = "stateEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SaleStateRecord> saleStateRecords;
 }

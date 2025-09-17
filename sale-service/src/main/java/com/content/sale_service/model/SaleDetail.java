@@ -22,7 +22,7 @@ public class SaleDetail {
     // ide del producto que se vende
 
     @Column(name = "price_unit")
-    private double priceUnit;
+    private double price_unit;
     @Column(name = "subtotal")
     private double subtotal;
     @Column(name = "total")
@@ -30,5 +30,5 @@ public class SaleDetail {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
-    private StateEntity stateEntity;
+    private StateEntity state_entity;
 }

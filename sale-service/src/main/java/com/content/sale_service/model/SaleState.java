@@ -22,13 +22,13 @@ public class SaleState {
     @Column(name = "description", nullable = false, length = 250)
     private String description;
 
-    @OneToMany(mappedBy = "saleState", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sale_state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Sale> sales;
 
-    @OneToMany(mappedBy = "saleState", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SaleStateRecord> saleStateRecord;
+    @OneToMany(mappedBy = "sale_state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SaleStateRecord> sale_state_record;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
-    private StateEntity stateEntity;
+    private StateEntity state_entity;
 }
