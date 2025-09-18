@@ -27,9 +27,9 @@ public class Employee {
     @Column(name = "lastname", nullable = false, length = 100)
     private String lastname;
     @Column(name = "date_birth", nullable = false)
-    private LocalDateTime dateBirth;
+    private LocalDateTime date_birth;
     @Column(name = "date_admission", nullable = false)
-    private LocalDateTime dateAdmission;
+    private LocalDateTime date_admission;
     @Column(name = "address", nullable = false)
     private String address;
 

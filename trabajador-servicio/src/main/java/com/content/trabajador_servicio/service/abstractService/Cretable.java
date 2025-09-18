@@ -1,5 +1,5 @@
 package com.content.trabajador_servicio.service.abstractService;
 
-public interface Creable<D>{
+public interface Cretable<D>{
     D create(D dto);
 }

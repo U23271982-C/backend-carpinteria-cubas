@@ -21,7 +21,7 @@ public class Identification {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer id;
     @Column(name = "identification", nullable = false, length = 100)
-    private String name_Identification;
+    private String name_identification;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "identification_type_id", nullable = false)

@@ -25,7 +25,7 @@ public class IdentificationType {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_type_id", nullable = false)
-    private PersonType personType;
+    private PersonType person_type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id", nullable = false)

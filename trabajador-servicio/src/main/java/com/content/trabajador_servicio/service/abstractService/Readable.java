@@ -1,5 +1,7 @@
 package com.content.trabajador_servicio.service.abstractService;
 
+import java.util.List;
+
 public interface Readable<D>{
-    D read(Long id);
+    List<D> read(Long id);
 }
