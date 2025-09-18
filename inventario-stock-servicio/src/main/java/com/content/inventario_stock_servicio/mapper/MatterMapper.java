@@ -7,7 +7,8 @@ import com.content.inventario_stock_servicio.model.Matter;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface MatterMapper extends Convert<Matter, MatterRequestDTO, MatterResponseDTO> {
+public interface MatterMapper
+        extends Convert<Matter, MatterRequestDTO, MatterResponseDTO> {
 
     @Override
     MatterResponseDTO toDTO(Matter model);
