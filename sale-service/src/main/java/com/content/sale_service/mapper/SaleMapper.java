@@ -7,7 +7,8 @@ import com.content.sale_service.model.Sale;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface SaleMapper extends Convert<Sale, SaleRequestDTO, SaleResponseDTO> {
+public interface SaleMapper
+        extends Convert<Sale, SaleRequestDTO, SaleResponseDTO> {
     @Override
     SaleResponseDTO toDTO(Sale modelo);
 
