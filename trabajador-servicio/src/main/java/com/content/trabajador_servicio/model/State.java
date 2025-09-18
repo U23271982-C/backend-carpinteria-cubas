@@ -5,8 +5,13 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Entidad que representa el estado de diferentes entidades en el sistema (0: Eliminado; 1: Activo; 2: Inactivo).
+ * Las relaciones están configuradas para carga perezosa y cascada en todas las operaciones.
+ */
+
 @Entity
-@Table(name = "State")
+@Table(name = "StateEntity")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,9 +27,9 @@ public class State {
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Position> position;
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PersonType> personType;
+    private List<PersonType> person_type;
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<IdentificationType> identificationType;
+    private List<IdentificationType> identification_type;
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Identification> identification;
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -32,7 +37,7 @@ public class State {
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Distric> distric;
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ContractType> contractType;
+    private List<ContractType> contract_type;
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Contract> contract;
     @OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

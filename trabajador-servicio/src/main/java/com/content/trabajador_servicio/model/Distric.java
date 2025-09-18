@@ -2,8 +2,12 @@ package com.content.trabajador_servicio.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
+
+/**
+ *
+ * Entidad que representa un distrito en el departamento de Lambayeque.
+ */
 
 @Entity
 @Table(name = "Distric")
@@ -17,7 +21,7 @@ public class Distric {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer id;
     @Column(name = "distric", nullable = false, length = 100)
-    private String name_Distric;
+    private String name_distric;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id", nullable = false)

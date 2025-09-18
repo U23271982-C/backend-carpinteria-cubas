@@ -5,6 +5,11 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ *
+ * Entidad que representa un tipo de contrato.
+ */
+
 @Entity
 @Table(name = "ContractType")
 @Getter
@@ -17,7 +22,7 @@ public class ContractType {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer id;
     @Column(name = "contract_type", nullable = false, length = 100)
-    private String contract_Type;
+    private String contract_type;
     @Column(name = "description", nullable = false, length = 250)
     private String descripcion;
 
