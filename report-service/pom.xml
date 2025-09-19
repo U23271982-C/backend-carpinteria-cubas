@@ -9,8 +9,10 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.content.report_service</groupId>
-    <artifactId>report-service</artifactId>
+    <artifactId>sale-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>report-service</name>
+    <description>Microservicio Reporte</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
