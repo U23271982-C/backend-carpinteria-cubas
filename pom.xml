@@ -42,6 +42,7 @@
         <module>report-service</module>
         <module>customer-service</module>
         <module>authentication-service</module>
+        <module>product-service</module>
     </modules>
 
 	<dependencies>
