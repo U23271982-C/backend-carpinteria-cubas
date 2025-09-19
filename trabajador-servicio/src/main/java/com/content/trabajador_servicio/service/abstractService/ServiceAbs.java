@@ -1,9 +1,15 @@
 package com.content.trabajador_servicio.service.abstractService;
 
-public interface ServiceAbs<DRE,DRQ>
-        extends Cretable<DRE>,
+/**
+ * Agrupación de métodos que se deben implementar en el servicio del modelo
+ * @param <DRE> Response DTO
+ */
+
+public interface ServiceAbs<DRQ,DRE>
+        extends Creatable<DRQ,DRE>,
         Readable<DRE>,
-        Updatable<DRE>,
+        Updatable<DRQ,DRE>,
         Removable,
         Listable<DRE>{
+
 }

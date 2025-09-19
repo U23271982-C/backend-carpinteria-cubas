@@ -1,28 +1,29 @@
 package com.content.trabajador_servicio.service;
 
+import com.content.trabajador_servicio.dto.Request.EmployeeRequestDTO;
+import com.content.trabajador_servicio.dto.Response.EmployeeResponseDTO;
 import com.content.trabajador_servicio.mapper.mapperImpl.EmployeeMapper;
 import com.content.trabajador_servicio.repository.EmployeeRepository;
 import com.content.trabajador_servicio.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeService implements ServiceAbs {
+public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeResponseDTO> {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
 
     @Override
-    public Object create(Object dto) {
+    public EmployeeResponseDTO create(EmployeeRequestDTO dto) {
         return null;
     }
 
     @Override
-    public List readById(Long id) {
-        return List.of();
+    public EmployeeResponseDTO readById(Long id) {
+        return null;
     }
 
     @Override
@@ -31,7 +32,13 @@ public class EmployeeService implements ServiceAbs {
     }
 
     @Override
-    public void update() {
-
+    public List<EmployeeResponseDTO> allList() {
+        return List.of();
     }
+
+    @Override
+    public EmployeeResponseDTO update(int id, EmployeeRequestDTO dto) {
+        return null;
+    }
+
 }

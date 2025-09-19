@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.content.trabajador_servicio.model.Contact;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EmployeeRequestDTO {
 
     private Integer id;
