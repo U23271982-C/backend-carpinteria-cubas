@@ -1,13 +1,23 @@
 package com.content.sale_service.dto.Request;
 
-import java.time.LocalDate;
+import com.content.sale_service.model.SaleDetail;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 /**
  * Peticione de entrada del cliente.
  * Crear o Actualizar una venta
  */
+@Getter
+@Setter
+@Builder
 public class SaleRequestDTO {
     // Codigo de la venta, para identificar la venta se realiza en lógica bd
-    private LocalDate date_sale;
-
+    private double subtotal;
+    private double total;
+    private int client_id;
+    private int state_id;
 }

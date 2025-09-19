@@ -3,6 +3,8 @@ package com.content.sale_service.service;
 import com.content.sale_service.dto.Request.SaleRequestDTO;
 import com.content.sale_service.dto.Response.SaleResponseDTO;
 import com.content.sale_service.mapper.SaleMapper;
+import com.content.sale_service.model.Sale;
+import com.content.sale_service.model.SaleDetail;
 import com.content.sale_service.repository.SaleRepository;
 import com.content.sale_service.service.abstractService.ServiceAbs;
 import jakarta.transaction.Transactional;
@@ -20,7 +22,17 @@ public class SaleServiceImpl implements ServiceAbs<SaleRequestDTO,SaleResponseDT
     @Transactional
     @Override
     public SaleResponseDTO create(SaleRequestDTO dto) {
-        return null;
+
+        Sale sale = new Sale();
+        /**
+         * El repositorio guarda el modelo y devuelve el modelo guardado
+         */
+
+        Sale saleSaved = sale_repository.save(sale); // Guardar BD
+
+        // se mapea el modelo guardado a DTO para devolverlo al cliente
+        SaleResponseDTO saleResponseDTO = sale_mapper.toDTO(saleSaved);
+        return saleResponseDTO;
     }
 
     @Transactional
