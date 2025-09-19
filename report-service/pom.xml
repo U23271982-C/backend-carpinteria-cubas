@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>sale-service</artifactId>
+    <artifactId>report-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>report-service</name>
     <description>Microservicio Reporte</description>
