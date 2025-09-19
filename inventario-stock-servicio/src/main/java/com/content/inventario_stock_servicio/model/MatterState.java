@@ -17,15 +17,15 @@ public class MatterState {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "matterState_name", nullable = false)
-    private String matterState_name;
+    @Column(name = "matter_state_name", nullable = false)
+    private String matter_state_name;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="state_id", nullable = false)
-    private State state;
+    private StateEntity state_entity;
 
     // mappedBy debe ser el nombre del atributo en Matter
-    @OneToMany(mappedBy = "matterState", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Matter> matters;
+    @OneToMany(mappedBy = "matter_state", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Matter> matter;
 }
 
