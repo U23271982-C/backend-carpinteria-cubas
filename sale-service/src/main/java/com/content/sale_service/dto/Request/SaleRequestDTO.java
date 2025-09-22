@@ -16,10 +16,10 @@ import java.util.List;
 @Builder
 public class SaleRequestDTO {
     // Codigo de la venta, para identificar la venta se realiza en lógica bd
-    private double subtotal;
-    private double total;
+    //private double subtotal;
+    //private double total;
     private int client_id;
-    private int state_sale_current_id;
-    private int state_entity_current_id; //
+    //private int state_sale_current_id;
+    //private int state_entity_current_id; //
     private List<SaleDetail> sale_details; // Lista de detalles de la venta, para poder sacar el total y el subtotal
 }

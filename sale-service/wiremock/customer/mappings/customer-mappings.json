@@ -1,0 +1,55 @@
+[
+  {
+    "request": {
+      "method": "GET",
+      "urlPattern": "/api/v1/customers/([0-9]+)"
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "id": "{{request.pathSegments.[3]}}",
+        "name": "Cliente Test",
+        "lastName": "Apellido Test",
+        "email": "cliente{{request.pathSegments.[3]}}@test.com",
+        "phone": "555-0123",
+        "address": "Dirección Test {{request.pathSegments.[3]}}",
+        "active": true
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "GET",
+      "urlPattern": "/api/v1/customers/([0-9]+)/exists"
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "exists": true,
+        "customerId": "{{request.pathSegments.[3]}}"
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "GET",
+      "urlPattern": "/api/v1/customers/999/exists"
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "exists": false,
+        "customerId": "999"
+      }
+    }
+  }
+]

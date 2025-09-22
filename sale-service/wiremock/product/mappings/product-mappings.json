@@ -1,0 +1,98 @@
+[
+  {
+    "request": {
+      "method": "GET",
+      "urlPattern": "/api/v1/products/([0-9]+)"
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "id": "{{request.pathSegments.[3]}}",
+        "name": "Producto Test {{request.pathSegments.[3]}}",
+        "description": "Descripción del producto de prueba {{request.pathSegments.[3]}}",
+        "price": 100.00,
+        "stock": 50,
+        "category": "Categoría Test",
+        "active": true
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "GET",
+      "urlPattern": "/api/v1/products/([0-9]+)/stock"
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "productId": "{{request.pathSegments.[3]}}",
+        "stock": 50,
+        "available": true
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "PUT",
+      "urlPattern": "/api/v1/products/([0-9]+)/stock",
+      "headers": {
+        "Content-Type": {
+          "equalTo": "application/json"
+        }
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "productId": "{{request.pathSegments.[3]}}",
+        "previousStock": 50,
+        "newStock": "{{jsonPath request.body '$.newStock'}}",
+        "updated": true,
+        "timestamp": "{{now format='yyyy-MM-dd HH:mm:ss'}}"
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "GET",
+      "urlPattern": "/api/v1/products/999"
+    },
+    "response": {
+      "status": 404,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "error": "Product not found",
+        "message": "Product with ID 999 does not exist",
+        "timestamp": "{{now format='yyyy-MM-dd HH:mm:ss'}}"
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "GET",
+      "urlPattern": "/api/v1/products/888/stock"
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "productId": "888",
+        "stock": 0,
+        "available": false
+      }
+    }
+  }
+]

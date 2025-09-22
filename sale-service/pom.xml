@@ -81,6 +81,11 @@
             <artifactId>javax.el</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <!-- Spring Cloud OpenFeign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
