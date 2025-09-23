@@ -1,6 +1,6 @@
 package com.content.sale_service.dto.Request;
 
-import com.content.sale_service.model.TypesStateEntity;
+import com.content.sale_service.states.TypesStateEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
