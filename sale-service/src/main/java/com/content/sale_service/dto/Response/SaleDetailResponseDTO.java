@@ -6,6 +6,5 @@ public class SaleDetailResponseDTO {
     private double price_unit;
     private int quantity;
     private double total;
-    private double subtotal;
 
 }

@@ -27,8 +27,6 @@ public class SaleDetail {
     @Column(name = "price_unit")
     private double price_unit;
     @Column(name = "subtotal")
-    private double subtotal;
-    @Column(name = "total")
     private double total;
     @Column(name = "quantity")
     private int quantity;
