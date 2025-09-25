@@ -1,8 +1,11 @@
 package com.content.sale_service.client;
 
+import com.content.sale_service.dto.Request.SaleDetailRequestDTO;
 import com.content.sale_service.dto.Request.SaleRequestDTO;
 import com.content.sale_service.dto.external.ProductDTO;
-import com.content.sale_service.execption.ExecptionValidation;
+import com.content.sale_service.execption.EValidation;
+import com.content.sale_service.execption.EFeignClientNotFound;
+import com.content.sale_service.execption.MappingExecption;
 import com.content.sale_service.model.Sale;
 import com.content.sale_service.model.SaleDetail;
 import lombok.AllArgsConstructor;
@@ -11,47 +14,60 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 @Slf4j
 @AllArgsConstructor
-public class ValidateClient {
+public class ValidateClientsFeign {
     private final CustomerClient customerClient;
     private final ProductClient productClient;
 
 
 
     /**
-     * Valida que el cliente existe usando el Feign client
+     * Valida que el cliente existe usando el Feign client, consultando si exite el id
      */
     public void validateCustomerExists(int customerId) {
         try {
             Boolean customerExists = customerClient.customerExists(customerId);
             if (!customerExists) {
                 log.error("Cliente no encontrado con ID: {}", customerId);
-                throw new ExecptionValidation("Cliente no encontrado con ID: " + customerId);
+                //throw new MappingExecption.SERVICES_CLIENTS.getErrorType();
+                 throw new EFeignClientNotFound("Cliente no encontrado: " + customerId);
             }
         } catch (Exception e) {
             log.error("Error al validar cliente con ID: {}", customerId, e);
-            throw new ExecptionValidation("Error al validar cliente: " + e.getMessage());
+
+            throw new EFeignClientNotFound("Error al validar cliente: " + e.getMessage());
         }
     }
 
     /**
      * Valida y procesa los detalles de la venta
      */
-    public void validateAndProcessSaleDetails(List<SaleDetail> saleDetails) {
-        if (saleDetails == null || saleDetails.isEmpty()) {
-            throw new ExecptionValidation("La venta debe tener al menos un detalle");
-        }
+    public List<SaleDetail> processSaleDetails(List<SaleDetailRequestDTO> saleDetailsRequestsDTOs) {
+        /**
+         * Mapeo de los detalles de la venta a un modelo de la venta <br>
+         * 'x' representa cada uno de los detalles de la venta (individualmente)
+         */
+        return saleDetailsRequestsDTOs.stream()
+                .map(
+                        x -> {
+                            // Calcular subtotal y total del detalle
+                            ProductDTO product = productClient.getProductById(x.getId_product()); // Extramos los datos del producto
+                            SaleDetail sale_detail_model = new SaleDetail();
 
-        for (SaleDetail detail : saleDetails) {
-            // Validar que el producto existe y tiene stock
-            validateProductStock(detail.getProduct_id(), detail.getQuantity());
+                            // Rellenamos el modelo con los datos del DTO
+                            int id_product = product.getId();
+                            double unit_price = product.getPrice().doubleValue();
+                            int quantity = x.getQuantity();
+                            double total = unit_price * quantity;
 
-            // Calcular subtotal y total del detalle
-            ProductDTO product = productClient.getProductById(detail.getProduct_id());
-            double unitPrice = product.getPrice().doubleValue();
-            detail.setPrice_unit(unitPrice);
-            detail.setSubtotal(unitPrice * detail.getQuantity());
-            detail.setTotal(detail.getSubtotal()); // Asumiendo sin impuestos por ahora
-        }
+                            sale_detail_model.setProduct_id(id_product);
+                            sale_detail_model.setPrice_unit(unit_price);
+                            sale_detail_model.setQuantity(quantity);
+                            sale_detail_model.setTotal(total);
+                            //sale_detail_model.setSubtotal(subtotal);
+
+                            return sale_detail_model;
+                        }
+                ).toList();
     }
 
     /**
@@ -62,11 +78,11 @@ public class ValidateClient {
             Boolean hasStock = productClient.checkProductStock(productId, quantity);
             if (!hasStock) {
                 log.error("Producto con ID: {} no tiene stock suficiente para cantidad: {}", productId, quantity);
-                throw new ExecptionValidation("Producto con ID " + productId + " no tiene stock suficiente");
+                throw new EFeignClientNotFound("Producto con ID " + productId + " no tiene stock suficiente");
             }
         } catch (Exception e) {
             log.error("Error al validar stock del producto con ID: {}", productId, e);
-            throw new ExecptionValidation("Error al validar stock del producto: " + e.getMessage());
+            throw new EFeignClientNotFound("Error al validar stock del producto: " + e.getMessage());
         }
     }
 
@@ -79,11 +95,11 @@ public class ValidateClient {
                 Boolean updated = productClient.updateProductStock(detail.getProduct_id(), detail.getQuantity());
                 if (!updated) {
                     log.error("No se pudo actualizar el stock del producto con ID: {}", detail.getProduct_id());
-                    throw new ExecptionValidation("Error al actualizar stock del producto ID: " + detail.getProduct_id());
+                    throw new EFeignClientNotFound("Error al actualizar stock del producto ID: " + detail.getProduct_id());
                 }
             } catch (Exception e) {
                 log.error("Error al actualizar stock del producto con ID: {}", detail.getProduct_id(), e);
-                throw new ExecptionValidation("Error al actualizar stock: " + e.getMessage());
+                throw new EFeignClientNotFound("Error al actualizar stock: " + e.getMessage());
             }
         }
     }
@@ -95,13 +111,13 @@ public class ValidateClient {
 
         // Recalcular totales si hay nuevos detalles
         if (dto.getSale_details() != null && !dto.getSale_details().isEmpty()) {
-            validateAndProcessSaleDetails(dto.getSale_details());
+            processSaleDetails(dto.getSale_details());
 
             double subtotal = dto.getSale_details().stream()
-                    .mapToDouble(SaleDetail::getSubtotal)
+                    .mapToDouble(SaleDetailRequestDTO::getSubtotal)
                     .sum();
             double total = dto.getSale_details().stream()
-                    .mapToDouble(SaleDetail::getTotal)
+                    .mapToDouble(SaleDetailRequestDTO::getTotal)
                     .sum();
 
             existingSale.setSubtotal(subtotal);
