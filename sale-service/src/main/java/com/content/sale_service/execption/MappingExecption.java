@@ -1,6 +1,9 @@
 package com.content.sale_service.execption;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+import java.util.Arrays;
 
 /**
  *Mapeo de excepciones a tipos de error para mostrar mensajes específicos
@@ -8,12 +11,31 @@ import lombok.Getter;
  */
 @Getter
 public enum MappingExecption {
-    VALIDACION_EXECPTION(ExecptionValidation.class, "Error de validación");
+
+    VALIDACION_EXECPTION(EValidation.class, "Error de validación", HttpStatus.BAD_REQUEST),
+    SERVICES_CLIENTS(EFeignClientCustomerNotFound.class, "Error del microservicio cliente", HttpStatus.SERVICE_UNAVAILABLE),
+    GENERIC(Exception.class, "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    private final Class<? extends Exception> errorType;
+    private final String title;
+    private final HttpStatus httpStatus;
 
 
-    Class<?> errorType;
-    String title;
+    MappingExecption(Class<? extends Exception> execptionValidationClass, String title, HttpStatus httpStatus) {
+        this.errorType = execptionValidationClass;
+        this.title = title;
+        this.httpStatus = httpStatus;
+    }
 
-    MappingExecption(Class<ExecptionValidation> execptionValidationClass, String title) {}
-
+    /**
+     *
+     * @param e
+     * @return
+     */
+    public static MappingExecption fromException(Exception e) {
+        return Arrays.stream(values())
+                .filter(m -> m.errorType.isAssignableFrom(e.getClass()))
+                .findFirst()
+                .orElse(GENERIC);
+    }
 }
