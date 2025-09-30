@@ -2,7 +2,6 @@ package com.content.customer_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 /**

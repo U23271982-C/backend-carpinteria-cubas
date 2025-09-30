@@ -4,30 +4,36 @@ import jakarta.persistence.*;
 import lombok.*;
 
 /**
- * Entidad que representa la relación entre usuarios y roles en el sistema.
- * Un usuario puede tener múltiples roles y un rol puede ser asignado a múltiples usuarios.
+ * Entidad que representa a los empleados de usuario en el sistema.
+ * Incluye detalles como área y puesto.
  * Las relaciones están configuradas para carga perezosa y cascada en todas las operaciones.
  */
 
 @Entity
-@Table(name = "UserRole")
+@Table(name = "UserEmployee")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserRole {
+public class UserEmployee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer user_role_id;
+    private Integer user_employee_id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @Column(unique = true, nullable = false)
     private User user_id;
+
+    @Column(name = "area", nullable = false,length = 100)
+    private String area;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role_id;
+    @JoinColumn(name = "post_user_employee_id", nullable = false)
+    private PostUserEmployee post_user_employee_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;

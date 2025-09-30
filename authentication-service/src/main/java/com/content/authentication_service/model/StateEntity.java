@@ -1,4 +1,4 @@
-package com.content.customer_service.model;
+package com.content.authentication_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,26 +26,24 @@ public class StateEntity {
     private String state_entity_name;
 
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Client> clients;
+    private List<Permission> permissions;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ClientType> clientTypes ;
+    private List<PostUserEmployee> postUserEmployees ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Contact> contacts ;
+    private List<Role> roles ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Department> departments ;
+    private List<RolePermission> rolePermissions ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Direction> directions ;
+    private List<Session> sessions ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<DirectionType> directionTypes ;
+    private List<User> users ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<District> districts ;
+    private List<UserClient> userClients ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Identification> identifications ;
+    private List<UserEmployee> userEmployees ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<IdentificationType> identificationTypes ;
+    private List<UserRole> userRoles ;
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PersonType> personTypes ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Province> provinces ;
+    private List<UserType> userTypes ;
 
 }
