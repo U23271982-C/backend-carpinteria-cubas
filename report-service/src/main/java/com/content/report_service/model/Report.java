@@ -4,6 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad que representa los reportes en el sistema.
+ * Cada reporte está asociado a un tipo de documento y un estado.
+ * Las relaciones están configuradas para carga perezosa.
+ */
+
 @Entity
 @Table(name = "Report")
 @Getter
@@ -11,24 +17,28 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Report {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer report_id;
 
-    @Column(name = "nombre_reporte", nullable = false, length = 150)
-    private String reportName;
+    @Column(name = "report_name", nullable = false, length = 200)
+    private String report_name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tipo_doc", nullable = false)
-    private DocumentType documentType;
+    @JoinColumn(name = "doc_type_id", nullable = false)
+    private DocType doc_type_id;
 
-    @Column(name = "peso", nullable = false)
-    private Double sizeKb;
+    @Column(name = "size_Kb", nullable = false)
+    private Double size_Kb;
     @Column(name = "url", nullable = false, length = 255)
     private String url;
-    @Column(name = "fecha_reporte", nullable = false)
-    private LocalDateTime reportDate;
+    @Column(name = "report_date", nullable = false)
+    private LocalDateTime report_date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_entity_id", nullable = false)
+    private StateEntity state_entity_id;
 
 }
