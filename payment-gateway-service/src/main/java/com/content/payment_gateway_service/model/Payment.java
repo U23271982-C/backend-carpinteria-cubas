@@ -4,6 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * Entidad que representa un pago realizado en el sistema.
+ * Incluye detalles como el total, la moneda, las fechas de procesamiento y finalización,
+ * así como las relaciones con el estado del pago y los intentos de pago asociados.
+ */
 
 @Entity
 @Table(name = "Payment")
@@ -12,30 +19,39 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Payment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer payment_id;
 
-    @Column(name = "uuid", nullable = false, unique = true, length = 36)
+    @Column(name = "uuid", nullable = false, unique = true, length = 100)
     private String uuid;
-    @Column(name = "order_dd", nullable = false)
-    private Integer orderId;
+    @Column(name= "permit_id", nullable = false)
+    private Integer permit_id;
     @Column(name = "client_id", nullable = false)
-    private Integer clientId;
-    @Column(name = "paymentstatus", nullable = false, length = 50)
-    private String paymentStatus;
+    private Integer client_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_state_id", nullable = false)
+    private PaymentState payment_state_id;
+
     @Column(name = "total", nullable = false)
-    private BigDecimal totalAmount;
-    @Column(name = "currency", nullable = false, length = 10)
+    private BigDecimal total;
+    @Column(name = "currency", nullable = false, length = 100)
     private String currency;
-    @Column(name = "processingdate")
-    private LocalDateTime processingDate;
-    @Column(name = "cancellationdate")
-    private LocalDateTime cancellationDate;
+    @Column(name = "processing_date", nullable = false)
+    private LocalDateTime processing_date;
+    @Column(name = "finish_date", nullable = false)
+    private LocalDateTime finish_date;
     @Column(name = "description", length = 255)
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_entity_id", nullable = false)
+    private StateEntity state_entity_id;
+
+    @OneToMany(mappedBy = "payment_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AttemptPayment> attemptPayments;
 
 }
