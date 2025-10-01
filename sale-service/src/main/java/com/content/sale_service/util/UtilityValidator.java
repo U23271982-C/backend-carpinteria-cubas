@@ -1,16 +1,36 @@
 package com.content.sale_service.util;
 
-import com.content.sale_service.execption.ExecptionValidation;
+import com.content.sale_service.execption.EValidation;
+import com.content.sale_service.execption.ObjectErrorValidation;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 
+@Component
+/**
+ * Clase que valida los objetos, en especial DTOs
+ */
 public class UtilityValidator {
-    private static final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private static final Validator validator = factory.getValidator();
+    @Autowired
+    private final Validator validator;
+
+    public UtilityValidator(Validator validator) {
+        this.validator = validator;
+    }
+
+    /**
+     * Valida un objeto (dto)
+     * @param objeto dto a validar
+     * @param <T> tipo del dto a validar
+     */
+    public <T> void validate(T objeto) {
+        Set<ConstraintViolation<T>> errores = validator.validate(objeto);
+        mapMessageErrores(errores);
+    }
 
     /**
      * Se valida un dto, con diferentes marcas de grupos de validación
@@ -19,14 +39,24 @@ public class UtilityValidator {
      * @param grupos
      * @param <T>
      */
-    public static <T> void validate(T objeto, Class<?>... grupos) {
+    public <T> void validateWithGroups(T objeto, Class<?>... grupos) {
         Set<ConstraintViolation<T>> errores = validator.validate(objeto, grupos);
+        mapMessageErrores(errores);
+    }
+
+    /**
+     * Todos los errores que están en cola, los mapea en una lista
+     * y los lanza como tipo de personalizado 'ExecptionValidation'
+     * @param errores cola errores a mapear
+     * @param <T> tipo del dto a validar
+     */
+    private static <T> void mapMessageErrores(Set<ConstraintViolation<T>> errores) {
         if (!errores.isEmpty()) {
-            StringBuilder sb = new StringBuilder("Errores de validación:\n");
-            for (ConstraintViolation<T> error : errores) {
-                sb.append("- ").append(error.getMessage()).append("\n");
-            }
-            throw new ExecptionValidation(sb.toString());
+            List<ObjectErrorValidation> listErrores = errores.stream()
+                    .map(error ->
+                                    new ObjectErrorValidation(error.getPropertyPath().toString(), error.getMessage())).toList();
+
+            throw new EValidation(listErrores);
         }
     }
 }
