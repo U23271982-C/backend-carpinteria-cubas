@@ -33,3 +33,5 @@ build/
 .vscode/
 ### MacOS ###
 .DS_Store
+### Test - Main Point ###
+sale-service/src/main/java/com/content/sale_service/AppMain.java
