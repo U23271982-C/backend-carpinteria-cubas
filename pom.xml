@@ -35,7 +35,7 @@
     <modules>
         <module>api-gateway</module>
         <module>descubridor-servicio</module>
-        <module>trabajador-servicio</module>
+        <module>employee-service</module>
         <module>inventario-stock-servicio</module>
         <module>sale-service</module>
         <module>payment-gateway-service</module>

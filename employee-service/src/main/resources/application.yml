@@ -1,0 +1,27 @@
+server:
+  port: ${SERVER_PORT}
+spring:
+  application:
+    name: employee-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://db_mysql:3306/BDEmployeeCarprentry?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      Maximum-Pool-Size: 10
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+          dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.MySQLDialect}
+
+eureka:
+  client:
+    instance:
+      instance-id: ${spring.application.name}:${spring.application.instance-id}:${random.value}
+    service-url:
+      defaultZone: ${DISCOVERY_SERVER_URL:http://discovery-service:8089/eureka} #Servidor de Eureka
