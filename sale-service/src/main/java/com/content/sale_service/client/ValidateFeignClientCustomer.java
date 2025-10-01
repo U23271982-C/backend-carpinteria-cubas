@@ -1,12 +1,6 @@
 package com.content.sale_service.client;
 
-import com.content.sale_service.dto.Request.SaleDetailRequestDTO;
-import com.content.sale_service.dto.Request.SaleRequestDTO;
-import com.content.sale_service.dto.external.ProductDTO;
 import com.content.sale_service.execption.EFeignClientCustomerNotFound;
-import com.content.sale_service.execption.EFeignClientProductNotFound;
-import com.content.sale_service.model.Sale;
-import com.content.sale_service.model.SaleDetail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
