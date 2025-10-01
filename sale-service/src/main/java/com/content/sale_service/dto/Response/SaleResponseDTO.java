@@ -17,5 +17,5 @@ public class SaleResponseDTO {
     private double subtotal;
     private double total;
     private int client_id;
-    private String id_state_sale_current;
+    private int id_state_sale_current;
 }
