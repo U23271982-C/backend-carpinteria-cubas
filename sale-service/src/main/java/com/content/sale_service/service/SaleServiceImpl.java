@@ -1,13 +1,14 @@
 package com.content.sale_service.service;
 
-import com.content.sale_service.client.ValidateClient;
+import com.content.sale_service.client.ValidateFeignClientCustomer;
+import com.content.sale_service.client.ValidateFeignClientProduct;
 import com.content.sale_service.dto.Request.SaleRequestDTO;
 import com.content.sale_service.dto.Response.SaleResponseDTO;
-import com.content.sale_service.dto.builder.BuildDTO;
 import com.content.sale_service.mapper.SaleMapper;
 import com.content.sale_service.model.Sale;
 import com.content.sale_service.repository.SaleRepository;
 import com.content.sale_service.service.abstractService.ServiceAbs;
+import com.content.sale_service.util.UtilityValidator;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,29 +18,37 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ *
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SaleServiceImpl implements ServiceAbs<SaleRequestDTO, SaleResponseDTO> {
     private final SaleRepository saleRepository;
     private final SaleMapper saleMapper;
-    private final ValidateClient validateClient;
+    private final ValidateFeignClientCustomer validateClient;
+    private final ValidateFeignClientProduct validateProduct;
+    private final UtilityValidator utilityValidator;
 
     @Transactional
     @Override
     public SaleResponseDTO create(SaleRequestDTO dto) {
         log.info("Iniciando creación de venta para cliente ID: {}", dto.getClient_id());
+
+        // Validar datos de la venta
+        utilityValidator.validate(dto);
         
         // Validar que el cliente existe
         validateClient.validateCustomerExists(dto.getClient_id());
 
         // Validar y procesar detalles de la venta
-        validateClient.validateAndProcessSaleDetails(dto.getSale_details());
+        validateProduct.processSaleDetails(dto.getSale_details());
 
-        Sale sale = BuildDTO.buildSaleFromDTO(dto);
+        Sale sale = saleMapper.toModel(dto);
         
         // Actualizar stock de productos
-        validateClient.updateProductStock(dto.getSale_details());
+        //validateProduct.updateProductStock(dto.getSale_details());
         
         Sale savedSale = saleRepository.save(sale);
         log.info("Venta creada exitosamente con ID: {} y número: {}", savedSale.getId(), savedSale.getNumber_sale());
@@ -101,7 +110,7 @@ public class SaleServiceImpl implements ServiceAbs<SaleRequestDTO, SaleResponseD
         //validateCustomerExists(dto.getClient_id());
         
         Sale existingSale = existingSaleOpt.get();
-        validateClient.updateSaleFromDTO(existingSale, dto);
+        validateProduct.updateSaleFromDTO(existingSale, dto);
         
         Sale updatedSale = saleRepository.save(existingSale);
         log.info("Venta actualizada exitosamente con ID: {}", updatedSale.getId());
