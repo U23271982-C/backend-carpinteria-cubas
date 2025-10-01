@@ -2,7 +2,7 @@
 # contexto construccion desde la raiz
 FROM maven:3.9-eclipse-temurin-21 AS builder
 
-ARG NAME_MICROSERVICE=payment-service
+ARG NAME_MICROSERVICE=payment-stock-service
 
 # simula la raiz
 WORKDIR /mainApp
