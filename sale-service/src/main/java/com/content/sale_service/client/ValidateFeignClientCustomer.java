@@ -9,10 +9,12 @@ import com.content.sale_service.model.Sale;
 import com.content.sale_service.model.SaleDetail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 @Slf4j
 @AllArgsConstructor
+@Component
 public class ValidateFeignClientCustomer {
     private final CustomerClient customerClient;
     //private final ProductClient productClient;

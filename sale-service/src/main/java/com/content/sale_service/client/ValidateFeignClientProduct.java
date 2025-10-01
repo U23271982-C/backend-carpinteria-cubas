@@ -9,11 +9,14 @@ import com.content.sale_service.model.Sale;
 import com.content.sale_service.model.SaleDetail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
+@Component
 public class ValidateFeignClientProduct {
     private final ProductClient productClient;
 
@@ -91,7 +94,7 @@ public class ValidateFeignClientProduct {
 
         // Recalcular totales si hay nuevos detalles
         if (dto.getSale_details() != null && !dto.getSale_details().isEmpty()) {
-            processSaleDetails(dto.getSale_details());
+            /*processSaleDetails(dto.getSale_details());
 
             double subtotal = dto.getSale_details().stream()
                     .mapToDouble(SaleDetailRequestDTO::getSubtotal)
@@ -105,7 +108,7 @@ public class ValidateFeignClientProduct {
 
             // Actualizar detalles
             dto.getSale_details().forEach(detail -> detail.setSale(existingSale));
-            existingSale.setSale_detail(dto.getSale_details());
+            existingSale.setSale_detail(dto.getSale_details());*/
         }
     }
 }
