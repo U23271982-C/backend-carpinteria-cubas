@@ -9,10 +9,10 @@ spring:
       server:
         webflux:
           routes:
-            - id: bien-servicio
-              uri: lb://bien-servicio
+            - id: authentication-service
+              uri: lb://authentication-service
               predicates:
-                - Path=/api/bien/**
+                - Path=/auth/**
               filters:
                 - StripPrefix=1
 

@@ -106,17 +106,18 @@ services:
       SERVER_PORT: ${AUTHENTICATION_SERVICE_PORT}
       DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_AUTHENTICATION}
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER_MAIN_DEV}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRESQL_USER_MAIN_DEV}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRESQL_PASS_MAIN_DEV}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
-    depends_on:
-      - discovery-service
-      - db_mysql
-      - employee-service
-      - inventory-stock-service
-      - sale-service
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
+    #depends_on:
+    #  - discovery-service
+    #  - db_mysql
+    #  - employee-service
+    #  - inventory-stock-service
+    #  - sale-service
+    # cuando se termine de probar todos los microservicios, se debe comentar la dependencia de los servicios
 
   api-gateway:
     container_name: api-gateway-container
@@ -129,13 +130,13 @@ services:
     environment:
       SERVER_PORT: ${API_GATEWAY_SERVICE_PORT}
       DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
-    depends_on:
-    # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
-      - discovery-service
-      - employee-service
-      - inventory-stock-service
-      - sale-service
-      - authentication-service
+    #depends_on:
+    ## por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
+    #  - discovery-service
+    #  - employee-service
+    #  - inventory-stock-service
+    #  - sale-service
+    #  - authentication-service
 volumes:
   mysql_data:
   postgres_data:
