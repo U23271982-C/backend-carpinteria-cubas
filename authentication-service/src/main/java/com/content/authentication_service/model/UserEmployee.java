@@ -23,8 +23,7 @@ public class UserEmployee {
     private Integer user_employee_id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @Column(unique = true, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user_id;
 
     @Column(name = "area", nullable = false,length = 100)
