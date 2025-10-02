@@ -32,7 +32,7 @@ public class StateDTO {
 
     private List<Employee> Employee;
 
-    private List<Identification> Identification;
+    private List<IdentificationDTO> Identification;
 
     private List<IdentificationType> Identificationtype;
 

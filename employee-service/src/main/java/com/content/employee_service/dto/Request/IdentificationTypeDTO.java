@@ -21,7 +21,7 @@ public class IdentificationTypeDTO {
 
     private Integer id_Person_Type;
 
-    private List<Identification> identifications;
+    private List<IdentificationDTO> identifications;
 
     private Integer id_State;
 }
