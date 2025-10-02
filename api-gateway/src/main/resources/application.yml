@@ -21,7 +21,12 @@ spring:
                 - Path=/cust/**
               filters:
                 - StripPrefix=1
-
+            - id: employee-service
+              uri: lb://employee-service
+              predicates:
+                - Path=/empl/**
+              filters:
+                - StripPrefix=1
 eureka:
   client:
     instance:
