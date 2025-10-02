@@ -13,8 +13,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeResponseDTO> {
 
-    private final EmployeeRepository employeeRepository;
-    private final EmployeeMapper employeeMapper;
+    //private final EmployeeRepository employeeRepository;
+    //private final EmployeeMapper employeeMapper;
+    EmployeeMapper employeeMapper;
 
     @Override
     public EmployeeResponseDTO create(EmployeeRequestDTO dto) {
