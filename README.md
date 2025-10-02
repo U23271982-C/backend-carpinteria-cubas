@@ -14,13 +14,20 @@
 - Spring Security
 - Spring Web
 - Spring Cloud Gateway
-- Spring Cloud Config 
+- Spring Cloud Config
+- PostreSQL 16
+- MySQL 8
+- Maven
+- Docker
+- Docker Compose
+- Lombok
+- MapStruct
 
 ---
 ### Implementar Microservicio Cliente
 1. Crear módulo con Maven
 2. Extenderlo al módulo padre
-3. Implementar /resources/application.yml
+3. Implementar `/resources/application.yml`
 4. Implementar Dockerfile
 5. Añadir el servicio a 'docker-compose.yml'
 6. Añadirlo al mapeo del gateway
@@ -67,3 +74,18 @@ En `api/gateway/src/main/resources/application.yml`
   - `Path`: Indica que la ruta debe coincidir con la ruta que se quiere acceder. El `auth` es el path del microservicio, cada microservicio tiene su propio path.
 - `filters`: Filtrado de la ruta.
   - `StripPrefix=1`: Elimina el prefijo de la ruta.
+
+Bases de Datos
+----
+Se han segmentado en diferentes servidores de BD.
+Ya que por la concurrencia y la magnitud de los datos.
+### PostgreSQL:16
+1. BDAuthentication - Microservicio de Authenticacion
+2. BDCustomers - Microservicio de Clientes
+3. BDPaymentGateway - Microservicio de Pasarela de Pago
+4. BDProducts - Microservicio de Productos
+5. BDSales - Microservicio de Ventas
+### MySQL:8
+1. BDEmployeeCarprentry - Microservicio de Empleados
+2. BDInventoryMatter - Microservicio de Inventario de Materiales
+3. BDReport - Microservicio de Reportes

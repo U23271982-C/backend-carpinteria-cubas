@@ -118,6 +118,23 @@ services:
     #  - inventory-stock-service
     #  - sale-service
     # cuando se termine de probar todos los microservicios, se debe comentar la dependencia de los servicios
+  customer-service:
+    container_name: customer-service-container
+    image: customer-service-image
+    build:
+      context: .
+      dockerfile: customer-service/Dockerfile
+    ports:
+      - "${CUSTOMER_SERVICE_PORT}:${CUSTOMER_SERVICE_PORT}"
+    environment:
+      SERVER_PORT: ${CUSTOMER_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_CUSTOMER}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRESQL_USER_MAIN_DEV}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRESQL_PASS_MAIN_DEV}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
 
   api-gateway:
     container_name: api-gateway-container
