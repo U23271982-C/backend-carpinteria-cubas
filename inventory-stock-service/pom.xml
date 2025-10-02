@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>inventario-stock-servicio</artifactId>
+    <artifactId>inventory-stock-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>inventario-stock-servicio</name>
     <description>Microservicio Inventario Stock</description>
