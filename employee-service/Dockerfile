@@ -2,7 +2,7 @@
 # contexto construccion desde la raiz
 FROM maven:3.9-eclipse-temurin-21 AS builder
 
-ARG NAME_MICROSERVICE=trabajador-servicio
+ARG NAME_MICROSERVICE=employee-service
 
 # simula la raiz
 WORKDIR /mainApp
