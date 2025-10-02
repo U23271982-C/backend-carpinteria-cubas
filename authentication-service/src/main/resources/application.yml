@@ -4,7 +4,7 @@ spring:
   application:
     name: authentication-service
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db_postgresql:5432/BDAuthentication?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db_postgresql:5432/BDAuthentication?sslmode=disable}
     username: ${SPRING_DATASOURCE_USERNAME:admin}
     password: ${SPRING_DATASOURCE_PASSWORD:admin}
     driver-class-name: org.postgresql.Driver
