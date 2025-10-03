@@ -5,6 +5,7 @@ import com.content.sale_service.execption.ObjectErrorValidation;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Set;
  * Clase que valida los objetos, en especial DTOs
  */
 public class UtilityValidator {
-    @Autowired
+    //@Autowired
     private final Validator validator;
 
     public UtilityValidator(Validator validator) {
@@ -54,9 +55,10 @@ public class UtilityValidator {
         if (!errores.isEmpty()) {
             List<ObjectErrorValidation> listErrores = errores.stream()
                     .map(error ->
-                                    new ObjectErrorValidation(error.getPropertyPath().toString(), error.getMessage())).toList();
+                            new ObjectErrorValidation(error.getPropertyPath().toString(), error.getMessage())).toList();
 
             throw new EValidation(listErrores);
         }
     }
 }
+

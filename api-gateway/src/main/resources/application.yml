@@ -51,6 +51,12 @@ spring:
                 - Path=/repo/**
               filters:
                 - StripPrefix=1
+            - id: sale-service
+              uri: lb://sale-service
+              predicates:
+                - Path=/sale/**
+              filters:
+                - StripPrefix=1
 
 eureka:
   client:
