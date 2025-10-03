@@ -33,6 +33,12 @@ spring:
                 - Path=/inve/**
               filters:
                 - StripPrefix=1
+            - id: payment-gateway-service
+              uri: lb://payment-gateway-service
+              predicates:
+                - Path=/paym/**
+              filters:
+                - StripPrefix=1
 
 eureka:
   client:
