@@ -51,27 +51,27 @@ services:
     depends_on:
       - discovery-service
       - db_mysql
-  inventory-stock-service:
-    container_name: inventary-stock-service-container
-    image: inventary-stock-service-image
+  inventory-matter-service:
+    container_name: inventory-matter-service-container
+    image: inventory-matter-service-image
     build:
       context: .
-      dockerfile: inventario-stock-servicio/Dockerfile
+      dockerfile: inventory-matter-service/Dockerfile
     ports:
-      - "${INVENTORY_SOTCK_SERVICE_PORT}:${INVENTORY_SOTCK_SERVICE_PORT}"
+      - "${INVENTORY_MATTER_SERVICE_PORT}:${INVENTORY_MATTER_SERVICE_PORT}"
     environment:
-      SERVER_PORT: ${INVENTORY_SOTCK_SERVICE_PORT}
+      SERVER_PORT: ${INVENTORY_MATTER_SERVICE_PORT}
       DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_INVENTORY_STOCK}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_INVENTORY_MATTER}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER_MAIN_DEV}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
-    depends_on:
-     - discovery-service
-     - db_mysql
-     - employee-service
+    #depends_on:
+    # - discovery-service
+    # - db_mysql
+    # - employee-service
   sale-service:
     container_name: sale-service-container
     image: sale-service-image
@@ -89,11 +89,11 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
-    depends_on:
-      - discovery-service
-      - db_mysql
-      - employee-service
-      - inventory-stock-service
+    #depends_on:
+    #  - discovery-service
+    #  - db_mysql
+    #  - employee-service
+    #  - inventory-stock-service
   authentication-service:
     container_name: authentication-service-container
     image: authentication-service-image

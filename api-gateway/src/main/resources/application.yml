@@ -27,6 +27,13 @@ spring:
                 - Path=/empl/**
               filters:
                 - StripPrefix=1
+            - id: inventory-matter-service
+              uri: lb://inventory-matter-service
+              predicates:
+                - Path=/inve/**
+              filters:
+                - StripPrefix=1
+
 eureka:
   client:
     instance:

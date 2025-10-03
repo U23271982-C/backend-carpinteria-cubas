@@ -22,6 +22,7 @@
 - Docker Compose
 - Lombok
 - MapStruct
+- Bean Validation
 
 ---
 ### Implementar Microservicio Cliente
