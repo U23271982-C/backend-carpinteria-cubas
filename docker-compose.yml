@@ -169,6 +169,23 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
+  report-service:
+    container_name: report-service-container
+    image: report-service-image
+    build:
+      context: .
+      dockerfile: report-service/Dockerfile
+    ports:
+      - "${REPORT_SERVICE_PORT}:${REPORT_SERVICE_PORT}"
+    environment:
+      SERVER_PORT: ${REPORT_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_REPORT}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER_MAIN_DEV}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASS_MAIN_DEV}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
   api-gateway:
     container_name: api-gateway-container
     image: api-gateway-image
