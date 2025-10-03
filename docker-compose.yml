@@ -152,6 +152,23 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
+  product-service:
+    container_name: product-service-container
+    image: product-service-image
+    build:
+      context: .
+      dockerfile: product-service/Dockerfile
+    ports:
+      - "${PRODUCT_SERVICE_PORT}:${PRODUCT_SERVICE_PORT}"
+    environment:
+      SERVER_PORT: ${PRODUCT_SERVICE_PORT}
+      DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL_PRODUCT}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRESQL_USER_MAIN_DEV}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRESQL_PASS_MAIN_DEV}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
   api-gateway:
     container_name: api-gateway-container
     image: api-gateway-image
