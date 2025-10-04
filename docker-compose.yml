@@ -22,6 +22,7 @@ services:
     volumes:
       - ./init/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
       - postgres_data:/var/lib/postgresql # ← Volumen Nombrado PostgreSQL
+
   discovery-service:
     container_name: discovery-service-container
     image: discovery-service-image
@@ -32,6 +33,9 @@ services:
       - "${DISCOVERY_SERVICE_PORT}:${DISCOVERY_SERVICE_PORT}"
     environment:
       SERVER_PORT: ${DISCOVERY_SERVICE_PORT}
+    depends_on:
+      - db_mysql
+      - db_postgresql
 
   employee-service:
     container_name: employee-service-container
@@ -52,7 +56,6 @@ services:
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
     depends_on:
       - discovery-service
-      - db_mysql
   inventory-matter-service:
     container_name: inventory-matter-service-container
     image: inventory-matter-service-image
@@ -70,10 +73,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
-    #depends_on:
-    # - discovery-service
-    # - db_mysql
-    # - employee-service
+    depends_on:
+     - discovery-service
   sale-service:
     container_name: sale-service-container
     image: sale-service-image
@@ -91,11 +92,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
-    #depends_on:
-    #  - discovery-service
-    #  - db_mysql
-    #  - employee-service
-    #  - inventory-stock-service
+    depends_on:
+      - discovery-service
   authentication-service:
     container_name: authentication-service-container
     image: authentication-service-image
@@ -113,13 +111,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
-    #depends_on:
-    #  - discovery-service
-    #  - db_mysql
-    #  - employee-service
-    #  - inventory-stock-service
-    #  - sale-service
-    # cuando se termine de probar todos los microservicios, se debe comentar la dependencia de los servicios
+    depends_on:
+      - discovery-service
   customer-service:
     container_name: customer-service-container
     image: customer-service-image
@@ -137,6 +130,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
+    depends_on:
+      - discovery-service
   payment-gateway-service:
     container_name: payment-gateway-service-container
     image: payment-gateway-service-image
@@ -154,6 +149,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
+    depends_on:
+      - discovery-service
   product-service:
     container_name: product-service-container
     image: product-service-image
@@ -171,6 +168,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT_POSTGRESQL}
+    depends_on:
+      - discovery-service
   report-service:
     container_name: report-service-container
     image: report-service-image
@@ -188,6 +187,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${DDL_AUTO}
       SPRING_JPA_SHOW_SQL: ${SHOW_SQL}
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ${DIALECT}
+    depends_on:
+      - discovery-service
 
   api-gateway:
     container_name: api-gateway-container
@@ -200,13 +201,18 @@ services:
     environment:
       SERVER_PORT: ${API_GATEWAY_SERVICE_PORT}
       DISCOVERY_SERVER_URL: ${DISCOVERY_SERVICE_EXTERNAL_URL}
-    #depends_on:
-    ## por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
-    #  - discovery-service
-    #  - employee-service
-    #  - inventory-stock-service
-    #  - sale-service
-    #  - authentication-service
+    depends_on:
+    # por cada microservicio cliente que se conecte a la API gateway, se debe agregar una dependencia
+      - discovery-service
+      - employee-service
+      - inventory-matter-service
+      - sale-service
+      - authentication-service
+      - customer-service
+      - payment-gateway-service
+      - product-service
+      - report-service
+
 volumes:
   mysql_data:
   postgres_data:
