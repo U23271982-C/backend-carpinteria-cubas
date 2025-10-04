@@ -1,7 +1,10 @@
 services:
   db_mysql:
     container_name: db_mysql_container
-    image: mysql:8.0
+    image: db_mysql_container
+    build:
+      context: ./db/mysql
+      dockerfile: Dockerfile.mysql
     ports:
       - "${SERVICE_MYSQL_PORT}:${SERVICE_MYSQL_PORT}"
     environment:
@@ -9,8 +12,13 @@ services:
       MYSQL_DATABASE: ${SERVICE_MYSQL_DATABASE}
       MYSQL_ALLOW_EMPTY_PASSWORD: no
     volumes:
-      - ./init/init-mysql.sql:/docker-entrypoint-initdb.d/init-mysql.sql
       - mysql_data:/var/lib/mysql # ← Volumen Nombrado
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-proot" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
   db_postgresql:
     container_name: db_postgresql_container
     image: postgres:16
