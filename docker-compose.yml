@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: ${SERVICE_MYSQL_DATABASE}
       MYSQL_ALLOW_EMPTY_PASSWORD: no
     volumes:
+      - ./init/init-mysql.sql:/docker-entrypoint-initdb.d/init-mysql.sql
       - mysql_data:/var/lib/mysql # ← Volumen Nombrado
   db_postgresql:
     container_name: db_postgresql_container
@@ -19,6 +20,7 @@ services:
       POSTGRES_USER: ${POSTGRESQL_USER_MAIN_DEV}
       POSTGRES_PASSWORD: ${POSTGRESQL_PASS_MAIN_DEV}
     volumes:
+      - ./init/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
       - postgres_data:/var/lib/postgresql # ← Volumen Nombrado PostgreSQL
   discovery-service:
     container_name: discovery-service-container
