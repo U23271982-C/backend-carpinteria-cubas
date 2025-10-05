@@ -1,7 +1,7 @@
 services:
   db_mysql:
     container_name: db_mysql_container
-    image: db_mysql_container
+    image: db_mysql_image_bk_carpentry
     build:
       context: ./db/mysql
       dockerfile: Dockerfile.mysql
@@ -14,22 +14,30 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql # ← Volumen Nombrado
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-proot" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u${MYSQL_USER_MAIN_DEV}", "-p${MYSQL_PASS_MAIN_DEV}" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 20s
   db_postgresql:
     container_name: db_postgresql_container
-    image: postgres:16
+    image: db_postgres_image_bk_carpentry
+    build:
+      context: ./db/postgres
+      dockerfile: Dockerfile.postgres
     ports:
       - "${SERVICE_POSTGRESQL_PORT}:${SERVICE_POSTGRESQL_PORT}"
     environment:
       POSTGRES_USER: ${POSTGRESQL_USER_MAIN_DEV}
       POSTGRES_PASSWORD: ${POSTGRESQL_PASS_MAIN_DEV}
     volumes:
-      - ./init/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
       - postgres_data:/var/lib/postgresql # ← Volumen Nombrado PostgreSQL
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   discovery-service:
     container_name: discovery-service-container
@@ -42,8 +50,10 @@ services:
     environment:
       SERVER_PORT: ${DISCOVERY_SERVICE_PORT}
     depends_on:
-      - db_mysql
-      - db_postgresql
+      db_mysql:
+          condition: service_healthy
+      db_postgresql:
+        condition: service_healthy
 
   employee-service:
     container_name: employee-service-container
