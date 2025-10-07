@@ -3,6 +3,7 @@ package com.content.sale_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -32,6 +33,31 @@ public class Sale {
     private double subtotal;
     @Column(name = "total")
     private double total;
+
+    /**
+     * categoria de la venta (prefabricado/personalizado)
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sale_category_id", nullable = false)
+    private SaleCategory sale_category;
+
+    /**
+     * Fecha estimada de entrega de la venta
+     */
+    @Column(name = "sale_delivery_date")
+    private LocalDate sale_delivery_date;
+
+    /**
+     * Monto del anticipo de la venta
+     */
+    @Column(name = "sale_start_payment")
+    private BigDecimal sale_start_payment;
+
+    /**
+     * Monto del pago final de la venta
+     */
+    @Column(name = "sale_final_payment")
+    private BigDecimal sale_final_payment;
 
     /**
      * id_cliente del microservicio customer-service
