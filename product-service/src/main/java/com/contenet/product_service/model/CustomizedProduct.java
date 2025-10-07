@@ -26,7 +26,7 @@ public class CustomizedProduct {
     @JoinColumn(name = "product_base_id", nullable = false)
     private ProductBase product_base_id;
 
-    @Column(name = "customized_product_name", nullable = false, length = 100)
+    @Column(name = "customized_product_specification", nullable = false, length = 100)
     private String specification;
     @Column(name = "stimated_time_hours", nullable = false)
     private Integer stimated_time_hours;
