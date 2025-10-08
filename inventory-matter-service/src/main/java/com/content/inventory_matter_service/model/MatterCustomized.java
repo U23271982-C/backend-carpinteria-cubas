@@ -11,9 +11,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class MatterCustomized {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer matter_customized_id;
 
     @OneToOne
     @JoinColumn(name = "matter_id", nullable = false, unique = true)
@@ -26,6 +27,6 @@ public class MatterCustomized {
     private Integer min_stock;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="state_id", nullable = false)
+    @JoinColumn(name="state_entity_id", nullable = false)
     private StateEntity state_entity;
 }
