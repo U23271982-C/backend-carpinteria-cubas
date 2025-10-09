@@ -1,46 +1,63 @@
 package com.content.employee_service.dto.Request;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-import com.content.employee_service.model.Contact;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 /**
  * Data Transfer Object para la entidad Employee.
  * Este DTO incluye lista de las entidades relaciones.
  */
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class EmployeeRequestDTO {
 
-    private Integer id;
+    // Nombre del empleado
+    @Size(min = 1, max = 100, message = "El nombre del empleado debe tener entre 2 y 100 caracteres")
+    @NotBlank(message = "El nombre del empleado es obligatorio")
+    private String employee_name;
 
-    private String firtsname_Employee;
+    // Apellidos del empleado
+    @Size(min = 1, max = 100, message = "Los apellidos del empleado debe tener entre 2 y 100 caracteres")
+    @NotBlank(message = "Los apellidos del empleado es obligatorio")
+    private String employee_last_name;
 
-    private String lastname_Employee;
+    // Fecha de nacimiento del empleado
+    @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
+    @NotNull(message = "La fecha de nacimiento no puede ser nulo")
+    private LocalDateTime birth_date;
 
-    private LocalDateTime date_Birth;
+    // Fecha de registro del empleado
+    @NotBlank(message = "El DNI es obligatorio")
+    @Size(min = 8, max = 8, message = "El DNI debe tener exactamente 8 dígitos")
+    @Pattern(regexp = "\\d{8}", message = "El DNI debe contener solo números")
+    private String identification_number;
 
-    private LocalDateTime date_Admission;
+    // ID del tipo de identificación del empleado
+    @Positive(message = "El ID del tipo de identificación debe ser un número positivo")
+    @NotNull(message = "El ID del tipo de identificación no puede ser nulo")
+    private Integer identification_type_id;
 
-    private String address_Employee;
+    // ID del cargo del empleado
+    @NotNull(message = "El ID del cargo no puede ser nulo")
+    @Positive(message = "El ID del cargo debe ser un número positivo")
+    private Integer post_id;
 
-    private Integer id_Distric;
+    // ID del contrato del empleado
+    @NotNull(message = "El ID del contrato no puede ser nulo")
+    @Positive(message = "El ID del contrato debe ser un número positivo")
+    private Integer contract_id;
 
-    private Integer id_Position;
+    // ID del distrito del empleado
+    @NotNull(message = "El ID del distrito no puede ser nulo")
+    @Positive(message = "El ID del distrito debe ser un número positivo")
+    private Integer distric_id;
 
-    private Integer id_Identification;
+    // Dirección de email del empleado
+    @Email(message = "La dirección de email debe ser válida")
+    @NotBlank(message = "La dirección de email es obligatoria")
+    private String direction_email;
 
-    private Integer id_Contract;
-
-    private List<Contact> contacts;
-
-    private Integer id_State;
 }
