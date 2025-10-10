@@ -1,9 +1,8 @@
 package com.content.employee_service.service;
 
-import com.content.employee_service.dto.Request.EmployeeRequestDTO;
-import com.content.employee_service.dto.Response.EmployeeResponseDTO;
+import com.content.employee_service.dto.request.EmployeeRequestDTO;
+import com.content.employee_service.dto.response.EmployeeResponseDTO;
 import com.content.employee_service.mapper.mapperImpl.EmployeeMapper;
-import com.content.employee_service.repository.EmployeeRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

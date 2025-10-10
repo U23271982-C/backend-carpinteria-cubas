@@ -1,4 +1,4 @@
-package com.content.employee_service.dto.Request;
+package com.content.employee_service.dto.request;
 
 import java.time.LocalDateTime;
 import jakarta.validation.constraints.*;

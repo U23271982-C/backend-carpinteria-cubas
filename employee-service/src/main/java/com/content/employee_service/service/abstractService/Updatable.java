@@ -2,8 +2,8 @@ package com.content.employee_service.service.abstractService;
 
 /**
  *
- * @param <DRQ> Request DTO
- * @param <DRE> Response DTO
+ * @param <DRQ> request DTO
+ * @param <DRE> response DTO
  */
 public interface Updatable<DRQ,DRE> {
     DRE update(int id, DRQ dto);

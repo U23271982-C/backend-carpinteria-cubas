@@ -1,7 +1,7 @@
 package com.content.employee_service.mapper.mapperImpl;
 
-import com.content.employee_service.dto.Request.EmployeeRequestDTO;
-import com.content.employee_service.dto.Response.EmployeeResponseDTO;
+import com.content.employee_service.dto.request.EmployeeRequestDTO;
+import com.content.employee_service.dto.response.EmployeeResponseDTO;
 import com.content.employee_service.mapper.convert.Convert;
 import com.content.employee_service.model.Employee;
 import org.mapstruct.Mapper;
