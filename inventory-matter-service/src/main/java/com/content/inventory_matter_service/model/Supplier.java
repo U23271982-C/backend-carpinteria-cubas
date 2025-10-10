@@ -15,18 +15,31 @@ import java.util.List;
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer supplier_id;
 
-    @Column(name = "supplier_name", nullable = false, length = 100)
-    private String name_Supplier;
+    @Column(name = "supplier_name", nullable = false, length = 11)
+    private String supplier_name;
+
+    @Column(name = "description", nullable = false, length = 100)
+    private String description;
 
     @Column(name = "ruc", nullable = false, length = 11)
     private String ruc;
 
-    @Column(name = "cell", nullable = false, length = 9)
-    private String cell;
+    @Column(name = "phone_number", nullable = false, length = 9)
+    private String phone_number;
 
-    // mappedBy debe ser el atributo en MatterSupplier
+    @Column(name = "direction", nullable = false, length = 100)
+    private String direction;
+
+    @Column(name = "email", nullable = false, length = 9)
+    private String email;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "supplier_type_id", nullable = false)
+    private SupplierType supplier_type_id;
+
+    //Relations
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MatterSupplier> matterSuppliers;
 

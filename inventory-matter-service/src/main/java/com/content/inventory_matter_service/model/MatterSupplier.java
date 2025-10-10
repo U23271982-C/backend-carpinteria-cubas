@@ -3,6 +3,7 @@ package com.content.inventory_matter_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -13,9 +14,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class MatterSupplier {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer matter_supplier_id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name= "supplier_id", nullable = false)
@@ -26,13 +28,10 @@ public class MatterSupplier {
     private Matter matter;
 
     @Column(name = "unit_price", nullable = false)
-    private double unit_price;
+    private BigDecimal unit_price;
 
-    @Column(name = "time_delivery", nullable = false)
-    private Integer time_delivery;
-
-    @Column(name = "observation", nullable = false, length = 100)
-    private String observation;
+    @Column(name = "delivery_time_days", nullable = false)
+    private Integer delivery_time_days;
 
     @Column(name = "log_date")
     private LocalDate log_date;
@@ -41,6 +40,6 @@ public class MatterSupplier {
     private LocalDate update_date;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="state_id", nullable = false)
+    @JoinColumn(name="state_entity_id", nullable = false)
     private StateEntity state_entity;
 }

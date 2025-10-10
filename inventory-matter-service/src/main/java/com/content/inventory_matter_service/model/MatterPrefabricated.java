@@ -11,13 +11,14 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class MatterPrefabricated {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer matter_prefabricated_id;
 
     @OneToOne
     @JoinColumn(name = "matter_id", nullable = false, unique = true)
-    private Matter matter;   // ✅ same correction
+    private Matter matter;
 
     @Column(name = "currently_stock", nullable = false)
     private Integer currently_stock;
@@ -26,7 +27,7 @@ public class MatterPrefabricated {
     private Integer min_stock;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="state_id", nullable = false)
+    @JoinColumn(name="state_entity_id", nullable = false)
     private StateEntity state_entity;
 }
 

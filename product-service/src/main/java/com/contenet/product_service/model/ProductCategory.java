@@ -21,7 +21,8 @@ public class ProductCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
-    private Integer id;
+    @Column(name = "product_category_id")
+    private Integer product_category_id;
 
     @Column(name = "product_category_name", nullable = false, length = 100)
     private String product_category_name;

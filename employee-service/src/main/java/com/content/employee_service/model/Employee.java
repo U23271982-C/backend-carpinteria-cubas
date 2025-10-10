@@ -48,8 +48,8 @@ public class Employee {
     @JoinColumn(name = "distric_id", nullable = false)
     private Distric distric_id;
 
-    @Column(name = "direction_email", nullable = false)
-    private String direction_email;
+    @Column(name = "direction_name", nullable = false)
+    private String direction_name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)

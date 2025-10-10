@@ -13,18 +13,19 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class MatterState {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer matter_state_id;
 
     @Column(name = "matter_state_name", nullable = false)
     private String matter_state_name;
 
+    // mappedBy debe ser el nombre del atributo en Matter
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="state_id", nullable = false)
+    @JoinColumn(name="state_entity_id", nullable = false)
     private StateEntity state_entity;
 
-    // mappedBy debe ser el nombre del atributo en Matter
     @OneToMany(mappedBy = "matter_state", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Matter> matter;
 }

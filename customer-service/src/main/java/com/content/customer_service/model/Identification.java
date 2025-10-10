@@ -22,8 +22,8 @@ public class Identification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer identification_id;
 
-    @Column(name = "identification_name", nullable = false, length = 50)
-    private String identification_name;
+    @Column(name = "identification_doc", nullable = false, length = 50)
+    private String identification_doc;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "identification_type_id", nullable = false)

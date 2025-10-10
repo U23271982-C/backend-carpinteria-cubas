@@ -16,16 +16,16 @@ public class MatterType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer matter_id;
 
-    @Column(name = "mattertype_name", nullable = false)
-    private String mattertype_name;
+    @Column(name = "matter_type_name", nullable = false)
+    private String matter_type_name;
 
     // mappedBy debe coincidir con el atributo en Matter
     @OneToMany(mappedBy = "matter_type", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Matter> matter;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="state_id", nullable = false)
+    @JoinColumn(name="state_entity_id", nullable = false)
     private StateEntity state_entity;
 }

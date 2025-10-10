@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class StateEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -19,6 +20,7 @@ public class StateEntity {
     @Column(name = "state", nullable = false, length = 100)
     private String name_State;
 
+    // Relations
     @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Matter> matters;
 
@@ -38,15 +40,9 @@ public class StateEntity {
     private List<MatterType> matters_type;
 
     @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockCustomized> movement_stock_customized;
-
-    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockPrefabricated> movement_stock_prefabricated;
-
-    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementType> movement_types;
-
-    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Supplier> suppliers;
+
+    @OneToMany(mappedBy = "state_entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SupplierType> supplier_type;
 }
 

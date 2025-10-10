@@ -2,6 +2,8 @@ package com.content.inventory_matter_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -20,10 +22,13 @@ public class Matter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer matter_id;
 
     @Column(name = "matter_name", nullable = false, length = 100)
     private String matter_name;
+
+    @Column(name = "description", nullable = false, length = 100)
+    private String description;
 
     @Column(name = "path_image", nullable = false, length = 100)
     private String path_image;
@@ -36,31 +41,25 @@ public class Matter {
     @JoinColumn(name = "matter_state_id", nullable = false)
     private MatterState matter_state;
 
-    @Column(name = "description", nullable = false, length = 100)
-    private String description;
-
     @Column(name = "cost", nullable = false)
-    private double cost;
+    private BigDecimal cost;
 
     @Column(name = "unit_measure", nullable = false)
     private double unit_measure;
 
+    @Column(name = "general_stock", nullable = false)
+    private int general_stock;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="state_id", nullable = false)
+    @JoinColumn(name="state_entity_id", nullable = false)
     private StateEntity state_entity;
 
-    // ✅ Correct bidirectional One-to-One
+    //Relations
     @OneToOne(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MatterCustomized matter_customized;
 
     @OneToOne(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MatterPrefabricated matter_prefabricated;
-
-    @OneToMany(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockPrefabricated> movement_stock_prefabricated;
-
-    @OneToMany(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovementStockCustomized> movement_stock_customized;
 
     @OneToMany(mappedBy = "matter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<MatterSupplier> matter_supplier;
