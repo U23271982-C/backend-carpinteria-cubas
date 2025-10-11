@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UserEmployeeRequestDTO {
+public class UserClientRequestDTO {
 
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El formato del email no es válido")
