@@ -1,4 +1,4 @@
-package com.content.sale_service.execption;
+package com.content.employee_service.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

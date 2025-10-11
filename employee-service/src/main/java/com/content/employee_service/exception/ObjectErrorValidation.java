@@ -1,4 +1,4 @@
-package com.content.sale_service.execption;
+package com.content.employee_service.exception;
 
 /**
  * Clase que sirve como DTO, para transportar los errores de validaciones

@@ -4,6 +4,7 @@ import com.content.employee_service.dto.request.EmployeeRequestDTO;
 import com.content.employee_service.dto.response.EmployeeResponseDTO;
 import com.content.employee_service.mapper.mapperImpl.EmployeeMapper;
 import com.content.employee_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -14,10 +15,12 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
 
     //private final EmployeeRepository employeeRepository;
     //private final EmployeeMapper employeeMapper;
-    EmployeeMapper employeeMapper;
+    private final EmployeeMapper employeeMapper;
 
+    @Transactional
     @Override
     public EmployeeResponseDTO create(EmployeeRequestDTO dto) {
+
         return null;
     }
 

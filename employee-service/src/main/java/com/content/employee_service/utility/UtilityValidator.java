@@ -1,12 +1,15 @@
 package com.content.employee_service.utility;
 
+import com.content.employee_service.exception.EValidation;
+import com.content.employee_service.exception.ObjectErrorValidation;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
-
-public class ValidatorUtility {
+@Component
+public class UtilityValidator {
     //@Autowired
     private final Validator validator;
 

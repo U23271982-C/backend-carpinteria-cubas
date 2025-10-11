@@ -1,4 +1,4 @@
-package com.content.sale_service.execption;
+package com.content.employee_service.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import java.util.Arrays;
 public enum MappingExecption {
 
     VALIDACION_EXECPTION(EValidation.class, "Error de validación", HttpStatus.BAD_REQUEST),
-    SERVICES_CLIENTS(EFeignClientCustomerNotFound.class, "Error del microservicio cliente", HttpStatus.SERVICE_UNAVAILABLE),
     GENERIC(Exception.class, "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final Class<? extends Exception> errorType;
