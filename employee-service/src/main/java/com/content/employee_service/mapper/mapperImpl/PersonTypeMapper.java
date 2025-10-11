@@ -4,7 +4,9 @@ import com.content.employee_service.dto.request.PersonTypeRequestDTO;
 import com.content.employee_service.dto.response.PersonTypeResponseDTO;
 import com.content.employee_service.mapper.convert.Convert;
 import com.content.employee_service.model.PersonType;
+import org.mapstruct.Mapper;
 
+@Mapper(componentModel = "spring")
 public interface PersonTypeMapper
         extends Convert<PersonType, PersonTypeRequestDTO, PersonTypeResponseDTO> {
     @Override

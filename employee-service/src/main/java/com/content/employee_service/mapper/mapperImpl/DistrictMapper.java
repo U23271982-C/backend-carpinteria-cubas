@@ -4,7 +4,9 @@ import com.content.employee_service.dto.request.DistrictRequestDTO;
 import com.content.employee_service.dto.response.DistrictResponseDTO;
 import com.content.employee_service.mapper.convert.Convert;
 import com.content.employee_service.model.Distric;
+import org.mapstruct.Mapper;
 
+@Mapper(componentModel = "spring")
 public interface DistrictMapper
         extends Convert<Distric, DistrictRequestDTO, DistrictResponseDTO> {
     @Override

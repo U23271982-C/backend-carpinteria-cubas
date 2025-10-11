@@ -4,7 +4,9 @@ import com.content.employee_service.dto.request.PostRequestDTO;
 import com.content.employee_service.dto.response.PostResponseDTO;
 import com.content.employee_service.mapper.convert.Convert;
 import com.content.employee_service.model.Post;
+import org.mapstruct.Mapper;
 
+@Mapper(componentModel = "spring")
 public interface PostMapper
         extends Convert<Post, PostRequestDTO, PostResponseDTO> {
     @Override
