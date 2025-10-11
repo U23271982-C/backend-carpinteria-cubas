@@ -1,4 +1,7 @@
 package com.content.authentication_service.repository;
 
-public interface UserClientRepository {
+import com.content.authentication_service.model.UserClient;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserClientRepository extends JpaRepository<UserClient,Integer> {
 }
