@@ -4,12 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
-/**
- * Entidad que representa las sesiones de los usuarios en el sistema.
- * Incluye detalles como la fecha de la sesión, si fue exitosa y la dirección IP.
- * Las relaciones están configuradas para carga perezosa.
- */
-
 @Entity
 @Table(name = "Session")
 @Getter
@@ -24,18 +18,19 @@ public class Session {
     private Integer session_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientsession_id", nullable = false)
-    private User user_id;
+    @JoinColumn(name = "user_employee_id", nullable = false)
+    private UserEmployee user_employee_id;
 
-    @Column(name = "session_date", nullable = false)
-    private LocalDateTime session_date;
-    @Column(name = "success", nullable = false)
-    private boolean success;
-    @Column(name = "address_ip", length = 16)
-    private String address_ip;
+    @Column(name = "sesion_date")
+    private LocalDateTime sesion_date;
+
+    @Column(name="succesed")
+    private Boolean succesed;
+
+    @Column(name="ip_address", length = 100)
+    private String ip_address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
-
 }

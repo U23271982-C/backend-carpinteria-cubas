@@ -4,12 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
-/**
- * Entidad que representa a los clientes de usuario en el sistema.
- * Incluye detalles como nombre, fecha de nacimiento y edad.
- * Las relaciones están configuradas para carga perezosa y cascada en todas las operaciones.
- */
-
 @Entity
 @Table(name = "UserClient")
 @Getter
@@ -23,19 +17,22 @@ public class UserClient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_client_id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
-    private User user_id;
+    @Column(name = "fire_base_uid", nullable = false, unique = true, length = 128)
+    private String fire_base_uid;
 
-    @Column(name = "user_client_name", nullable = false, length = 100)
-    private String user_client_name;
-    @Column(name = "user_client_birth_date", nullable = false, length = 100)
-    private LocalDateTime user_client_birth_date;
-    @Column(name = "user_client_age", nullable = false)
-    private Integer user_client_age;
+    @Column(name = "userclient_email", length = 100)
+    private String user_client_email;
+
+    @Column(name="userclient_full_name", length = 100)
+    private String user_client_full_name;
+
+    @Column(name = "user_client_phone", length = 20)
+    private String user_client_phone;
+
+    @Column(name = "user_client_address")
+    private String user_client_address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
-
 }

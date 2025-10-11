@@ -2,13 +2,8 @@ package com.content.authentication_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 import java.util.List;
-
-/**
- * Entidad que representa un permiso en el sistema.
- * Un permiso puede ser asignado a múltiples roles.
- * Las relaciones están configuradas para carga perezosa y cascada en todas las operaciones.
- */
 
 @Entity
 @Table(name = "Permission")
@@ -23,10 +18,11 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer permission_id;
 
-    @Column(name = "permission_name", nullable = false, length = 50)
+    @Column(name = "permission_name", length = 100)
     private String permission_name;
-    @Column(name = "description", nullable = false, length = 100)
-    private String description;
+
+    @Column(name = "permission_description", length = 100)
+    private String permission_description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
