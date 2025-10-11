@@ -1,10 +1,14 @@
-package com.content.authentication_service.mapper.mapperImpl;
+package com.content.authentication_service.mapper;
 
+import com.content.authentication_service.dto.request.UserClientRequestDTO;
+import com.content.authentication_service.dto.response.UserClientResponseDTO;
+import com.content.authentication_service.mapper.convert.Convert;
 import com.content.authentication_service.model.UserClient;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-public interface UserClientMapper {
+public interface UserClientMapper
+        extends Convert<UserClient, UserClientRequestDTO, UserClientResponseDTO> {
     @Override
     @Mappings({
             // Mapea el campo `state_entity_name` del objeto anidado a `state` en el DTO.
@@ -14,7 +18,7 @@ public interface UserClientMapper {
             @Mapping(source = "user_client_phone", target = "phone"),
             @Mapping(source = "user_client_address", target = "address")
     })
-    UserClientResponse toDTO(UserClient model);
+    UserClientResponseDTO toDTO(UserClient model);
 
     @Override
     @Mappings({
@@ -27,5 +31,5 @@ public interface UserClientMapper {
             @Mapping(source = "phone", target = "user_client_phone"),
             @Mapping(source = "address", target = "user_client_address")
     })
-    UserClient toModel(UserClientRequest dto);
+    UserClient toModel(UserClientRequestDTO dto);
 }
