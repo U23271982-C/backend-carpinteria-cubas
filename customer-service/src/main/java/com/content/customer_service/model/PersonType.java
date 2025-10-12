@@ -29,7 +29,7 @@ public class PersonType {
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
 
-    @OneToMany(mappedBy = "personType", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "person_type_id", fetch = FetchType.LAZY)
     private List<IdentificationType> identification_type_id;
 
 }
