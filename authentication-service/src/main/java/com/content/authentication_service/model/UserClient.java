@@ -18,7 +18,7 @@ public class UserClient {
     private Integer user_client_id;
 
     @Column(name = "fire_base_uid", nullable = false, unique = true, length = 128)
-    private String fire_base_uid;
+    private String fireBaseUid;
 
     @Column(name = "userclient_email", length = 100)
     private String user_client_email;
@@ -31,6 +31,9 @@ public class UserClient {
 
     @Column(name = "user_client_address")
     private String user_client_address;
+
+    @Column(name = "user_client_created_at", nullable = false)
+    private LocalDateTime user_client_created_at;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
