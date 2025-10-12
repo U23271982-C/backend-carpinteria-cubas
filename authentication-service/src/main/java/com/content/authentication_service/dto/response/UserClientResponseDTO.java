@@ -14,4 +14,5 @@ public class UserClientResponseDTO {
     private String phone;
     private String address;
     private String state; // Devolvemos solo el nombre del estado para simplicidad.
+    private String createdAt;
 }
