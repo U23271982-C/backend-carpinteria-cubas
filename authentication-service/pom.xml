@@ -89,9 +89,8 @@
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
+            <artifactId>mapstruct</artifactId>
             <version>1.5.5.Final</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -109,6 +108,12 @@
                         <path>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
+                        </path>
+                        <!--Procesadora anotación MapStruct-->
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.5.5.Final</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
