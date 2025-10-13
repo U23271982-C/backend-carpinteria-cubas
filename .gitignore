@@ -35,3 +35,6 @@ build/
 .DS_Store
 ### Test - Main Point ###
 sale-service/src/main/java/com/content/sale_service/AppMain.java
+
+### ApiKey FireBase Admin SDK ###
+src/main/resources/firebase/carpinteriacubas-6bd84-firebase-adminsdk-fbsvc-e19c915056.json

@@ -1,0 +1,28 @@
+package com.content.authentication_service.mapper;
+
+import com.content.authentication_service.dto.request.UserClientRequestDTO;
+import com.content.authentication_service.dto.response.UserClientResponseDTO;
+import com.content.authentication_service.mapper.convert.Convert;
+import com.content.authentication_service.model.UserClient;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring")
+public interface UserClientMapper extends Convert<UserClient, UserClientRequestDTO, UserClientResponseDTO> {
+
+    UserClientMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(UserClientMapper.class);
+
+    @Override
+    UserClientResponseDTO toDTO(UserClient modelo);
+
+    @Mapping(target = "user_client_id", ignore = true)
+    @Mapping(target = "fireBaseUid", source = "firebaseUid") // Mapeamos el firebaseUid del DTO
+    @Mapping(target = "user_client_email", source = "email")
+    @Mapping(target = "user_client_full_name", source = "fullName")
+    @Mapping(target = "user_client_phone", source = "phone")
+    @Mapping(target = "user_client_address", source = "address")
+    @Mapping(target = "state_entity_id", ignore = true)
+    @Mapping(target = "user_client_created_at", expression = "java(java.time.LocalDateTime.now())")
+    @Override
+    UserClient toModel(UserClientRequestDTO dto);
+}
