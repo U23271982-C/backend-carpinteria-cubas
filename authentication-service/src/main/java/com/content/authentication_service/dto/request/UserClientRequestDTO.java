@@ -13,13 +13,12 @@ import lombok.Setter;
 @Builder
 public class UserClientRequestDTO {
 
+    @NotBlank(message = "El UID de Firebase es obligatorio")
+    private String firebaseUid;
+
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El formato del email no es válido")
     private String email;
-
-    @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    private String password;
 
     @NotBlank(message = "El nombre completo es obligatorio")
     @Pattern(regexp = "^[\\p{L} ]+$", message = "El nombre completo solo puede contener letras y espacios")
