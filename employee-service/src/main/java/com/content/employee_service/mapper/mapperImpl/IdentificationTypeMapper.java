@@ -10,10 +10,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface IdentificationTypeMapper
         extends Convert<IdentificationType, IdentificationTypeRequestDTO, IdentificationTypeResponseDTO> {
+    @Mapping(target = "identification_type_name", source = "identification_type_name")
     @Mapping(target = "person_type_id", source = "person_type_id.person_type_id")
     @Override
     IdentificationTypeResponseDTO toDTO(IdentificationType model);
 
+    @Mapping(target = "identification_type_name", source = "identification_type_name")
+    @Mapping(target = "person_type_id.person_type_id", source = "person_type_id")
     @Override
     IdentificationType toModel(IdentificationTypeRequestDTO dto);
 }

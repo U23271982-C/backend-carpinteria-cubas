@@ -16,6 +16,9 @@ public interface ContactMapper
     @Override
     ContactResponseDTO toDTO(Contact model);
 
+    @Mapping(target = "employee_id.employee_id", source = "employee_id")
+    @Mapping(target = "phone_number", source = "phone_number")
+    @Mapping(target = "email", source = "email")
     @Override
     Contact toModel(ContactRequestDTO dto);
 }
