@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuarios - Carpintería Cubas</title>
+    <style>
+        /* (Mantener los mismos estilos del anterior) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-google {
+            background: #db4437;
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            color: #666;
+            position: relative;
+        }
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e1e5e9;
+        }
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .user-info.active {
+            display: block;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .user-details {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .user-details div {
+            margin-bottom: 5px;
+        }
+        .debug-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Registro de Usuario</h1>
+
+    <div id="errorMessage" class="error-message"></div>
+    <div id="successMessage" class="success-message"></div>
+
+    <div id="userInfo" class="user-info">
+        <h3>Usuario Autenticado</h3>
+        <div class="user-details">
+            <div><strong>Email:</strong> <span id="userEmail"></span></div>
+            <div><strong>UID:</strong> <span id="userUid"></span></div>
+        </div>
+    </div>
+
+    <div id="authSection">
+        <button id="googleSignIn" class="btn btn-google">
+            Registrarse con Google
+        </button>
+
+        <div class="divider">
+            <span>O regístrate con email</span>
+        </div>
+
+        <form id="emailSignUpForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" required minlength="6">
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Registrarse con Email
+            </button>
+        </form>
+    </div>
+
+    <form id="userDataForm" style="display: none;">
+        <div class="form-group">
+            <label for="fullName">Nombre Completo:</label>
+            <input type="text" id="fullName" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Teléfono:</label>
+            <input type="tel" id="phone">
+        </div>
+        <div class="form-group">
+            <label for="address">Dirección:</label>
+            <textarea id="address"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            Completar Registro
+        </button>
+    </form>
+
+    <div id="apiTestSection" style="margin-top: 30px; display: none;">
+        <h3>Prueba de APIs</h3>
+        <button id="listUsers" class="btn" style="background: #28a745; color: white; margin-bottom: 10px;">
+            Listar Usuarios
+        </button>
+        <div id="usersList"></div>
+    </div>
+
+    <div id="debugInfo" class="debug-info">
+        <h4>Información de Debug:</h4>
+        <div id="debugContent"></div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithPopup,
+        GoogleAuthProvider,
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCa9nCTVImXDexo-A0Qh-XKzUyK4eIErMc",
+        authDomain: "carpinteriacubas-6bd84.firebaseapp.com",
+        projectId: "carpinteriacubas-6bd84",
+        storageBucket: "carpinteriacubas-6bd84.firebasestorage.app",
+        messagingSenderId: "411158338165",
+        appId: "1:411158338165:web:ed98c0d5f9b609a1c1363c",
+        measurementId: "G-8PK0KP4N59"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // Elementos DOM
+    const authSection = document.getElementById('authSection');
+    const userDataForm = document.getElementById('userDataForm');
+    const userInfo = document.getElementById('userInfo');
+    const userEmail = document.getElementById('userEmail');
+    const userUid = document.getElementById('userUid');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
+    const apiTestSection = document.getElementById('apiTestSection');
+    const usersList = document.getElementById('usersList');
+    const debugInfo = document.getElementById('debugInfo');
+    const debugContent = document.getElementById('debugContent');
+
+    // URL base de tu API - PRUEBA DIFERENTES OPCIONES
+    const API_BASE_URL = 'http://localhost:8080/auth/api/user-clients';
+    // Alternativas si la anterior no funciona:
+    // const API_BASE_URL = 'http://127.0.0.1:8080/api/user-clients';
+    // const API_BASE_URL = '/api/user-clients'; // Si usas proxy
+
+    // Mostrar mensaje de error
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+    }
+
+    // Mostrar mensaje de éxito
+    function showSuccess(message) {
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+    }
+
+    // Ocultar mensajes
+    function hideMessages() {
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+    }
+
+    // Mostrar información de debug
+    function showDebugInfo(info) {
+        debugContent.innerHTML = info;
+        debugInfo.style.display = 'block';
+    }
+
+    // Función mejorada para hacer fetch con manejo de errores
+    async function apiCall(url, options = {}) {
+        try {
+            showDebugInfo(`Enviando petición a: ${url}<br>Método: ${options.method || 'GET'}`);
+
+            const response = await fetch(url, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers,
+                },
+            });
+
+            showDebugInfo(`Respuesta recibida: ${response.status} ${response.statusText}`);
+
+            if (!response.ok) {
+                let errorText = 'Error en el servidor';
+                try {
+                    errorText = await response.text();
+                } catch (e) {
+                    errorText = `Error ${response.status}: ${response.statusText}`;
+                }
+                throw new Error(errorText);
+            }
+
+            return await response.json();
+        } catch (error) {
+            showDebugInfo(`Error en fetch: ${error.message}`);
+            throw error;
+        }
+    }
+
+    // Registro con Google
+    document.getElementById('googleSignIn').addEventListener('click', async () => {
+        try {
+            hideMessages();
+            showDebugInfo('Iniciando autenticación con Google...');
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+
+            showUserInfo(user);
+            showSuccess('Autenticación con Google exitosa. Complete sus datos para finalizar el registro.');
+            showDebugInfo(`Usuario autenticado: ${user.email}, UID: ${user.uid}`);
+
+            // Prellenar datos si están disponibles en Google
+            if (user.displayName) {
+                document.getElementById('fullName').value = user.displayName;
+            }
+        } catch (error) {
+            showError('Error en autenticación con Google: ' + error.message);
+            showDebugInfo(`Error en Google Auth: ${error.message}`);
+        }
+    });
+
+    // Registro con email y contraseña
+    document.getElementById('emailSignUpForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            hideMessages();
+            showDebugInfo(`Creando usuario con email: ${email}`);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            showUserInfo(user);
+            showSuccess('Cuenta creada exitosamente. Complete sus datos para finalizar el registro.');
+            showDebugInfo(`Usuario creado: ${user.email}, UID: ${user.uid}`);
+        } catch (error) {
+            showError('Error al crear cuenta: ' + error.message);
+            showDebugInfo(`Error en creación de usuario: ${error.message}`);
+        }
+    });
+
+    // Envío de datos completos a tu API
+    document.getElementById('userDataForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const user = auth.currentUser;
+        if (!user) {
+            showError('No hay usuario autenticado');
+            return;
+        }
+
+        const userData = {
+            firebaseUid: user.uid,
+            email: user.email,
+            fullName: document.getElementById('fullName').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value
+        };
+
+        try {
+            hideMessages();
+            showDebugInfo(`Enviando datos a la API: ${JSON.stringify(userData)}`);
+
+            const result = await apiCall(API_BASE_URL, {
+                method: 'POST',
+                body: JSON.stringify(userData)
+            });
+
+            showSuccess('Usuario registrado exitosamente en la base de datos!');
+            showDebugInfo(`Registro exitoso: ${JSON.stringify(result)}`);
+            apiTestSection.style.display = 'block';
+
+            // Limpiar formulario
+            document.getElementById('userDataForm').reset();
+
+        } catch (error) {
+            showError('Error al registrar usuario: ' + error.message);
+            showDebugInfo(`Error en registro: ${error.message}<br><br>Posibles soluciones:<br>
+                    1. Verifica que el backend esté ejecutándose en ${API_BASE_URL}<br>
+                    2. Revisa la configuración CORS en el backend<br>
+                    3. Verifica los logs del servidor backend`);
+        }
+    });
+
+    // Listar usuarios (para testing)
+    document.getElementById('listUsers').addEventListener('click', async () => {
+        try {
+            showDebugInfo('Solicitando lista de usuarios...');
+            const users = await apiCall(API_BASE_URL);
+
+            usersList.innerHTML = '<h4>Usuarios registrados:</h4>' +
+                users.map(user => `
+                        <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 5px;">
+                            <strong>${user.fullName}</strong><br>
+                            Email: ${user.email}<br>
+                            Teléfono: ${user.phone || 'N/A'}<br>
+                            Estado: ${user.state}
+                        </div>
+                    `).join('');
+
+            showDebugInfo(`Se encontraron ${users.length} usuarios`);
+        } catch (error) {
+            showError('Error al listar usuarios: ' + error.message);
+        }
+    });
+
+    // Mostrar información del usuario autenticado
+    function showUserInfo(user) {
+        userEmail.textContent = user.email;
+        userUid.textContent = user.uid;
+        userInfo.classList.add('active');
+        authSection.style.display = 'none';
+        userDataForm.style.display = 'block';
+        debugInfo.style.display = 'block';
+    }
+
+    // Escuchar cambios en la autenticación
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            showUserInfo(user);
+        } else {
+            userInfo.classList.remove('active');
+            authSection.style.display = 'block';
+            userDataForm.style.display = 'none';
+            apiTestSection.style.display = 'none';
+            debugInfo.style.display = 'none';
+        }
+    });
+
+    // Probar la conexión con el backend al cargar la página
+    window.addEventListener('load', async () => {
+        try {
+            showDebugInfo('Probando conexión con el backend...');
+            await fetch(API_BASE_URL);
+            showDebugInfo('✅ Conexión con el backend exitosa');
+        } catch (error) {
+            showDebugInfo(`❌ No se puede conectar con el backend: ${error.message}<br>
+                    Asegúrate de que:<br>
+                    - El backend Spring Boot esté ejecutándose<br>
+                    - La URL ${API_BASE_URL} sea correcta<br>
+                    - No haya problemas de CORS`);
+        }
+    });
+</script>
+</body>
+</html>
