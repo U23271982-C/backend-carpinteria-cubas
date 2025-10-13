@@ -19,4 +19,7 @@ public class ContractTypeRequestDTO {
     @Size(min = 1, max = 100, message = "El nombre del tipo de contrato debe tener entre 1 y 100 caracteres")
     private String contract_type_name;
 
+    @NotBlank(message = "La descripción del tipo de contrato no puede estar ser vacío")
+    @Size(min = 1, max = 250, message = "La descripción del tipo de contrato no puede pasar los 250 caracteres")
+    private String description;
 }

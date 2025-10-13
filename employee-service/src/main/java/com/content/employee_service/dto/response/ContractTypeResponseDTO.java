@@ -6,6 +6,6 @@ import lombok.Data;
 @Builder
 @Data
 public class ContractTypeResponseDTO {
-    private String person_type_name;
     private String contract_type_name;
+    private String description;
 }

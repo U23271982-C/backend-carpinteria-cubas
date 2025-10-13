@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class EmployeeResponseDTO {
     private String employee_name;
     private String employee_last_name;
-    private String birth_date;
+    private LocalDateTime birth_date;
     private LocalDateTime register_date;
     private String identification_number;
     private String direction_email;
