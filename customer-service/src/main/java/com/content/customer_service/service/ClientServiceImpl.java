@@ -54,7 +54,7 @@ public class ClientServiceImpl implements ServiceAbs<ClientRequestDTO, ClientRes
                 .orElseThrow(() -> new EntityNotFoundException("Identificación no encontrada con ID: " + dto.getIdentification_id()));
 
         // Verificar que no exista un cliente con el mismo documento de identificación
-        if (clientRepository.existsByIdentification_id_IdentificationDoc(identification.getIdentification_doc())) {
+        if (clientRepository.existsByIdentificationDoc(identification.getIdentification_doc())) {
             throw new IllegalArgumentException("Ya existe un cliente con el documento de identificación: " + identification.getIdentification_doc());
         }
 
@@ -147,4 +147,3 @@ public class ClientServiceImpl implements ServiceAbs<ClientRequestDTO, ClientRes
         return clientMapper.toDTO(updatedClient);
     }
 }
-

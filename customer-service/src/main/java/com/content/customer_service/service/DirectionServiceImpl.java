@@ -79,7 +79,7 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
     private Department findOrCreateDepartment(String departmentName, StateEntity stateActive) {
         log.info("Buscando o creando departamento: {}", departmentName);
 
-        Optional<Department> departmentOpt = departmentRepository.findByDepartment_nameIgnoreCase(departmentName);
+        Optional<Department> departmentOpt = departmentRepository.findByNameIgnoreCase(departmentName);
 
         if (departmentOpt.isPresent()) {
             log.info("Departamento encontrado: {}", departmentName);
@@ -104,7 +104,7 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
         log.info("Buscando o creando provincia: {} en departamento: {}", provinceName, department.getDepartment_name());
 
         Optional<Province> provinceOpt = provinceRepository
-                .findByProvince_nameIgnoreCaseAndDepartment_id_Department_id(provinceName, department.getDepartment_id());
+                .findByNameAndDepartmentId(provinceName, department.getDepartment_id());
 
         if (provinceOpt.isPresent()) {
             log.info("Provincia encontrada: {}", provinceName);
@@ -130,7 +130,7 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
         log.info("Buscando o creando distrito: {} en provincia: {}", districtName, province.getProvince_name());
 
         Optional<District> districtOpt = districtRepository
-                .findByDistrict_nameIgnoreCaseAndProvince_id_Province_id(districtName, province.getProvince_id());
+                .findByNameAndProvinceId(districtName, province.getProvince_id());
 
         if (districtOpt.isPresent()) {
             log.info("Distrito encontrado: {}", districtName);
@@ -233,4 +233,3 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
         return directionMapper.toDTO(updatedDirection);
     }
 }
-
