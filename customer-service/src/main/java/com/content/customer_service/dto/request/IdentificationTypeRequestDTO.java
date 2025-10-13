@@ -9,7 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO para la solicitud de creación de un Tipo de Identificación.
+ * DTO para la solicitud de creación/actualización de un Tipo de Identificación.
+ * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
  */
 
 @Getter
@@ -17,14 +18,14 @@ import lombok.Setter;
 @Builder
 public class IdentificationTypeRequestDTO {
 
-    // Nombre del tipo de identificación
-    @NotBlank(message = "El nombre del Tipo de Identificación no debe estar vacío")
-    @Size(max = 50, message = "El nombre del Tipo de Identificación no debe exceder los 50 caracteres")
+    // Nombre del tipo de identificación (ejemplo: "DNI", "RUC", "Pasaporte", "Carnet de Extranjería")
+    @NotBlank(message = "El nombre del tipo de identificación no debe estar vacío")
+    @Size(max = 100, message = "El nombre del tipo de identificación no debe exceder los 100 caracteres")
     private String identification_type_name;
 
-    // ID del Tipo de Persona asociado al Tipo de Identificación
-    @Positive(message = "El ID del Tipo de Persona debe ser un número positivo")
-    @NotNull(message = "El ID del Tipo de Persona no debe ser nulo")
+    // ID del tipo de persona asociada (Natural, Jurídica)
+    @Positive(message = "El ID del tipo de persona debe ser un número positivo")
+    @NotNull(message = "El ID del tipo de persona no debe ser nulo")
     private Integer person_type_id;
 
 }

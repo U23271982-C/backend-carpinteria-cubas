@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO para la solicitud de creación de una Provincia.
+ * DTO para la solicitud de creación/actualización de una Provincia.
+ * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
+ * Nota: La provincia se crea automáticamente si no existe al registrar una dirección.
  */
 
 @Getter
@@ -17,14 +19,14 @@ import lombok.Setter;
 @Builder
 public class ProvinceRequestDTO {
 
-    // Nombre de la provincia
+    // Nombre de la provincia (ejemplo: "Lima", "Callao", "Cañete")
     @NotBlank(message = "El nombre de la provincia no debe estar vacío")
-    @Size(min = 3, max = 50, message = "El nombre de la provincia debe tener entre 3 y 50 caracteres")
+    @Size(max = 100, message = "El nombre de la provincia no debe exceder los 100 caracteres")
     private String province_name;
 
-    // ID del Departamento asociado
-    @Positive(message = "El ID del Departamento debe ser un número positivo")
-    @NotNull(message = "El ID del Departamento no debe ser nulo")
+    // ID del departamento asociado
+    @Positive(message = "El ID del departamento debe ser un número positivo")
+    @NotNull(message = "El ID del departamento no debe ser nulo")
     private Integer department_id;
 
 }

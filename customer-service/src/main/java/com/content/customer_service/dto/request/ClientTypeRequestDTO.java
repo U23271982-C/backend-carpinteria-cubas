@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO para la solicitud de creación de un Tipo de Cliente.
+ * DTO para la solicitud de creación/actualización de un Tipo de Cliente.
+ * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
  */
 
 @Getter
@@ -15,14 +16,14 @@ import lombok.Setter;
 @Builder
 public class ClientTypeRequestDTO {
 
-    // Nombre del tipo de cliente
+    // Nombre del tipo de cliente (ejemplo: "Premium", "Regular", "VIP")
     @NotBlank(message = "El nombre del tipo de cliente no debe estar vacío")
-    @Size(min = 3, max = 50, message = "El nombre del tipo de cliente debe tener entre 3 y 50 caracteres")
+    @Size(max = 50, message = "El nombre del tipo de cliente no debe exceder los 50 caracteres")
     private String client_type_name;
 
     // Descripción del tipo de cliente
     @NotBlank(message = "La descripción no debe estar vacía")
-    @Size(min = 5, max = 255, message = "La descripción debe tener entre 5 y 255 caracteres")
+    @Size(max = 100, message = "La descripción no debe exceder los 100 caracteres")
     private String description;
 
 }

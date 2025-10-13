@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO para la solicitud de creación de un Distrito.
+ * DTO para la solicitud de creación/actualización de un Distrito.
+ * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
+ * Nota: El distrito se crea automáticamente si no existe al registrar una dirección.
  */
 
 @Getter
@@ -17,14 +19,14 @@ import lombok.Setter;
 @Builder
 public class DistrictRequestDTO {
 
-    // Nombre del distrito
+    // Nombre del distrito (ejemplo: "Miraflores", "San Isidro", "Barranco")
     @NotBlank(message = "El nombre del distrito no debe estar vacío")
-    @Size(min = 3, max = 50, message = "El nombre del distrito debe tener entre 3 y 50 caracteres")
+    @Size(max = 100, message = "El nombre del distrito no debe exceder los 100 caracteres")
     private String district_name;
 
-    // ID de la Provincia asociada
-    @Positive(message = "El ID de la Provincia debe ser un número positivo")
-    @NotNull(message = "El ID de la Provincia no debe ser nulo")
+    // ID de la provincia asociada
+    @Positive(message = "El ID de la provincia debe ser un número positivo")
+    @NotNull(message = "El ID de la provincia no debe ser nulo")
     private Integer province_id;
 
 }
