@@ -4,18 +4,16 @@ import com.content.employee_service.exception.EValidation;
 import com.content.employee_service.exception.ObjectErrorValidation;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
 @Component
+@AllArgsConstructor
 public class UtilityValidator {
-    //@Autowired
-    private final Validator validator;
 
-    public UtilityValidator(Validator validator) {
-        this.validator = validator;
-    }
+    private final Validator validator;
 
     /**
      * Valida un objeto (dto)
