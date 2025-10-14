@@ -5,6 +5,7 @@ import com.content.authentication_service.dto.response.UserClientResponseDTO;
 import com.content.authentication_service.service.UserClientServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user-clients")
 @RequiredArgsConstructor
+@Slf4j
 public class UserClientController {
 
     private final UserClientServiceImpl userClientService;
@@ -31,7 +33,10 @@ public class UserClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserClientResponseDTO> findById(@PathVariable Long id) {
+        log.info("Fetching user client with ID: {}", id);
         UserClientResponseDTO user = userClientService.readById(id);
+
+        log.info("User encontrado: {} {}", user.getFullName(), user.getFire_base_uid());
         return ResponseEntity.ok(user);
     }
 
