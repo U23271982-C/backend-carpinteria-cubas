@@ -14,11 +14,11 @@ import java.io.InputStream;
 
 @Configuration
 public class FireBaseConfig {
-
     /**
      * Este método se ejecuta una vez que el bean ha sido creado e inicializado.
      * Es el lugar perfecto para inicializar FirebaseApp.
      */
+    /*
     @PostConstruct
     public void initialize() {
         try {
@@ -43,12 +43,13 @@ public class FireBaseConfig {
             e.printStackTrace();
         }
     }
-
+    */
     /**
      * Creamos un Bean de FirebaseApp para que pueda ser inyectado en otras partes
      * de la aplicación si es necesario.
      * @return FirebaseApp
      */
+    /*
     @Bean
     public FirebaseApp firebaseApp() {
         return FirebaseApp.getInstance();
@@ -60,8 +61,11 @@ public class FireBaseConfig {
      * @param firebaseApp La instancia de FirebaseApp creada en el bean anterior.
      * @return FirebaseAuth
      */
+    /*
     @Bean
     public FirebaseAuth firebaseAuth(FirebaseApp firebaseApp) {
         return FirebaseAuth.getInstance(firebaseApp);
     }
+    */
+
 }
