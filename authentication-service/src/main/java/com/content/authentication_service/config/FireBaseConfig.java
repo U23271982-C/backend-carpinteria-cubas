@@ -23,7 +23,7 @@ public class FireBaseConfig {
     public void initialize() {
         try {
             // Usamos ClassPathResource para cargar el archivo desde el classpath
-            ClassPathResource resource = new ClassPathResource("carpinteriacubas-6bd84-firebase-adminsdk-fbsvc-a5794d4e94.json");
+            ClassPathResource resource = new ClassPathResource("carpinteriacubas-6bd84-firebase-adminsdk-fbsvc-a3936cb3cd.json");
 
             // Obtenemos el InputStream del archivo
             InputStream serviceAccount = resource.getInputStream();
