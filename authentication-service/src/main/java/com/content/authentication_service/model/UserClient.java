@@ -2,6 +2,8 @@ package com.content.authentication_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,7 +35,7 @@ public class UserClient {
     private String user_client_address;
 
     @Column(name = "user_client_created_at", nullable = false)
-    private LocalDateTime user_client_created_at;
+    private LocalDate user_client_created_at;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
