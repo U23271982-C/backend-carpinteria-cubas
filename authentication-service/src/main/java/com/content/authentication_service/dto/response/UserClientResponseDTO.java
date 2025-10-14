@@ -6,16 +6,17 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Builder
 public class UserClientResponseDTO {
-    private String fire_base_uid;
+
+    private String uuid;
     private String email;
     private String fullName;
     private String phone;
     private String address;
-    private Integer state; // Devolvemos solo el nombre del estado para simplicidad.
     private LocalDate createdAt;
 }

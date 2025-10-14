@@ -6,5 +6,5 @@ package com.content.authentication_service.service.abstractservice;
  * @param <DRE> Response DTO
  */
 public interface Updatable<DRQ,DRE> {
-    DRE update(int id, DRQ dto);
+    DRE update(String uuid, DRQ dto);
 }

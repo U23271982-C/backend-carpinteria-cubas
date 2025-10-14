@@ -9,9 +9,11 @@ import com.content.authentication_service.repository.UserClientRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,8 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
         // Mapear DTO a entidad (el mapper ya se encarga del firebaseUid y timestamp)
         UserClient userClient = userClientMapper.toModel(dto);
 
+        UUID uuid = UUID.randomUUID();
+        userClient.setUuid(uuid.toString());
         // Asignar estado activo (ID = 1)
         StateEntity stateEntity = new StateEntity();
         stateEntity.setState_entity_id(1);
@@ -36,37 +40,57 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
     }
 
     @Override
-    public UserClientResponseDTO readById(Long id) {
-        UserClient userClient = userClientRepository.findById(id.intValue())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+    public UserClientResponseDTO readById(String uuid) {
+        UserClient userClient = userClientRepository.findAll()
+                .stream()
+                .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
         return userClientMapper.toDTO(userClient);
     }
 
     @Override
-    public UserClientResponseDTO update(int id, UserClientRequestDTO dto) {
-        UserClient existingUser = userClientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+    public UserClientResponseDTO update(String uuid, UserClientRequestDTO dto) {
+
+        UserClient existingUser = userClientRepository.findAll()
+                .stream()
+                .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
 
         // Actualizar campos permitidos (no actualizamos firebaseUid)
-        existingUser.setUser_client_full_name(dto.getFullName());
-        existingUser.setUser_client_phone(dto.getPhone());
-        existingUser.setUser_client_address(dto.getAddress());
+        if (dto.getFullName() != null && !dto.getFullName().trim().isEmpty()) {
+            existingUser.setUser_client_full_name(dto.getFullName());
+        }
+        if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+            existingUser.setUser_client_phone(dto.getPhone());
+        }
+        if (dto.getAddress() != null && !dto.getAddress().trim().isEmpty()) {
+            existingUser.setUser_client_address(dto.getAddress());
+        }
 
         UserClient updatedUser = userClientRepository.save(existingUser);
         return userClientMapper.toDTO(updatedUser);
     }
 
     @Override
-    public void remove(int id) {
-        UserClient userClient = userClientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
-        userClientRepository.delete(userClient);
+    public void remove(String uuid) {
+        UserClient userClient = userClientRepository.findAll()
+                .stream()
+                .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
+
+        StateEntity stateEntity = new StateEntity();
+        stateEntity.setState_entity_id(3); //Estado Eliminado
+        userClient.setState_entity_id(stateEntity);
+        userClientRepository.save(userClient);
     }
 
     @Override
     public List<UserClientResponseDTO> allList() {
         return userClientRepository.findAll()
-                .stream()
+                .stream().filter(user -> user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
                 .map(userClientMapper::toDTO)
                 .toList();
     }

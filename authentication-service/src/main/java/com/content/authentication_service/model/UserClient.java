@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "UserClient")
@@ -19,10 +18,13 @@ public class UserClient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_client_id;
 
+    @Column(name = "uuid",unique = true, nullable = false, updatable = false)
+    private String uuid;
+
     @Column(name = "fire_base_uid", nullable = false, unique = true, length = 128)
     private String fireBaseUid;
 
-    @Column(name = "userclient_email", length = 100)
+    @Column(name = "userclient_email", length = 100, nullable = false, unique = true, updatable = false)
     private String user_client_email;
 
     @Column(name="userclient_full_name", length = 100)

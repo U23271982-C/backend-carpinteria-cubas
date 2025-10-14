@@ -12,23 +12,23 @@ public interface UserClientMapper extends Convert<UserClient, UserClientRequestD
 
     UserClientMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(UserClientMapper.class);
 
-    @Mapping(source = "fireBaseUid", target = "fire_base_uid") // Mapeamos el firebaseUid del modelo
+    @Mapping(source = "uuid", target = "uuid")
     @Mapping(source = "user_client_email", target = "email")
     @Mapping(source = "user_client_full_name", target = "fullName")
     @Mapping(source = "user_client_phone", target = "phone")
     @Mapping(source = "user_client_address", target = "address")
-    @Mapping(source = "state_entity_id.state_entity_id", target = "state")
     @Mapping(source = "user_client_created_at", target = "createdAt")
     @Override
     UserClientResponseDTO toDTO(UserClient modelo);
 
     @Mapping(target = "user_client_id", ignore = true)
     @Mapping(target = "fireBaseUid", source = "firebaseUid") // Mapeamos el firebaseUid del DTO
+    @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "user_client_email", source = "email")
     @Mapping(target = "user_client_full_name", source = "fullName")
     @Mapping(target = "user_client_phone", source = "phone")
     @Mapping(target = "user_client_address", source = "address")
-    @Mapping(target = "state_entity_id", ignore = true)
+    @Mapping(target = "state_entity_id.state_entity_id", ignore = true) // Asignamos el ID del estado directamente
     @Mapping(target = "user_client_created_at", expression = "java(java.time.LocalDate.now())")
     @Override
     UserClient toModel(UserClientRequestDTO dto);

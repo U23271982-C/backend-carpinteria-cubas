@@ -31,26 +31,20 @@ public class UserClientController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserClientResponseDTO> findById(@PathVariable Long id) {
-        log.info("Fetching user client with ID: {}", id);
-        UserClientResponseDTO user = userClientService.readById(id);
+    @GetMapping("/{uuid}")
+    public ResponseEntity<UserClientResponseDTO> findByUuid(@PathVariable String uuid) {
+        log.info("Fetching user client with ID: {}", uuid);
+        UserClientResponseDTO user = userClientService.readById(uuid);
 
-        log.info("User encontrado: {} {}", user.getFullName(), user.getFire_base_uid());
+        log.info("User encontrado: {} {}", user.getFullName(), user.getEmail());
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
-        userClientService.remove(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     public ResponseEntity<UserClientResponseDTO> update(
-            @PathVariable int id,
+            @PathVariable String uuid,
             @Valid @RequestBody UserClientRequestDTO dto) {
-        UserClientResponseDTO updatedUser = userClientService.update(id, dto);
+        UserClientResponseDTO updatedUser = userClientService.update(uuid, dto);
         return ResponseEntity.ok(updatedUser);
     }
 }
