@@ -13,7 +13,8 @@ import java.util.Arrays;
 public enum MappingExecption {
 
     VALIDACION_EXECPTION(EValidation.class, "Error de validación", HttpStatus.BAD_REQUEST),
-    GENERIC(Exception.class, "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
+    GENERIC(Exception.class, "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR),
+    SERVICE_LAYER(EServiceLayer.class, "Error en la capa de servicio", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final Class<? extends Exception> errorType;
     private final String title;

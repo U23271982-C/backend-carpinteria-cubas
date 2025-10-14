@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +26,12 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
     }
 
     @Override
-    public EmployeeResponseDTO readById(Long id) {
+    public EmployeeResponseDTO readByUUID(UUID uuid) {
         return null;
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(UUID uuid) {
 
     }
 
@@ -40,8 +41,8 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
     }
 
     @Override
-    public EmployeeResponseDTO update(int id, EmployeeRequestDTO dto) {
+    public EmployeeResponseDTO updateByUUID(UUID uuid, EmployeeRequestDTO dto) {
+
         return null;
     }
-
 }

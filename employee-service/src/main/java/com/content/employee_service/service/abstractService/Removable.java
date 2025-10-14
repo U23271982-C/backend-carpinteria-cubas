@@ -1,5 +1,7 @@
 package com.content.employee_service.service.abstractService;
 
+import java.util.UUID;
+
 public interface Removable{
-    void remove(int id);
+    void remove(UUID uuid);
 }

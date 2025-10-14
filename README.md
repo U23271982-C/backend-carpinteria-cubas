@@ -90,3 +90,6 @@ Ya que por la concurrencia y la magnitud de los datos.
 1. BDEmployeeCarprentry - Microservicio de Empleados
 2. BDInventoryMatter - Microservicio de Inventario de Materiales
 3. BDReport - Microservicio de Reportes
+
+Biblioteca de terminología:
+- UUID: id público para que se pueda identificar un registro, sirve para realizar una petición PUT o DELETE.

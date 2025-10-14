@@ -11,6 +11,7 @@ import org.mapstruct.Mapping;
 public interface PersonTypeMapper
         extends Convert<PersonType, PersonTypeRequestDTO, PersonTypeResponseDTO> {
     @Mapping(target = "person_type_name", source = "person_type_name")
+    @Mapping(target = "uuid", source = "uuid")
     @Override
     PersonTypeResponseDTO toDTO(PersonType model);
 
