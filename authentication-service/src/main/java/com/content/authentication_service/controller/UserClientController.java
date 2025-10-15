@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/user-clients")
+@RequestMapping("/user-client")
 @RequiredArgsConstructor
 @Slf4j
 public class UserClientController {
