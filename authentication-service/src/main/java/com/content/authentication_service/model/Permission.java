@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "Permission")
@@ -17,6 +18,9 @@ public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer permission_id;
+
+    @Column(name = "uuid", unique = true, nullable = false, updatable = false)
+    private UUID uuid;
 
     @Column(name = "permission_name", length = 100)
     private String permission_name;
