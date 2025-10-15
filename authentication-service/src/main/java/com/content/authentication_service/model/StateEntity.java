@@ -3,6 +3,7 @@ package com.content.authentication_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "StateEntity")
@@ -16,6 +17,9 @@ public class StateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer state_entity_id;
+
+    @Column(name = "uuid", nullable = false, unique = true, updatable = false)
+    private UUID uuid;
 
     @Column(name = "state_entity_name", nullable = false, length = 100)
     private String state_entity_name;
