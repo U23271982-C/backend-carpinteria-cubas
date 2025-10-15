@@ -1,12 +1,12 @@
 package com.content.customer_service.model;
 
+import com.content.customer_service.model.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 /**
- * Entidad que representa el estado de diferentes entidades en el sistema (0: Eliminado; 1: Activo; 2: Inactivo).
- * Las relaciones están configuradas para carga perezosa y cascada en todas las operaciones.
+ * Entidad que representa el estado de una entidad (Activo, Inactivo, etc.).
  */
 
 @Entity
@@ -15,37 +15,19 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class StateEntity {
+@SuperBuilder
+public class StateEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
-    private Integer state_entity_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer state_entity_id; // ID interno para la base de datos
 
-    @Column(name = "state_entity_name", nullable = false, length = 100)
-    private String state_entity_name;
+    @Column(name = "state_name", nullable = false, length = 50)
+    private String state_name;
 
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Client> clients;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ClientType> clientTypes ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Contact> contacts ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Department> departments ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Direction> directions ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<DirectionType> directionTypes ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<District> districts ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Identification> identifications ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<IdentificationType> identificationTypes ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PersonType> personTypes ;
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Province> provinces ;
+    @Column(name = "description", length = 255)
+    private String description;
 
+    @Column(name = "is_active", nullable = false)
+    private Boolean is_active;
 }

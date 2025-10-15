@@ -1,38 +1,40 @@
 package com.content.customer_service.model;
 
+import com.content.customer_service.model.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 /**
- * Entidad que representa una identificación de un cliente.
- * Contiene el valor de la identificación, su tipo y su estado.
+ * Entidad que representa la identificación de un cliente.
+ * ACTUALIZADA para usar SuperBuilder y herencia UUID
  */
 
 @Entity
-@Table(name ="Identification")
+@Table(name = "Identification")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Identification {
+@SuperBuilder // Cambiado de @Builder a @SuperBuilder
+public class Identification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer identification_id;
+    private Integer identification_id; // ID interno para la base de datos
 
-    @Column(name = "identification_doc", nullable = false, length = 50)
-    private String identification_doc;
+    @Column(name = "identification_number", nullable = false, length = 20)
+    private String identification_number;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "identification_type_id", nullable = false)
     private IdentificationType identification_type_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "person_type_id", nullable = false)
+    private PersonType person_type_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
-
-    @OneToMany(mappedBy = "identification_id", fetch = FetchType.LAZY)
-    private List<Client> clients;
-
 }

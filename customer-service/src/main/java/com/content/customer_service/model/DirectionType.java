@@ -2,15 +2,14 @@ package com.content.customer_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
+import java.util.UUID;
 
 /**
- * Entidad que representa un tipo de dirección.
- * Contiene información sobre la descripción del tipo de dirección y su estado.
+ * Entidad que representa el tipo de dirección.
  */
 
 @Entity
-@Table(name ="DirectionType")
+@Table(name = "DirectionType")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,16 +19,25 @@ public class DirectionType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer direction_type_id;
+    private Integer direction_type_id; // ID interno para la base de datos
 
-    @Column(name = "description", nullable = false, length = 100)
+    @Column(name = "uuid", nullable = false, unique = true, updatable = false)
+    private String uuid; // UUID público para la API
+
+    @Column(name = "type_name", nullable = false, length = 50)
+    private String type_name;
+
+    @Column(name = "description", length = 255)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
 
-    @OneToMany(mappedBy = "direction_type_id", fetch = FetchType.LAZY)
-    private List<Direction> directions;
-
+    @PrePersist
+    private void generateUuid() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 }

@@ -9,21 +9,19 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Repositorio para gestión de Distritos
- */
 @Repository
 public interface DistrictRepository extends JpaRepository<District, Integer> {
 
-    // Buscar distrito por nombre y provincia (ignora mayúsculas/minúsculas) usando query personalizada
-    @Query("SELECT d FROM District d WHERE LOWER(d.district_name) = LOWER(:districtName) AND d.province_id.province_id = :provinceId")
-    Optional<District> findByNameAndProvinceId(@Param("districtName") String districtName, @Param("provinceId") Integer provinceId);
+    Optional<District> findByUuid(String uuid);
+    boolean existsByUuid(String uuid);
 
-    // Buscar distritos por provincia usando query personalizada
-    @Query("SELECT d FROM District d WHERE d.province_id.province_id = :provinceId")
-    List<District> findByProvinceId(@Param("provinceId") Integer provinceId);
+    @Query("SELECT d FROM District d WHERE d.uuid = :uuid AND d.state_entity_id.is_active = true")
+    Optional<District> findActiveByUuid(@Param("uuid") String uuid);
 
-    // Verificar si existe un distrito por nombre y provincia usando query personalizada
-    @Query("SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END FROM District d WHERE LOWER(d.district_name) = LOWER(:districtName) AND d.province_id.province_id = :provinceId")
-    boolean existsByNameAndProvinceId(@Param("districtName") String districtName, @Param("provinceId") Integer provinceId);
+    @Query("SELECT d FROM District d WHERE d.province_id.uuid = :provinceUuid AND d.state_entity_id.is_active = true")
+    List<District> findByProvinceUuid(@Param("provinceUuid") String provinceUuid);
+
+    // Buscar distrito por nombre y provincia ID
+    @Query("SELECT d FROM District d WHERE LOWER(d.district_name) = LOWER(:name) AND d.province_id.province_id = :provinceId AND d.state_entity_id.is_active = true")
+    Optional<District> findByNameAndProvinceId(@Param("name") String name, @Param("provinceId") Integer provinceId);
 }

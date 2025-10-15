@@ -2,15 +2,14 @@ package com.content.customer_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
+import java.util.UUID;
 
 /**
  * Entidad que representa un distrito.
- * Contiene información sobre el nombre del distrito, su provincia y su estado.
  */
 
 @Entity
-@Table(name ="District")
+@Table(name = "District")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,19 +19,29 @@ public class District {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer district_id;
+    private Integer district_id; // ID interno para la base de datos
+
+    @Column(name = "uuid", nullable = false, unique = true, updatable = false)
+    private String uuid; // UUID público para la API
 
     @Column(name = "district_name", nullable = false, length = 100)
     private String district_name;
 
+    @Column(name = "district_code", length = 10)
+    private String district_code;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "province_id", nullable = false)
     private Province province_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
 
-    @OneToMany(mappedBy = "district_id", fetch = FetchType.LAZY)
-    private List<Direction> directions;
-
+    @PrePersist
+    private void generateUuid() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 }

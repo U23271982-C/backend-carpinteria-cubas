@@ -6,15 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
-/**
- * Repositorio para gestión de Tipos de Persona
- */
 @Repository
 public interface PersonTypeRepository extends JpaRepository<PersonType, Integer> {
 
-    // Buscar tipo de persona por nombre usando query personalizada
-    @Query("SELECT pt FROM PersonType pt WHERE pt.persona_type_name = :personaTypeName")
-    Optional<PersonType> findByName(@Param("personaTypeName") String personaTypeName);
+    Optional<PersonType> findByUuid(String uuid);
+    boolean existsByUuid(String uuid);
+
+    @Query("SELECT pt FROM PersonType pt WHERE pt.uuid = :uuid AND pt.state_entity_id.is_active = true")
+    Optional<PersonType> findActiveByUuid(@Param("uuid") String uuid);
+
+    @Query("SELECT pt FROM PersonType pt WHERE pt.state_entity_id.is_active = true")
+    List<PersonType> findAllActive();
 }

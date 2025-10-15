@@ -1,40 +1,32 @@
 package com.content.customer_service.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import jakarta.validation.constraints.*;
 
 /**
- * DTO para la solicitud de creación de un Cliente.
+ * DTO de request para crear/actualizar Cliente - Recibe UUIDs de referencias, nunca IDs internos
  */
-
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClientRequestDTO {
 
-    // Nombre del cliente
-    @NotBlank(message = "El nombre del cliente no debe estar vacío")
-    @Size(max = 100, message = "El nombre del cliente no debe exceder los 100 caracteres")
-    private String client_name;
+    @NotBlank(message = "El nombre del cliente es obligatorio")
+    @Size(max = 100, message = "El nombre no puede exceder 100 caracteres")
+    private String clientName;
 
-    // Apellido del cliente
-    @NotBlank(message = "El apellido del cliente no debe estar vacío")
-    @Size(max = 100, message = "El apellido del cliente no debe exceder los 100 caracteres")
-    private String client_last_name;
+    @NotBlank(message = "El apellido del cliente es obligatorio")
+    @Size(max = 100, message = "El apellido no puede exceder 100 caracteres")
+    private String clientLastName;
 
-    // ID del Tipo de Cliente asociado
-    @Positive(message = "El ID del Tipo de Cliente debe ser un número positivo")
-    @NotNull(message = "El ID del Tipo de Cliente no debe ser nulo")
-    private Integer client_type_id;
+    // Referencias usando UUIDs - NUNCA recibimos IDs internos
+    @NotBlank(message = "El tipo de cliente es obligatorio")
+    private String clientTypeUuid;
 
-    // ID de la Identificación asociada
-    @Positive(message = "El ID de la Identificación debe ser un número positivo")
-    @NotNull(message = "El ID de la Identificación no debe ser nulo")
-    private Integer identification_id;
+    @NotBlank(message = "La identificación es obligatoria")
+    private String identificationUuid;
 
+    @NotBlank(message = "El estado es obligatorio")
+    private String stateEntityUuid;
 }

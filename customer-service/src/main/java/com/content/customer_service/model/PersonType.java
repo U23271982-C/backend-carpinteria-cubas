@@ -2,15 +2,14 @@ package com.content.customer_service.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.List;
+import java.util.UUID;
 
 /**
- * Entidad que representa los tipos de personas.
- * Contiene información sobre el tipo de persona y su estado.
+ * Entidad que representa el tipo de persona.
  */
 
 @Entity
-@Table(name ="PersonType")
+@Table(name = "PersonType")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,16 +19,25 @@ public class PersonType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer person_type_id;
+    private Integer person_type_id; // ID interno para la base de datos
 
-    @Column(name = "persona_type_name", nullable = false, length = 100)
-    private String persona_type_name;
+    @Column(name = "uuid", nullable = false, unique = true, updatable = false)
+    private String uuid; // UUID público para la API
+
+    @Column(name = "type_name", nullable = false, length = 50)
+    private String type_name;
+
+    @Column(name = "description", length = 255)
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
 
-    @OneToMany(mappedBy = "person_type_id", fetch = FetchType.LAZY)
-    private List<IdentificationType> identification_type_id;
-
+    @PrePersist
+    private void generateUuid() {
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();
+        }
+    }
 }

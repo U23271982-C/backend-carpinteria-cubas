@@ -1,33 +1,42 @@
 package com.content.customer_service.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
- * DTO de respuesta para Dirección.
+ * DTO de respuesta para Direction - Solo expone UUIDs, nunca IDs internos
  */
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DirectionResponseDTO {
 
-    private Integer direction_id;
-    private Integer client_id;
-    private String client_name;
-    private Integer direction_type_id;
-    private String direction_type_description;
-    private String direction_name;
-    private String direction_number;
-    private String reference;
-    private Integer district_id;
-    private String district_name;
-    private Integer province_id;
-    private String province_name;
-    private Integer department_id;
-    private String department_name;
-    private Integer state_entity_id;
-    private String state_entity_name;
+    private String uuid; // UUID público
+    private String directionName;
+    private String addressLine1;
+    private String addressLine2;
 
+    // Referencias usando UUIDs
+    private String clientUuid;
+    private String clientName;
+
+    private String directionTypeUuid;
+    private String directionTypeName;
+
+    private String districtUuid;
+    private String districtName;
+
+    private String provinceUuid;
+    private String provinceName;
+
+    private String departmentUuid;
+    private String departmentName;
+
+    private String stateEntityUuid;
+    private String stateName;
+
+    // Métodos de compatibilidad para controladores legacy
+    public String getDirection_id() {
+        return uuid;
+    }
 }
-

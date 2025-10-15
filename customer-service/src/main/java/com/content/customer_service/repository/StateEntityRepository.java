@@ -6,12 +6,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-/**
- * Repositorio para gestión de Estados de Entidades
- */
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface StateEntityRepository extends JpaRepository<StateEntity, Integer> {
-    // Buscar estado de entidad por nombre usando query personalizada
-    @Query("SELECT se FROM StateEntity se WHERE se.state_entity_name = :stateEntityName")
-    StateEntity findByName(@Param("stateEntityName") String stateEntityName);
+
+    // Método principal: Buscar por UUID
+    Optional<StateEntity> findByUuid(String uuid);
+
+    // Verificar existencia por UUID
+    boolean existsByUuid(String uuid);
+
+    // Buscar estados activos
+    @Query("SELECT s FROM StateEntity s WHERE s.is_active = true")
+    List<StateEntity> findAllActive();
+
+    // Buscar por nombre de estado
+    @Query("SELECT s FROM StateEntity s WHERE LOWER(s.state_name) = LOWER(:stateName)")
+    Optional<StateEntity> findByStateName(@Param("stateName") String stateName);
 }

@@ -1,30 +1,27 @@
 package com.content.customer_service.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import jakarta.validation.constraints.*;
 
 /**
- * DTO para la solicitud de creación/actualización de una Identificación.
- * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
+ * DTO de request para Identification - Usa UUIDs para referencias
  */
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class IdentificationRequestDTO {
 
-    // Número o código del documento de identificación
-    @NotBlank(message = "El documento de identificación no debe estar vacío")
-    @Size(max = 50, message = "El documento de identificación no debe exceder los 50 caracteres")
-    private String identification_doc;
+    @NotBlank(message = "El número de identificación es obligatorio")
+    @Size(max = 20, message = "El número de identificación no puede exceder 20 caracteres")
+    private String identificationNumber;
 
-    // ID del tipo de identificación (DNI, RUC, Pasaporte, etc.)
-    @Positive(message = "El ID del tipo de identificación debe ser un número positivo")
-    @NotNull(message = "El ID del tipo de identificación no debe ser nulo")
-    private Integer identification_type_id;
+    @NotBlank(message = "El tipo de identificación es obligatorio")
+    private String identificationTypeUuid;
 
+    @NotBlank(message = "El tipo de persona es obligatorio")
+    private String personTypeUuid;
+
+    @NotBlank(message = "El estado es obligatorio")
+    private String stateEntityUuid;
 }

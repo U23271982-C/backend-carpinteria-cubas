@@ -1,30 +1,57 @@
 package com.content.customer_service.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
- * DTO de respuesta para Cliente.
- * Contiene toda la información del cliente incluyendo datos generados automáticamente.
+ * DTO de respuesta para Cliente - Solo expone UUIDs, nunca IDs internos
  */
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClientResponseDTO {
 
-    private Integer client_id;
-    private String client_name;
-    private String client_last_name;
-    private LocalDateTime registration_date;
-    private Integer client_type_id;
-    private String client_type_name;
-    private Integer identification_id;
-    private String identification_doc;
-    private Integer state_entity_id;
-    private String state_entity_name;
+    private String uuid; // UUID público - NUNCA exponemos el ID interno
+    private String clientName;
+    private String clientLastName;
+    private LocalDateTime registrationDate;
 
+    // Referencias usando UUIDs, no IDs internos
+    private String clientTypeUuid;
+    private String clientTypeName;
+
+    private String identificationUuid;
+    private String identificationNumber;
+    private String identificationTypeName;
+
+    private String stateEntityUuid;
+    private String stateName;
+
+    // Listas de contactos y direcciones (solo UUIDs)
+    private List<ContactSummaryDTO> contacts;
+    private List<DirectionSummaryDTO> directions;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ContactSummaryDTO {
+        private String uuid;
+        private String phoneNumber;
+        private String email;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DirectionSummaryDTO {
+        private String uuid;
+        private String directionName;
+        private String addressLine1;
+        private String districtName;
+        private String provinceName;
+    }
 }
-

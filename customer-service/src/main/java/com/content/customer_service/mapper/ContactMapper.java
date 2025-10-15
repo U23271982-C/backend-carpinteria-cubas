@@ -8,28 +8,33 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * Mapper para conversión entre Contact, ContactRequestDTO y ContactResponseDTO
+ * Mapper para Contact - ACTUALIZADO PARA TRABAJAR CON UUIDs
  */
 @Mapper(componentModel = "spring")
 public interface ContactMapper extends Convert<Contact, ContactRequestDTO, ContactResponseDTO> {
 
     /**
-     * Convierte un modelo Contact a ContactResponseDTO
+     * Convierte Contact a ContactResponseDTO - SOLO UUIDs
      */
-    @Mapping(source = "client_id.client_id", target = "client_id")
-    @Mapping(source = "client_id.client_name", target = "client_name")
-    @Mapping(source = "state_entity_id.state_entity_id", target = "state_entity_id")
-    @Mapping(source = "state_entity_id.state_entity_name", target = "state_entity_name")
+    @Mapping(source = "uuid", target = "uuid")
+    @Mapping(source = "phone_number", target = "phoneNumber")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "client_id.uuid", target = "clientUuid")
+    @Mapping(source = "client_id.client_name", target = "clientName")
+    @Mapping(source = "state_entity_id.uuid", target = "stateEntityUuid")
+    @Mapping(source = "state_entity_id.state_name", target = "stateName")
     @Override
     ContactResponseDTO toDTO(Contact modelo);
 
     /**
-     * Convierte un ContactRequestDTO a modelo Contact
+     * Convierte ContactRequestDTO a Contact
      */
-    @Mapping(target = "contact_id", ignore = true)
-    @Mapping(target = "client_id", ignore = true) // Se asigna en el servicio
-    @Mapping(target = "state_entity_id", ignore = true) // Se asigna en el servicio
+    @Mapping(target = "contact_id", ignore = true) // ID interno se genera
+    @Mapping(target = "uuid", ignore = true) // UUID se genera en BaseEntity
+    @Mapping(source = "phoneNumber", target = "phone_number")
+    @Mapping(source = "email", target = "email")
+    @Mapping(target = "client_id", ignore = true) // Se asigna en servicio por UUID
+    @Mapping(target = "state_entity_id", ignore = true) // Se asigna en servicio por UUID
     @Override
     Contact toModel(ContactRequestDTO dto);
 }
-

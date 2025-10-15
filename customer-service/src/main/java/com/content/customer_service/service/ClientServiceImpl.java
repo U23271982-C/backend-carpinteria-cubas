@@ -19,11 +19,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
- * Servicio de implementación para gestión de Clientes
+ * Servicio de implementación para gestión de Clientes - USA SOLO UUIDs
  */
 @Service
 @RequiredArgsConstructor
@@ -40,110 +41,146 @@ public class ClientServiceImpl implements ServiceAbs<ClientRequestDTO, ClientRes
     @Transactional
     @Override
     public ClientResponseDTO create(ClientRequestDTO dto) {
-        log.info("Iniciando creación de cliente: {} {}", dto.getClient_name(), dto.getClient_last_name());
+        log.info("Iniciando creación de cliente: {} {}", dto.getClientName(), dto.getClientLastName());
 
         // Validar datos del cliente
         utilityValidator.validate(dto);
 
-        // Verificar que el tipo de cliente existe
-        ClientType clientType = clientTypeRepository.findById(dto.getClient_type_id())
-                .orElseThrow(() -> new EntityNotFoundException("Tipo de cliente no encontrado con ID: " + dto.getClient_type_id()));
+        // Verificar que el tipo de cliente existe usando UUID
+        ClientType clientType = clientTypeRepository.findByUuid(dto.getClientTypeUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Tipo de cliente no encontrado con UUID: " + dto.getClientTypeUuid()));
 
-        // Verificar que la identificación existe
-        Identification identification = identificationRepository.findById(dto.getIdentification_id())
-                .orElseThrow(() -> new EntityNotFoundException("Identificación no encontrada con ID: " + dto.getIdentification_id()));
+        // Verificar que la identificación existe usando UUID
+        Identification identification = identificationRepository.findByUuid(dto.getIdentificationUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Identificación no encontrada con UUID: " + dto.getIdentificationUuid()));
 
-        // Verificar que no exista un cliente con el mismo documento de identificación
-        if (clientRepository.existsByIdentificationDoc(identification.getIdentification_doc())) {
-            throw new IllegalArgumentException("Ya existe un cliente con el documento de identificación: " + identification.getIdentification_doc());
-        }
-
-        // Obtener estado activo (ID = 1)
-        StateEntity stateActive = stateEntityRepository.findById(1)
-                .orElseThrow(() -> new EntityNotFoundException("Estado activo no encontrado"));
+        // Verificar que el estado existe usando UUID
+        StateEntity stateEntity = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado con UUID: " + dto.getStateEntityUuid()));
 
         // Crear el cliente
-        Client client = clientMapper.toModel(dto);
-        client.setClient_type_id(clientType);
-        client.setIdentification_id(identification);
-        client.setState_entity_id(stateActive);
+        Client client = Client.builder()
+                .client_name(dto.getClientName())
+                .client_last_name(dto.getClientLastName())
+                .registration_date(LocalDateTime.now())
+                .client_type_id(clientType)
+                .identification_id(identification)
+                .state_entity_id(stateEntity)
+                .build();
 
         Client savedClient = clientRepository.save(client);
-        log.info("Cliente creado exitosamente con ID: {}", savedClient.getClient_id());
 
-        return clientMapper.toDTO(savedClient);
+        log.info("Cliente creado exitosamente con UUID: {}", savedClient.getUuid());
+        return convertToResponseDTO(savedClient);
     }
 
-    @Transactional
     @Override
-    public List<ClientResponseDTO> allList() {
-        log.info("Obteniendo todos los clientes");
-        List<Client> clients = clientRepository.findAll();
+    public ClientResponseDTO getByUuid(String uuid) {
+        log.info("Buscando cliente por UUID: {}", uuid);
+
+        Client client = clientRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + uuid));
+
+        return convertToResponseDTO(client);
+    }
+
+    @Override
+    public List<ClientResponseDTO> getAll() {
+        log.info("Obteniendo todos los clientes activos");
+
+        List<Client> clients = clientRepository.findAllActive();
         return clients.stream()
-                .map(clientMapper::toDTO)
-                .toList();
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public ClientResponseDTO readById(Long id) {
-        log.info("Buscando cliente con ID: {}", id);
-        Optional<Client> clientOpt = clientRepository.findById(id.intValue());
+    public ClientResponseDTO update(String uuid, ClientRequestDTO dto) {
+        log.info("Actualizando cliente con UUID: {}", uuid);
 
-        if (clientOpt.isEmpty()) {
-            log.error("Cliente no encontrado con ID: {}", id);
-            throw new EntityNotFoundException("Cliente no encontrado con ID: " + id);
-        }
+        // Buscar cliente por UUID
+        Client client = clientRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + uuid));
 
-        return clientMapper.toDTO(clientOpt.get());
-    }
-
-    @Transactional
-    @Override
-    public void remove(int id) {
-        log.info("Eliminando (lógicamente) cliente con ID: {}", id);
-
-        Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + id));
-
-        // Eliminación lógica: cambiar estado a eliminado (ID = 0)
-        StateEntity stateDeleted = stateEntityRepository.findById(0)
-                .orElseThrow(() -> new EntityNotFoundException("Estado eliminado no encontrado"));
-
-        client.setState_entity_id(stateDeleted);
-        clientRepository.save(client);
-        log.info("Cliente eliminado (lógicamente) exitosamente con ID: {}", id);
-    }
-
-    @Transactional
-    @Override
-    public ClientResponseDTO update(int id, ClientRequestDTO dto) {
-        log.info("Actualizando cliente con ID: {}", id);
-
-        // Validar datos del cliente
+        // Validar datos
         utilityValidator.validate(dto);
 
-        // Verificar que el cliente existe
-        Client existingClient = clientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + id));
+        // Buscar entidades relacionadas por UUID
+        ClientType clientType = clientTypeRepository.findByUuid(dto.getClientTypeUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Tipo de cliente no encontrado"));
 
-        // Verificar que el tipo de cliente existe
-        ClientType clientType = clientTypeRepository.findById(dto.getClient_type_id())
-                .orElseThrow(() -> new EntityNotFoundException("Tipo de cliente no encontrado con ID: " + dto.getClient_type_id()));
+        Identification identification = identificationRepository.findByUuid(dto.getIdentificationUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Identificación no encontrada"));
 
-        // Verificar que la identificación existe
-        Identification identification = identificationRepository.findById(dto.getIdentification_id())
-                .orElseThrow(() -> new EntityNotFoundException("Identificación no encontrada con ID: " + dto.getIdentification_id()));
+        StateEntity stateEntity = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado"));
 
-        // Actualizar datos del cliente
-        existingClient.setClient_name(dto.getClient_name());
-        existingClient.setClient_last_name(dto.getClient_last_name());
-        existingClient.setClient_type_id(clientType);
-        existingClient.setIdentification_id(identification);
+        // Actualizar datos
+        client.setClient_name(dto.getClientName());
+        client.setClient_last_name(dto.getClientLastName());
+        client.setClient_type_id(clientType);
+        client.setIdentification_id(identification);
+        client.setState_entity_id(stateEntity);
 
-        Client updatedClient = clientRepository.save(existingClient);
-        log.info("Cliente actualizado exitosamente con ID: {}", updatedClient.getClient_id());
+        Client updatedClient = clientRepository.save(client);
 
-        return clientMapper.toDTO(updatedClient);
+        log.info("Cliente actualizado exitosamente con UUID: {}", uuid);
+        return convertToResponseDTO(updatedClient);
+    }
+
+    @Transactional
+    @Override
+    public void delete(String uuid) {
+        log.info("Eliminando cliente con UUID: {}", uuid);
+
+        Client client = clientRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + uuid));
+
+        // Soft delete: cambiar a estado inactivo
+        StateEntity inactiveState = stateEntityRepository.findByStateName("INACTIVO")
+                .orElseThrow(() -> new EntityNotFoundException("Estado INACTIVO no encontrado"));
+
+        client.setState_entity_id(inactiveState);
+        clientRepository.save(client);
+
+        log.info("Cliente eliminado (soft delete) exitosamente con UUID: {}", uuid);
+    }
+
+    // Método auxiliar para convertir entidad a DTO de respuesta
+    private ClientResponseDTO convertToResponseDTO(Client client) {
+        return ClientResponseDTO.builder()
+                .uuid(client.getUuid()) // Solo exponemos UUID, nunca el ID interno
+                .clientName(client.getClient_name())
+                .clientLastName(client.getClient_last_name())
+                .registrationDate(client.getRegistration_date())
+                .clientTypeUuid(client.getClient_type_id().getUuid())
+                .clientTypeName(client.getClient_type_id().getType_name())
+                .identificationUuid(client.getIdentification_id().getUuid())
+                .identificationNumber(client.getIdentification_id().getIdentification_number())
+                .identificationTypeName(client.getIdentification_id().getIdentification_type_id().getType_name())
+                .stateEntityUuid(client.getState_entity_id().getUuid())
+                .stateName(client.getState_entity_id().getState_name())
+                .build();
+    }
+
+    // Método para buscar por número de identificación
+    public ClientResponseDTO getByIdentificationNumber(String identificationNumber) {
+        log.info("Buscando cliente por número de identificación: {}", identificationNumber);
+
+        Client client = clientRepository.findByIdentificationNumber(identificationNumber)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con número de identificación: " + identificationNumber));
+
+        return convertToResponseDTO(client);
+    }
+
+    // Método para buscar por nombre
+    public List<ClientResponseDTO> searchByName(String searchTerm) {
+        log.info("Buscando clientes por nombre: {}", searchTerm);
+
+        List<Client> clients = clientRepository.findByNameContainingIgnoreCase(searchTerm);
+        return clients.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
     }
 }

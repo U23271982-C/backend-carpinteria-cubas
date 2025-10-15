@@ -1,59 +1,71 @@
 package com.content.customer_service.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import jakarta.validation.constraints.*;
 
 /**
- * DTO para la solicitud de creación/actualización de una Dirección.
- * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
- * La lógica de negocio verificará y creará automáticamente departamento, provincia y distrito si no existen.
+ * DTO de request para Direction - Usa UUIDs para referencias
  */
-
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DirectionRequestDTO {
 
-    // ID del cliente asociado
-    @Positive(message = "El ID del cliente debe ser un número positivo")
-    @NotNull(message = "El ID del cliente no debe ser nulo")
-    private Integer client_id;
+    private String directionName;
 
-    // ID del tipo de dirección (ejemplo: "Casa", "Oficina", "Trabajo")
-    @Positive(message = "El ID del tipo de dirección debe ser un número positivo")
-    @NotNull(message = "El ID del tipo de dirección no debe ser nulo")
-    private Integer direction_type_id;
+    @NotBlank(message = "La línea de dirección 1 es obligatoria")
+    @Size(max = 255, message = "La dirección no puede exceder 255 caracteres")
+    private String addressLine1;
 
-    // Nombre de la dirección (ejemplo: "Av. Principal", "Calle Los Olivos")
-    @Size(max = 50, message = "El nombre de la dirección no debe exceder los 50 caracteres")
-    private String direction_name;
+    @Size(max = 255, message = "La dirección línea 2 no puede exceder 255 caracteres")
+    private String addressLine2;
 
-    // Número de la dirección (ejemplo: "123", "456-A")
-    @Size(max = 50, message = "El número de la dirección no debe exceder los 50 caracteres")
-    private String direction_number;
+    @NotBlank(message = "El cliente es obligatorio")
+    private String clientUuid;
 
-    // Referencia adicional de ubicación
-    @Size(max = 255, message = "La referencia no debe exceder los 255 caracteres")
-    private String reference;
+    @NotBlank(message = "El tipo de dirección es obligatorio")
+    private String directionTypeUuid;
 
-    // Nombre del departamento (se verificará y creará si no existe)
-    @NotBlank(message = "El nombre del departamento no debe estar vacío")
-    @Size(max = 100, message = "El nombre del departamento no debe exceder los 100 caracteres")
-    private String department_name;
+    @NotBlank(message = "El distrito es obligatorio")
+    private String districtUuid;
 
-    // Nombre de la provincia (se verificará y creará si no existe)
-    @NotBlank(message = "El nombre de la provincia no debe estar vacío")
-    @Size(max = 100, message = "El nombre de la provincia no debe exceder los 100 caracteres")
-    private String province_name;
+    @NotBlank(message = "El estado es obligatorio")
+    private String stateEntityUuid;
 
-    // Nombre del distrito (se verificará y creará si no existe)
-    @NotBlank(message = "El nombre del distrito no debe estar vacío")
-    @Size(max = 100, message = "El nombre del distrito no debe exceder los 100 caracteres")
-    private String district_name;
+    // Métodos adicionales para compatibilidad con servicios legacy
+    public String getClient_id() {
+        return clientUuid;
+    }
 
+    public String getDirection_type_id() {
+        return directionTypeUuid;
+    }
+
+    public String getDirection_name() {
+        return directionName;
+    }
+
+    public String getDirection_number() {
+        return addressLine1;
+    }
+
+    public String getReference() {
+        return addressLine2;
+    }
+
+    public String getDepartment_name() {
+        // Este método será manejado por el servicio usando el districtUuid
+        return null;
+    }
+
+    public String getProvince_name() {
+        // Este método será manejado por el servicio usando el districtUuid
+        return null;
+    }
+
+    public String getDistrict_name() {
+        // Este método será manejado por el servicio usando el districtUuid
+        return null;
+    }
 }

@@ -1,4 +1,3 @@
-
 package com.content.customer_service.service;
 
 import com.content.customer_service.dto.request.ContactRequestDTO;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Servicio de implementación para gestión de Contactos
@@ -38,23 +36,23 @@ public class ContactServiceImpl implements ServiceAbs<ContactRequestDTO, Contact
     @Transactional
     @Override
     public ContactResponseDTO create(ContactRequestDTO dto) {
-        log.info("Iniciando creación de contacto para cliente ID: {}", dto.getClient_id());
+        log.info("Iniciando creación de contacto para cliente UUID: {}", dto.getClient_id());
 
         // Validar datos del contacto
         utilityValidator.validate(dto);
 
-        // Verificar que el cliente existe
-        Client client = clientRepository.findById(dto.getClient_id())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + dto.getClient_id()));
+        // Verificar que el cliente existe usando UUID
+        Client client = clientRepository.findByUuid(dto.getClient_id())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + dto.getClient_id()));
 
         // Verificar que el email no está registrado
         if (contactRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Ya existe un contacto con el email: " + dto.getEmail());
         }
 
-        // Obtener estado activo (ID = 1)
-        StateEntity stateActive = stateEntityRepository.findById(1)
-                .orElseThrow(() -> new EntityNotFoundException("Estado activo no encontrado"));
+        // Obtener estado usando UUID
+        StateEntity stateActive = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado con UUID: " + dto.getStateEntityUuid()));
 
         // Crear el contacto
         Contact contact = contactMapper.toModel(dto);
@@ -62,16 +60,25 @@ public class ContactServiceImpl implements ServiceAbs<ContactRequestDTO, Contact
         contact.setState_entity_id(stateActive);
 
         Contact savedContact = contactRepository.save(contact);
-        log.info("Contacto creado exitosamente con ID: {}", savedContact.getContact_id());
+        log.info("Contacto creado exitosamente con UUID: {}", savedContact.getUuid());
 
         return contactMapper.toDTO(savedContact);
     }
 
-    @Transactional
     @Override
-    public List<ContactResponseDTO> allList() {
-        log.info("Obteniendo todos los contactos");
-        List<Contact> contacts = contactRepository.findAll();
+    public ContactResponseDTO getByUuid(String uuid) {
+        log.info("Buscando contacto con UUID: {}", uuid);
+        Contact contact = contactRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Contacto no encontrado con UUID: " + uuid));
+        return contactMapper.toDTO(contact);
+    }
+
+    @Override
+    public List<ContactResponseDTO> getAll() {
+        log.info("Obteniendo todos los contactos activos");
+        List<Contact> contacts = contactRepository.findAll().stream()
+                .filter(contact -> contact.getState_entity_id().getIs_active())
+                .toList();
         return contacts.stream()
                 .map(contactMapper::toDTO)
                 .toList();
@@ -79,60 +86,50 @@ public class ContactServiceImpl implements ServiceAbs<ContactRequestDTO, Contact
 
     @Transactional
     @Override
-    public ContactResponseDTO readById(Long id) {
-        log.info("Buscando contacto con ID: {}", id);
-        Optional<Contact> contactOpt = contactRepository.findById(id.intValue());
-
-        if (contactOpt.isEmpty()) {
-            log.error("Contacto no encontrado con ID: {}", id);
-            throw new EntityNotFoundException("Contacto no encontrado con ID: " + id);
-        }
-
-        return contactMapper.toDTO(contactOpt.get());
-    }
-
-    @Transactional
-    @Override
-    public void remove(int id) {
-        log.info("Eliminando (lógicamente) contacto con ID: {}", id);
-
-        Contact contact = contactRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Contacto no encontrado con ID: " + id));
-
-        // Eliminación lógica: cambiar estado a eliminado (ID = 0)
-        StateEntity stateDeleted = stateEntityRepository.findById(0)
-                .orElseThrow(() -> new EntityNotFoundException("Estado eliminado no encontrado"));
-
-        contact.setState_entity_id(stateDeleted);
-        contactRepository.save(contact);
-        log.info("Contacto eliminado (lógicamente) exitosamente con ID: {}", id);
-    }
-
-    @Transactional
-    @Override
-    public ContactResponseDTO update(int id, ContactRequestDTO dto) {
-        log.info("Actualizando contacto con ID: {}", id);
+    public ContactResponseDTO update(String uuid, ContactRequestDTO dto) {
+        log.info("Actualizando contacto con UUID: {}", uuid);
 
         // Validar datos del contacto
         utilityValidator.validate(dto);
 
         // Verificar que el contacto existe
-        Contact existingContact = contactRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Contacto no encontrado con ID: " + id));
-        // Verificar que el cliente existe
-        Client client = clientRepository.findById(dto.getClient_id())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + dto.getClient_id()));
+        Contact existingContact = contactRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Contacto no encontrado con UUID: " + uuid));
+
+        // Verificar que el cliente existe usando UUID
+        Client client = clientRepository.findByUuid(dto.getClient_id())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + dto.getClient_id()));
+
+        // Obtener estado usando UUID
+        StateEntity stateEntity = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado con UUID: " + dto.getStateEntityUuid()));
 
         // Actualizar datos del contacto
         existingContact.setClient_id(client);
         existingContact.setPhone_number(dto.getPhone_number());
         existingContact.setEmail(dto.getEmail());
+        existingContact.setState_entity_id(stateEntity);
 
         Contact updatedContact = contactRepository.save(existingContact);
-        log.info("Contacto actualizado exitosamente con ID: {}", updatedContact.getContact_id());
+        log.info("Contacto actualizado exitosamente con UUID: {}", updatedContact.getUuid());
 
         return contactMapper.toDTO(updatedContact);
     }
+
+    @Transactional
+    @Override
+    public void delete(String uuid) {
+        log.info("Eliminando (lógicamente) contacto con UUID: {}", uuid);
+
+        Contact contact = contactRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Contacto no encontrado con UUID: " + uuid));
+
+        // Eliminación lógica: cambiar estado a eliminado
+        StateEntity stateDeleted = stateEntityRepository.findByStateName("Eliminado")
+                .orElseThrow(() -> new EntityNotFoundException("Estado eliminado no encontrado"));
+
+        contact.setState_entity_id(stateDeleted);
+        contactRepository.save(contact);
+        log.info("Contacto eliminado (lógicamente) exitosamente con UUID: {}", uuid);
+    }
 }
-
-

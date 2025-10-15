@@ -1,13 +1,15 @@
 package com.content.customer_service.model;
 
+import com.content.customer_service.model.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Entidad que representa un cliente.
- * Contiene información personal y referencias a otros tipos relacionados.
+ * ACTUALIZADA para usar SuperBuilder y herencia UUID
  */
 
 @Entity
@@ -16,12 +18,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Client {
+@SuperBuilder // Cambiado de @Builder a @SuperBuilder
+public class Client extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer client_id;
+    private Integer client_id; // ID interno para la base de datos
 
     @Column(name = "client_name", nullable = false, length = 100)
     private String client_name;
@@ -44,5 +46,4 @@ public class Client {
     private List<Contact> contacts;
     @OneToMany(mappedBy = "client_id", fetch = FetchType.LAZY)
     private List<Direction> directions;
-
 }

@@ -42,17 +42,20 @@ public class DataLoader {
             // ========== 1. ESTADOS ==========
             log.info("📊 Creando estados de entidades...");
             StateEntity stateDeleted = StateEntity.builder()
-                    .state_entity_name("Eliminado")
+                    .state_name("Eliminado")
+                    .is_active(false)
                     .build();
             stateDeleted = stateEntityRepository.save(stateDeleted);
 
             StateEntity stateActive = StateEntity.builder()
-                    .state_entity_name("Activo")
+                    .state_name("Activo")
+                    .is_active(true)
                     .build();
             stateActive = stateEntityRepository.save(stateActive);
 
             StateEntity stateInactive = StateEntity.builder()
-                    .state_entity_name("Inactivo")
+                    .state_name("Inactivo")
+                    .is_active(true)
                     .build();
             stateInactive = stateEntityRepository.save(stateInactive);
 
@@ -64,13 +67,13 @@ public class DataLoader {
             // ========== 2. TIPOS DE PERSONA ==========
             log.info("👥 Creando tipos de persona...");
             PersonType personNatural = PersonType.builder()
-                    .persona_type_name("Natural")
+                    .type_name("Natural")
                     .state_entity_id(stateActive)
                     .build();
             personNatural = personTypeRepository.save(personNatural);
 
             PersonType personJuridica = PersonType.builder()
-                    .persona_type_name("Jurídica")
+                    .type_name("Jurídica")
                     .state_entity_id(stateActive)
                     .build();
             personJuridica = personTypeRepository.save(personJuridica);
@@ -82,22 +85,19 @@ public class DataLoader {
             // ========== 3. TIPOS DE IDENTIFICACIÓN ==========
             log.info("🆔 Creando tipos de identificación...");
             IdentificationType typeDNI = IdentificationType.builder()
-                    .identification_type_name("DNI")
-                    .person_type_id(personNatural)
+                    .type_name("DNI")
                     .state_entity_id(stateActive)
                     .build();
             typeDNI = identificationTypeRepository.save(typeDNI);
 
             IdentificationType typeRUC = IdentificationType.builder()
-                    .identification_type_name("RUC")
-                    .person_type_id(personJuridica)
+                    .type_name("RUC")
                     .state_entity_id(stateActive)
                     .build();
             typeRUC = identificationTypeRepository.save(typeRUC);
 
             IdentificationType typePasaporte = IdentificationType.builder()
-                    .identification_type_name("Pasaporte")
-                    .person_type_id(personNatural)
+                    .type_name("Pasaporte")
                     .state_entity_id(stateActive)
                     .build();
             typePasaporte = identificationTypeRepository.save(typePasaporte);
@@ -110,49 +110,52 @@ public class DataLoader {
             // ========== 4. IDENTIFICACIONES ==========
             log.info("📄 Creando identificaciones de prueba...");
             Identification id1 = Identification.builder()
-                    .identification_doc("72345678")
+                    .identification_number("72345678")
                     .identification_type_id(typeDNI)
+                    .person_type_id(personNatural)
                     .state_entity_id(stateActive)
                     .build();
             id1 = identificationRepository.save(id1);
 
             Identification id2 = Identification.builder()
-                    .identification_doc("87654321")
+                    .identification_number("87654321")
                     .identification_type_id(typeDNI)
+                    .person_type_id(personNatural)
                     .state_entity_id(stateActive)
                     .build();
             id2 = identificationRepository.save(id2);
 
             Identification id3 = Identification.builder()
-                    .identification_doc("20123456789")
+                    .identification_number("20123456789")
                     .identification_type_id(typeRUC)
+                    .person_type_id(personJuridica)
                     .state_entity_id(stateActive)
                     .build();
             id3 = identificationRepository.save(id3);
 
             log.info("✅ Identificaciones creadas: {} ({}), {} ({}), {} ({})",
-                    id1.getIdentification_doc(), id1.getIdentification_id(),
-                    id2.getIdentification_doc(), id2.getIdentification_id(),
-                    id3.getIdentification_doc(), id3.getIdentification_id());
+                    id1.getIdentification_number(), id1.getIdentification_id(),
+                    id2.getIdentification_number(), id2.getIdentification_id(),
+                    id3.getIdentification_number(), id3.getIdentification_id());
 
             // ========== 5. TIPOS DE CLIENTE ==========
             log.info("🏷️ Creando tipos de cliente...");
             ClientType typeRegular = ClientType.builder()
-                    .client_type_name("Regular")
+                    .type_name("Regular")
                     .description("Cliente regular sin beneficios especiales")
                     .state_entity_id(stateActive)
                     .build();
             typeRegular = clientTypeRepository.save(typeRegular);
 
             ClientType typePremium = ClientType.builder()
-                    .client_type_name("Premium")
+                    .type_name("Premium")
                     .description("Cliente con beneficios premium")
                     .state_entity_id(stateActive)
                     .build();
             typePremium = clientTypeRepository.save(typePremium);
 
             ClientType typeVIP = ClientType.builder()
-                    .client_type_name("VIP")
+                    .type_name("VIP")
                     .description("Cliente VIP con máximos beneficios")
                     .state_entity_id(stateActive)
                     .build();
@@ -166,19 +169,22 @@ public class DataLoader {
             // ========== 6. TIPOS DE DIRECCIÓN ==========
             log.info("🏠 Creando tipos de dirección...");
             DirectionType typeCasa = DirectionType.builder()
-                    .description("Casa")
+                    .type_name("Casa")
+                    .description("Dirección residencial")
                     .state_entity_id(stateActive)
                     .build();
             typeCasa = directionTypeRepository.save(typeCasa);
 
             DirectionType typeOficina = DirectionType.builder()
-                    .description("Oficina")
+                    .type_name("Oficina")
+                    .description("Dirección comercial u oficina")
                     .state_entity_id(stateActive)
                     .build();
             typeOficina = directionTypeRepository.save(typeOficina);
 
             DirectionType typeTrabajo = DirectionType.builder()
-                    .description("Trabajo")
+                    .type_name("Trabajo")
+                    .description("Dirección laboral")
                     .state_entity_id(stateActive)
                     .build();
             typeTrabajo = directionTypeRepository.save(typeTrabajo);
@@ -307,8 +313,8 @@ public class DataLoader {
                     .client_id(client1)
                     .direction_type_id(typeCasa)
                     .direction_name("Av. Larco")
-                    .direction_number("1234")
-                    .reference("Cerca al Parque Kennedy")
+                    .address_line_1("1234")
+                    .address_line_2("Cerca al Parque Kennedy")
                     .district_id(distMiraflores)
                     .state_entity_id(stateActive)
                     .build();
@@ -318,8 +324,8 @@ public class DataLoader {
                     .client_id(client2)
                     .direction_type_id(typeCasa)
                     .direction_name("Calle Las Begonias")
-                    .direction_number("567")
-                    .reference("Edificio azul, tercer piso")
+                    .address_line_1("567")
+                    .address_line_2("Edificio azul, tercer piso")
                     .district_id(distSanIsidro)
                     .state_entity_id(stateActive)
                     .build();
@@ -329,17 +335,17 @@ public class DataLoader {
                     .client_id(client3)
                     .direction_type_id(typeOficina)
                     .direction_name("Av. Primavera")
-                    .direction_number("890")
-                    .reference("Centro Empresarial, Torre B")
+                    .address_line_1("890")
+                    .address_line_2("Centro Empresarial, Torre B")
                     .district_id(distSurco)
                     .state_entity_id(stateActive)
                     .build();
             dir3 = directionRepository.save(dir3);
 
             log.info("✅ Direcciones creadas: {} {} (ID: {}), {} {} (ID: {}), {} {} (ID: {})",
-                    dir1.getDirection_name(), dir1.getDirection_number(), dir1.getDirection_id(),
-                    dir2.getDirection_name(), dir2.getDirection_number(), dir2.getDirection_id(),
-                    dir3.getDirection_name(), dir3.getDirection_number(), dir3.getDirection_id());
+                    dir1.getDirection_name(), dir1.getAddress_line_1(), dir1.getDirection_id(),
+                    dir2.getDirection_name(), dir2.getAddress_line_1(), dir2.getDirection_id(),
+                    dir3.getDirection_name(), dir3.getAddress_line_1(), dir3.getDirection_id());
 
             log.info("🎉 ¡Carga de datos completada exitosamente!");
             log.info("📊 Resumen:");
@@ -358,4 +364,3 @@ public class DataLoader {
         };
     }
 }
-

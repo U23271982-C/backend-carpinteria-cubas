@@ -13,94 +13,115 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controlador REST para gestión de Clientes
- * Implementa operaciones CRUD siguiendo principios RESTful
+ * Controlador REST para gestión de Clientes - USA SOLO UUIDs
+ * Todas las rutas usan UUIDs como identificadores públicos
  */
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/api/v1/clients")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*")
 public class ClientController {
 
     private final ClientServiceImpl clientService;
 
     /**
      * Crear un nuevo cliente
-     * @param clientRequestDTO Datos del cliente a crear
-     * @return Cliente creado con código 201
+     * POST /api/v1/clients
      */
     @PostMapping
     public ResponseEntity<ClientResponseDTO> createClient(@Valid @RequestBody ClientRequestDTO clientRequestDTO) {
-        log.info("Recibida solicitud para crear cliente: {} {}",
-                clientRequestDTO.getClient_name(), clientRequestDTO.getClient_last_name());
-
-        ClientResponseDTO createdClient = clientService.create(clientRequestDTO);
-
-        log.info("Cliente creado exitosamente con ID: {}", createdClient.getClient_id());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdClient);
+        log.info("Request para crear cliente: {} {}", clientRequestDTO.getClientName(), clientRequestDTO.getClientLastName());
+        
+        ClientResponseDTO response = clientService.create(clientRequestDTO);
+        
+        log.info("Cliente creado exitosamente con UUID: {}", response.getUuid());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**
-     * Obtener todos los clientes
-     * @return Lista de todos los clientes
+     * Obtener cliente por UUID (identificador público)
+     * GET /api/v1/clients/{uuid}
+     */
+    @GetMapping("/{uuid}")
+    public ResponseEntity<ClientResponseDTO> getClientByUuid(@PathVariable String uuid) {
+        log.info("Request para obtener cliente con UUID: {}", uuid);
+        
+        ClientResponseDTO response = clientService.getByUuid(uuid);
+        
+        log.info("Cliente encontrado: {}", response.getClientName());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Obtener todos los clientes activos
+     * GET /api/v1/clients
      */
     @GetMapping
     public ResponseEntity<List<ClientResponseDTO>> getAllClients() {
-        log.info("Recibida solicitud para obtener todos los clientes");
-
-        List<ClientResponseDTO> clients = clientService.allList();
-
-        log.info("Se encontraron {} clientes", clients.size());
-        return ResponseEntity.ok(clients);
+        log.info("Request para obtener todos los clientes activos");
+        
+        List<ClientResponseDTO> response = clientService.getAll();
+        
+        log.info("Se encontraron {} clientes activos", response.size());
+        return ResponseEntity.ok(response);
     }
 
     /**
-     * Obtener un cliente por su ID
-     * @param id ID del cliente
-     * @return Cliente encontrado
+     * Actualizar cliente por UUID
+     * PUT /api/v1/clients/{uuid}
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<ClientResponseDTO> getClientById(@PathVariable Long id) {
-        log.info("Recibida solicitud para obtener cliente con ID: {}", id);
-
-        ClientResponseDTO client = clientService.readById(id);
-
-        log.info("Cliente encontrado: {} {}", client.getClient_name(), client.getClient_last_name());
-        return ResponseEntity.ok(client);
-    }
-
-    /**
-     * Actualizar un cliente existente
-     * @param id ID del cliente a actualizar
-     * @param clientRequestDTO Nuevos datos del cliente
-     * @return Cliente actualizado
-     */
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     public ResponseEntity<ClientResponseDTO> updateClient(
-            @PathVariable Integer id,
+            @PathVariable String uuid,
             @Valid @RequestBody ClientRequestDTO clientRequestDTO) {
-
-        log.info("Recibida solicitud para actualizar cliente con ID: {}", id);
-
-        ClientResponseDTO updatedClient = clientService.update(id, clientRequestDTO);
-
-        log.info("Cliente actualizado exitosamente con ID: {}", updatedClient.getClient_id());
-        return ResponseEntity.ok(updatedClient);
+        log.info("Request para actualizar cliente con UUID: {}", uuid);
+        
+        ClientResponseDTO response = clientService.update(uuid, clientRequestDTO);
+        
+        log.info("Cliente actualizado exitosamente: {}", response.getClientName());
+        return ResponseEntity.ok(response);
     }
 
     /**
-     * Eliminar un cliente (eliminación lógica)
-     * @param id ID del cliente a eliminar
-     * @return Respuesta sin contenido (204)
+     * Eliminar cliente por UUID (soft delete)
+     * DELETE /api/v1/clients/{uuid}
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Integer id) {
-        log.info("Recibida solicitud para eliminar cliente con ID: {}", id);
-
-        clientService.remove(id);
-
-        log.info("Cliente eliminado exitosamente con ID: {}", id);
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<Void> deleteClient(@PathVariable String uuid) {
+        log.info("Request para eliminar cliente con UUID: {}", uuid);
+        
+        clientService.delete(uuid);
+        
+        log.info("Cliente eliminado exitosamente");
         return ResponseEntity.noContent().build();
     }
-}
 
+    /**
+     * Buscar cliente por número de identificación
+     * GET /api/v1/clients/search/identification/{identificationNumber}
+     */
+    @GetMapping("/search/identification/{identificationNumber}")
+    public ResponseEntity<ClientResponseDTO> getClientByIdentification(@PathVariable String identificationNumber) {
+        log.info("Request para buscar cliente por identificación: {}", identificationNumber);
+
+        ClientResponseDTO response = clientService.getByIdentificationNumber(identificationNumber);
+
+        log.info("Cliente encontrado por identificación: {}", response.getClientName());
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Buscar clientes por nombre
+     * GET /api/v1/clients/search/name?q={searchTerm}
+     */
+    @GetMapping("/search/name")
+    public ResponseEntity<List<ClientResponseDTO>> searchClientsByName(@RequestParam String q) {
+        log.info("Request para buscar clientes por nombre: {}", q);
+
+        List<ClientResponseDTO> response = clientService.searchByName(q);
+
+        log.info("Se encontraron {} clientes con el término: {}", response.size(), q);
+        return ResponseEntity.ok(response);
+    }
+}

@@ -7,18 +7,26 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Repositorio para gestión de Direcciones
- */
 @Repository
 public interface DirectionRepository extends JpaRepository<Direction, Integer> {
 
-    // Buscar direcciones por cliente usando query personalizada
-    @Query("SELECT d FROM Direction d WHERE d.client_id.client_id = :clientId")
-    List<Direction> findByClientId(@Param("clientId") Integer clientId);
+    // Método principal: Buscar dirección por UUID
+    Optional<Direction> findByUuid(String uuid);
 
-    // Buscar direcciones por distrito usando query personalizada
-    @Query("SELECT d FROM Direction d WHERE d.district_id.district_id = :districtId")
-    List<Direction> findByDistrictId(@Param("districtId") Integer districtId);
+    // Verificar existencia por UUID
+    boolean existsByUuid(String uuid);
+
+    // Buscar dirección activa por UUID
+    @Query("SELECT d FROM Direction d WHERE d.uuid = :uuid AND d.state_entity_id.is_active = true")
+    Optional<Direction> findActiveByUuid(@Param("uuid") String uuid);
+
+    // Buscar todas las direcciones de un cliente por UUID del cliente
+    @Query("SELECT d FROM Direction d WHERE d.client_id.uuid = :clientUuid AND d.state_entity_id.is_active = true")
+    List<Direction> findByClientUuid(@Param("clientUuid") String clientUuid);
+
+    // Buscar todas las direcciones activas
+    @Query("SELECT d FROM Direction d WHERE d.state_entity_id.is_active = true")
+    List<Direction> findAllActive();
 }

@@ -33,12 +33,12 @@ public class DirectionController {
      */
     @PostMapping
     public ResponseEntity<DirectionResponseDTO> createDirection(@Valid @RequestBody DirectionRequestDTO directionRequestDTO) {
-        log.info("Recibida solicitud para crear dirección para cliente ID: {}",
-                directionRequestDTO.getClient_id());
+        log.info("Recibida solicitud para crear dirección para cliente UUID: {}",
+                directionRequestDTO.getClientUuid());
 
         DirectionResponseDTO createdDirection = directionService.create(directionRequestDTO);
 
-        log.info("Dirección creada exitosamente con ID: {}", createdDirection.getDirection_id());
+        log.info("Dirección creada exitosamente con UUID: {}", createdDirection.getUuid());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDirection);
     }
 
@@ -50,7 +50,7 @@ public class DirectionController {
     public ResponseEntity<List<DirectionResponseDTO>> getAllDirections() {
         log.info("Recibida solicitud para obtener todas las direcciones");
 
-        List<DirectionResponseDTO> directions = directionService.allList();
+        List<DirectionResponseDTO> directions = directionService.getAll();
 
         log.info("Se encontraron {} direcciones", directions.size());
         return ResponseEntity.ok(directions);
@@ -62,48 +62,47 @@ public class DirectionController {
      * @return Dirección encontrada
      */
     @GetMapping("/{id}")
-    public ResponseEntity<DirectionResponseDTO> getDirectionById(@PathVariable Long id) {
-        log.info("Recibida solicitud para obtener dirección con ID: {}", id);
+    public ResponseEntity<DirectionResponseDTO> getDirectionById(@PathVariable String id) {
+        log.info("Recibida solicitud para obtener dirección con UUID: {}", id);
 
-        DirectionResponseDTO direction = directionService.readById(id);
+        DirectionResponseDTO direction = directionService.getByUuid(id);
 
-        log.info("Dirección encontrada con ID: {}", direction.getDirection_id());
+        log.info("Dirección encontrada con UUID: {}", direction.getUuid());
         return ResponseEntity.ok(direction);
     }
 
     /**
      * Actualizar una dirección existente
      * El sistema actualizará o creará departamento, provincia y distrito según sea necesario
-     * @param id ID de la dirección a actualizar
+     * @param id UUID de la dirección a actualizar
      * @param directionRequestDTO Nuevos datos de la dirección
      * @return Dirección actualizada
      */
     @PutMapping("/{id}")
     public ResponseEntity<DirectionResponseDTO> updateDirection(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @Valid @RequestBody DirectionRequestDTO directionRequestDTO) {
 
-        log.info("Recibida solicitud para actualizar dirección con ID: {}", id);
+        log.info("Recibida solicitud para actualizar dirección con UUID: {}", id);
 
         DirectionResponseDTO updatedDirection = directionService.update(id, directionRequestDTO);
 
-        log.info("Dirección actualizada exitosamente con ID: {}", updatedDirection.getDirection_id());
+        log.info("Dirección actualizada exitosamente con UUID: {}", updatedDirection.getUuid());
         return ResponseEntity.ok(updatedDirection);
     }
 
     /**
      * Eliminar una dirección (eliminación lógica)
-     * @param id ID de la dirección a eliminar
+     * @param id UUID de la dirección a eliminar
      * @return Respuesta sin contenido (204)
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDirection(@PathVariable Integer id) {
-        log.info("Recibida solicitud para eliminar dirección con ID: {}", id);
+    public ResponseEntity<Void> deleteDirection(@PathVariable String id) {
+        log.info("Recibida solicitud para eliminar dirección con UUID: {}", id);
 
-        directionService.remove(id);
+        directionService.delete(id);
 
-        log.info("Dirección eliminada exitosamente con ID: {}", id);
+        log.info("Dirección eliminada exitosamente con UUID: {}", id);
         return ResponseEntity.noContent().build();
     }
 }
-

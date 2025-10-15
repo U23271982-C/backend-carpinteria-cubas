@@ -31,12 +31,12 @@ public class ContactController {
      */
     @PostMapping
     public ResponseEntity<ContactResponseDTO> createContact(@Valid @RequestBody ContactRequestDTO contactRequestDTO) {
-        log.info("Recibida solicitud para crear contacto para cliente ID: {}",
-                contactRequestDTO.getClient_id());
+        log.info("Recibida solicitud para crear contacto para cliente UUID: {}",
+                contactRequestDTO.getClientUuid());
 
         ContactResponseDTO createdContact = contactService.create(contactRequestDTO);
 
-        log.info("Contacto creado exitosamente con ID: {}", createdContact.getContact_id());
+        log.info("Contacto creado exitosamente con UUID: {}", createdContact.getUuid());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdContact);
     }
 
@@ -48,22 +48,22 @@ public class ContactController {
     public ResponseEntity<List<ContactResponseDTO>> getAllContacts() {
         log.info("Recibida solicitud para obtener todos los contactos");
 
-        List<ContactResponseDTO> contacts = contactService.allList();
+        List<ContactResponseDTO> contacts = contactService.getAll();
 
         log.info("Se encontraron {} contactos", contacts.size());
         return ResponseEntity.ok(contacts);
     }
 
     /**
-     * Obtener un contacto por su ID
-     * @param id ID del contacto
+     * Obtener un contacto por su UUID
+     * @param id UUID del contacto
      * @return Contacto encontrado
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ContactResponseDTO> getContactById(@PathVariable Long id) {
-        log.info("Recibida solicitud para obtener contacto con ID: {}", id);
+    public ResponseEntity<ContactResponseDTO> getContactById(@PathVariable String id) {
+        log.info("Recibida solicitud para obtener contacto con UUID: {}", id);
 
-        ContactResponseDTO contact = contactService.readById(id);
+        ContactResponseDTO contact = contactService.getByUuid(id);
 
         log.info("Contacto encontrado con email: {}", contact.getEmail());
         return ResponseEntity.ok(contact);
@@ -71,36 +71,35 @@ public class ContactController {
 
     /**
      * Actualizar un contacto existente
-     * @param id ID del contacto a actualizar
+     * @param id UUID del contacto a actualizar
      * @param contactRequestDTO Nuevos datos del contacto
      * @return Contacto actualizado
      */
     @PutMapping("/{id}")
     public ResponseEntity<ContactResponseDTO> updateContact(
-            @PathVariable Integer id,
+            @PathVariable String id,
             @Valid @RequestBody ContactRequestDTO contactRequestDTO) {
 
-        log.info("Recibida solicitud para actualizar contacto con ID: {}", id);
+        log.info("Recibida solicitud para actualizar contacto con UUID: {}", id);
 
         ContactResponseDTO updatedContact = contactService.update(id, contactRequestDTO);
 
-        log.info("Contacto actualizado exitosamente con ID: {}", updatedContact.getContact_id());
+        log.info("Contacto actualizado exitosamente con UUID: {}", updatedContact.getUuid());
         return ResponseEntity.ok(updatedContact);
     }
 
     /**
      * Eliminar un contacto (eliminación lógica)
-     * @param id ID del contacto a eliminar
+     * @param id UUID del contacto a eliminar
      * @return Respuesta sin contenido (204)
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteContact(@PathVariable Integer id) {
-        log.info("Recibida solicitud para eliminar contacto con ID: {}", id);
+    public ResponseEntity<Void> deleteContact(@PathVariable String id) {
+        log.info("Recibida solicitud para eliminar contacto con UUID: {}", id);
 
-        contactService.remove(id);
+        contactService.delete(id);
 
-        log.info("Contacto eliminado exitosamente con ID: {}", id);
+        log.info("Contacto eliminado exitosamente con UUID: {}", id);
         return ResponseEntity.noContent().build();
     }
 }
-

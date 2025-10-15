@@ -14,11 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Servicio de implementación para gestión de Direcciones
- * Incluye lógica automática para crear Departamento, Provincia y Distrito si no existen
  */
 @Service
 @RequiredArgsConstructor
@@ -28,8 +26,6 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
     private final DirectionRepository directionRepository;
     private final ClientRepository clientRepository;
     private final DirectionTypeRepository directionTypeRepository;
-    private final DepartmentRepository departmentRepository;
-    private final ProvinceRepository provinceRepository;
     private final DistrictRepository districtRepository;
     private final StateEntityRepository stateEntityRepository;
     private final DirectionMapper directionMapper;
@@ -38,27 +34,26 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
     @Transactional
     @Override
     public DirectionResponseDTO create(DirectionRequestDTO dto) {
-        log.info("Iniciando creación de dirección para cliente ID: {}", dto.getClient_id());
+        log.info("Iniciando creación de dirección para cliente UUID: {}", dto.getClient_id());
 
         // Validar datos de la dirección
         utilityValidator.validate(dto);
 
-        // Verificar que el cliente existe
-        Client client = clientRepository.findById(dto.getClient_id())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + dto.getClient_id()));
+        // Verificar que el cliente existe usando UUID
+        Client client = clientRepository.findByUuid(dto.getClient_id())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + dto.getClient_id()));
 
-        // Verificar que el tipo de dirección existe
-        DirectionType directionType = directionTypeRepository.findById(dto.getDirection_type_id())
-                .orElseThrow(() -> new EntityNotFoundException("Tipo de dirección no encontrado con ID: " + dto.getDirection_type_id()));
+        // Verificar que el tipo de dirección existe usando UUID
+        DirectionType directionType = directionTypeRepository.findByUuid(dto.getDirection_type_id())
+                .orElseThrow(() -> new EntityNotFoundException("Tipo de dirección no encontrado con UUID: " + dto.getDirection_type_id()));
 
-        // Obtener estado activo (ID = 1)
-        StateEntity stateActive = stateEntityRepository.findById(1)
-                .orElseThrow(() -> new EntityNotFoundException("Estado activo no encontrado"));
+        // Obtener estado activo usando UUID
+        StateEntity stateActive = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado con UUID: " + dto.getStateEntityUuid()));
 
-        // LÓGICA DE NEGOCIO: Buscar o crear Departamento, Provincia y Distrito
-        Department department = findOrCreateDepartment(dto.getDepartment_name(), stateActive);
-        Province province = findOrCreateProvince(dto.getProvince_name(), department, stateActive);
-        District district = findOrCreateDistrict(dto.getDistrict_name(), province, stateActive);
+        // Obtener distrito usando UUID (ya no creamos automáticamente)
+        District district = districtRepository.findByUuid(dto.getDistrictUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Distrito no encontrado con UUID: " + dto.getDistrictUuid()));
 
         // Crear la dirección
         Direction direction = directionMapper.toModel(dto);
@@ -68,92 +63,23 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
         direction.setState_entity_id(stateActive);
 
         Direction savedDirection = directionRepository.save(direction);
-        log.info("Dirección creada exitosamente con ID: {}", savedDirection.getDirection_id());
+        log.info("Dirección creada exitosamente con UUID: {}", savedDirection.getUuid());
 
         return directionMapper.toDTO(savedDirection);
     }
 
-    /**
-     * Busca un departamento por nombre, si no existe lo crea
-     */
-    private Department findOrCreateDepartment(String departmentName, StateEntity stateActive) {
-        log.info("Buscando o creando departamento: {}", departmentName);
-
-        Optional<Department> departmentOpt = departmentRepository.findByNameIgnoreCase(departmentName);
-
-        if (departmentOpt.isPresent()) {
-            log.info("Departamento encontrado: {}", departmentName);
-            return departmentOpt.get();
-        }
-
-        // Crear nuevo departamento
-        Department newDepartment = Department.builder()
-                .department_name(departmentName)
-                .state_entity_id(stateActive)
-                .build();
-
-        Department savedDepartment = departmentRepository.save(newDepartment);
-        log.info("Departamento creado con ID: {}", savedDepartment.getDepartment_id());
-        return savedDepartment;
-    }
-
-    /**
-     * Busca una provincia por nombre y departamento, si no existe la crea
-     */
-    private Province findOrCreateProvince(String provinceName, Department department, StateEntity stateActive) {
-        log.info("Buscando o creando provincia: {} en departamento: {}", provinceName, department.getDepartment_name());
-
-        Optional<Province> provinceOpt = provinceRepository
-                .findByNameAndDepartmentId(provinceName, department.getDepartment_id());
-
-        if (provinceOpt.isPresent()) {
-            log.info("Provincia encontrada: {}", provinceName);
-            return provinceOpt.get();
-        }
-
-        // Crear nueva provincia
-        Province newProvince = Province.builder()
-                .province_name(provinceName)
-                .department_id(department)
-                .state_entity_id(stateActive)
-                .build();
-
-        Province savedProvince = provinceRepository.save(newProvince);
-        log.info("Provincia creada con ID: {}", savedProvince.getProvince_id());
-        return savedProvince;
-    }
-
-    /**
-     * Busca un distrito por nombre y provincia, si no existe lo crea
-     */
-    private District findOrCreateDistrict(String districtName, Province province, StateEntity stateActive) {
-        log.info("Buscando o creando distrito: {} en provincia: {}", districtName, province.getProvince_name());
-
-        Optional<District> districtOpt = districtRepository
-                .findByNameAndProvinceId(districtName, province.getProvince_id());
-
-        if (districtOpt.isPresent()) {
-            log.info("Distrito encontrado: {}", districtName);
-            return districtOpt.get();
-        }
-
-        // Crear nuevo distrito
-        District newDistrict = District.builder()
-                .district_name(districtName)
-                .province_id(province)
-                .state_entity_id(stateActive)
-                .build();
-
-        District savedDistrict = districtRepository.save(newDistrict);
-        log.info("Distrito creado con ID: {}", savedDistrict.getDistrict_id());
-        return savedDistrict;
-    }
-
-    @Transactional
     @Override
-    public List<DirectionResponseDTO> allList() {
-        log.info("Obteniendo todas las direcciones");
-        List<Direction> directions = directionRepository.findAll();
+    public DirectionResponseDTO getByUuid(String uuid) {
+        log.info("Buscando dirección con UUID: {}", uuid);
+        Direction direction = directionRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Dirección no encontrada con UUID: " + uuid));
+        return directionMapper.toDTO(direction);
+    }
+
+    @Override
+    public List<DirectionResponseDTO> getAll() {
+        log.info("Obteniendo todas las direcciones activas");
+        List<Direction> directions = directionRepository.findAllActive();
         return directions.stream()
                 .map(directionMapper::toDTO)
                 .toList();
@@ -161,75 +87,61 @@ public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, Dir
 
     @Transactional
     @Override
-    public DirectionResponseDTO readById(Long id) {
-        log.info("Buscando dirección con ID: {}", id);
-        Optional<Direction> directionOpt = directionRepository.findById(id.intValue());
-
-        if (directionOpt.isEmpty()) {
-            log.error("Dirección no encontrada con ID: {}", id);
-            throw new EntityNotFoundException("Dirección no encontrada con ID: " + id);
-        }
-
-        return directionMapper.toDTO(directionOpt.get());
-    }
-
-    @Transactional
-    @Override
-    public void remove(int id) {
-        log.info("Eliminando (lógicamente) dirección con ID: {}", id);
-
-        Direction direction = directionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Dirección no encontrada con ID: " + id));
-
-        // Eliminación lógica: cambiar estado a eliminado (ID = 0)
-        StateEntity stateDeleted = stateEntityRepository.findById(0)
-                .orElseThrow(() -> new EntityNotFoundException("Estado eliminado no encontrado"));
-
-        direction.setState_entity_id(stateDeleted);
-        directionRepository.save(direction);
-        log.info("Dirección eliminada (lógicamente) exitosamente con ID: {}", id);
-    }
-
-    @Transactional
-    @Override
-    public DirectionResponseDTO update(int id, DirectionRequestDTO dto) {
-        log.info("Actualizando dirección con ID: {}", id);
+    public DirectionResponseDTO update(String uuid, DirectionRequestDTO dto) {
+        log.info("Actualizando dirección con UUID: {}", uuid);
 
         // Validar datos de la dirección
         utilityValidator.validate(dto);
 
         // Verificar que la dirección existe
-        Direction existingDirection = directionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Dirección no encontrada con ID: " + id));
+        Direction existingDirection = directionRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Dirección no encontrada con UUID: " + uuid));
 
-        // Verificar que el cliente existe
-        Client client = clientRepository.findById(dto.getClient_id())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + dto.getClient_id()));
+        // Verificar que el cliente existe usando UUID
+        Client client = clientRepository.findByUuid(dto.getClient_id())
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + dto.getClient_id()));
 
-        // Verificar que el tipo de dirección existe
-        DirectionType directionType = directionTypeRepository.findById(dto.getDirection_type_id())
-                .orElseThrow(() -> new EntityNotFoundException("Tipo de dirección no encontrado con ID: " + dto.getDirection_type_id()));
+        // Verificar que el tipo de dirección existe usando UUID
+        DirectionType directionType = directionTypeRepository.findByUuid(dto.getDirection_type_id())
+                .orElseThrow(() -> new EntityNotFoundException("Tipo de dirección no encontrado con UUID: " + dto.getDirection_type_id()));
 
-        // Obtener estado activo
-        StateEntity stateActive = stateEntityRepository.findById(1)
-                .orElseThrow(() -> new EntityNotFoundException("Estado activo no encontrado"));
+        // Obtener distrito usando UUID
+        District district = districtRepository.findByUuid(dto.getDistrictUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Distrito no encontrado con UUID: " + dto.getDistrictUuid()));
 
-        // Buscar o crear ubicación geográfica
-        Department department = findOrCreateDepartment(dto.getDepartment_name(), stateActive);
-        Province province = findOrCreateProvince(dto.getProvince_name(), department, stateActive);
-        District district = findOrCreateDistrict(dto.getDistrict_name(), province, stateActive);
+        // Estado permanece el mismo o se puede actualizar
+        StateEntity stateEntity = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado con UUID: " + dto.getStateEntityUuid()));
 
         // Actualizar datos de la dirección
         existingDirection.setClient_id(client);
         existingDirection.setDirection_type_id(directionType);
         existingDirection.setDirection_name(dto.getDirection_name());
-        existingDirection.setDirection_number(dto.getDirection_number());
-        existingDirection.setReference(dto.getReference());
+        existingDirection.setAddress_line_1(dto.getDirection_number());
+        existingDirection.setAddress_line_2(dto.getReference());
         existingDirection.setDistrict_id(district);
+        existingDirection.setState_entity_id(stateEntity);
 
         Direction updatedDirection = directionRepository.save(existingDirection);
-        log.info("Dirección actualizada exitosamente con ID: {}", updatedDirection.getDirection_id());
+        log.info("Dirección actualizada exitosamente con UUID: {}", updatedDirection.getUuid());
 
         return directionMapper.toDTO(updatedDirection);
+    }
+
+    @Transactional
+    @Override
+    public void delete(String uuid) {
+        log.info("Eliminando (lógicamente) dirección con UUID: {}", uuid);
+
+        Direction direction = directionRepository.findActiveByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException("Dirección no encontrada con UUID: " + uuid));
+
+        // Eliminación lógica: cambiar estado a eliminado
+        StateEntity stateDeleted = stateEntityRepository.findByStateName("Eliminado")
+                .orElseThrow(() -> new EntityNotFoundException("Estado eliminado no encontrado"));
+
+        direction.setState_entity_id(stateDeleted);
+        directionRepository.save(direction);
+        log.info("Dirección eliminada (lógicamente) exitosamente con UUID: {}", uuid);
     }
 }

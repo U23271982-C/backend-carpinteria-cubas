@@ -8,29 +8,34 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * Mapper para conversión entre Identification, IdentificationRequestDTO y IdentificationResponseDTO
+ * Mapper para Identification - ACTUALIZADO PARA TRABAJAR CON UUIDs
  */
 @Mapper(componentModel = "spring")
 public interface IdentificationMapper extends Convert<Identification, IdentificationRequestDTO, IdentificationResponseDTO> {
 
     /**
-     * Convierte un modelo Identification a IdentificationResponseDTO
+     * Convierte Identification a IdentificationResponseDTO - SOLO UUIDs
      */
-    @Mapping(source = "identification_type_id.identification_type_id", target = "identification_type_id")
-    @Mapping(source = "identification_type_id.identification_type_name", target = "identification_type_name")
-    @Mapping(source = "state_entity_id.state_entity_id", target = "state_entity_id")
-    @Mapping(source = "state_entity_id.state_entity_name", target = "state_entity_name")
+    @Mapping(source = "uuid", target = "uuid")
+    @Mapping(source = "identification_number", target = "identificationNumber")
+    @Mapping(source = "identification_type_id.uuid", target = "identificationTypeUuid")
+    @Mapping(source = "identification_type_id.type_name", target = "identificationTypeName")
+    @Mapping(source = "person_type_id.uuid", target = "personTypeUuid")
+    @Mapping(source = "person_type_id.type_name", target = "personTypeName")
+    @Mapping(source = "state_entity_id.uuid", target = "stateEntityUuid")
+    @Mapping(source = "state_entity_id.state_name", target = "stateName")
     @Override
     IdentificationResponseDTO toDTO(Identification modelo);
 
     /**
-     * Convierte un IdentificationRequestDTO a modelo Identification
+     * Convierte IdentificationRequestDTO a Identification
      */
-    @Mapping(target = "identification_id", ignore = true)
-    @Mapping(target = "clients", ignore = true)
-    @Mapping(target = "state_entity_id", ignore = true) // Se asigna en el servicio
-    @Mapping(source = "identification_type_id", target = "identification_type_id.identification_type_id")
+    @Mapping(target = "identification_id", ignore = true) // ID interno se genera
+    @Mapping(target = "uuid", ignore = true) // UUID se genera en BaseEntity
+    @Mapping(source = "identificationNumber", target = "identification_number")
+    @Mapping(target = "identification_type_id", ignore = true) // Se asigna en servicio por UUID
+    @Mapping(target = "person_type_id", ignore = true) // Se asigna en servicio por UUID
+    @Mapping(target = "state_entity_id", ignore = true) // Se asigna en servicio por UUID
     @Override
     Identification toModel(IdentificationRequestDTO dto);
 }
-

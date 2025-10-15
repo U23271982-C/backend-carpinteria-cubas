@@ -1,23 +1,25 @@
 package com.content.customer_service.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
- * DTO de respuesta para Identificación.
+ * DTO de respuesta para Identification - Solo expone UUIDs
  */
-@Getter
-@Setter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class IdentificationResponseDTO {
 
-    private Integer identification_id;
-    private String identification_doc;
-    private Integer identification_type_id;
-    private String identification_type_name;
-    private Integer state_entity_id;
-    private String state_entity_name;
+    private String uuid;
+    private String identificationNumber;
 
+    private String identificationTypeUuid;
+    private String identificationTypeName;
+
+    private String personTypeUuid;
+    private String personTypeName;
+
+    private String stateEntityUuid;
+    private String stateName;
 }
-

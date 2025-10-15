@@ -6,15 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
-/**
- * Repositorio para gestión de Tipos de Cliente
- */
 @Repository
 public interface ClientTypeRepository extends JpaRepository<ClientType, Integer> {
 
-    // Buscar tipo de cliente por nombre usando query personalizada
-    @Query("SELECT ct FROM ClientType ct WHERE ct.client_type_name = :clientTypeName")
-    Optional<ClientType> findByName(@Param("clientTypeName") String clientTypeName);
+    Optional<ClientType> findByUuid(String uuid);
+    boolean existsByUuid(String uuid);
+
+    @Query("SELECT ct FROM ClientType ct WHERE ct.uuid = :uuid AND ct.state_entity_id.is_active = true")
+    Optional<ClientType> findActiveByUuid(@Param("uuid") String uuid);
+
+    @Query("SELECT ct FROM ClientType ct WHERE ct.state_entity_id.is_active = true")
+    List<ClientType> findAllActive();
 }
