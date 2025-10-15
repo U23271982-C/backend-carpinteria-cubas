@@ -4,9 +4,12 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Builder
 @Data
 public class ContractResponseDTO {
+    private UUID uuid;
     private String contract_name;
     private LocalDateTime start_date;
     private LocalDateTime end_date;

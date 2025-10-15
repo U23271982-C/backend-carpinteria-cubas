@@ -1,6 +1,8 @@
 package com.content.employee_service.dto.request;
 
 import java.time.LocalDateTime;
+
+import com.content.employee_service.utility.ValidateGroup;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -15,29 +17,29 @@ import lombok.*;
 public class ContractRequestDTO {
 
     // Nombre del contrato
-    @Size(min = 1, max = 100, message = "El nombre del contrato debe tener entre 1 y 100 caracteres")
-    @NotBlank(message = "El nombre del contrato no puede estar vacío")
+    @Size(min = 1, max = 100, message = "El nombre del contrato debe tener entre 1 y 100 caracteres", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
+    @NotBlank(message = "El nombre del contrato no puede estar vacío", groups = ValidateGroup.OnCreate.class)
     private String contract_name;
 
     // Fecha de inicio del contrato
-    @FutureOrPresent(message = "La fecha de inicio del contrato debe ser hoy o una fecha futura")
-    @NotNull(message = "La fecha de inicio no puede ser nula")
+    @FutureOrPresent(message = "La fecha de inicio del contrato debe ser hoy o una fecha futura", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
+    @NotNull(message = "La fecha de inicio no puede ser nula", groups = ValidateGroup.OnCreate.class)
     private LocalDateTime start_date;
 
     // Fecha de finalización del contrato
-    @Future(message = "La fecha de finalización del contrato debe ser una fecha futura")
-    @NotNull(message = "La fecha de finalización no puede ser nula")
+    @Future(message = "La fecha de finalización del contrato debe ser una fecha futura", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
+    @NotNull(message = "La fecha de finalización no puede ser nula", groups = ValidateGroup.OnCreate.class)
     private LocalDateTime end_date;
 
     // Tipo de contrato (ID)
-    @Positive(message = "El ID del tipo de contrato debe ser un número positivo")
-    @NotNull(message = "El ID tipo de contrato no puede ser nulo")
-    private Integer contract_type_id;
+    @Positive(message = "El ID del tipo de contrato debe ser un número positivo", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
+    @NotNull(message = "El ID tipo de contrato no puede ser nulo", groups = ValidateGroup.OnCreate.class)
+    private Integer contract_type_uuid;
 
     // Salario del contrato
-    @Positive(message = "El salario debe ser un número positivo")
-    @NotNull(message = "El salario no puede ser nulo")
-    @Size(max = 10, message = "El salario no puede tener más de 10 dígitos")
+    @Positive(message = "El salario debe ser un número positivo", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
+    @NotNull(message = "El salario no puede ser nulo", groups = ValidateGroup.OnCreate.class)
+    @Digits(integer = 10, fraction = 2,message = "El salario no puede tener más de 10 dígitos", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
     private double salary;
 
 }
