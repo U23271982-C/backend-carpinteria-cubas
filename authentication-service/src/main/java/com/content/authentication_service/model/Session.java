@@ -3,6 +3,7 @@ package com.content.authentication_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "Session")
@@ -16,6 +17,9 @@ public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer session_id;
+
+    @Column(name="uuid", nullable = false, unique = true, updatable = false)
+    private UUID uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_employee_id", nullable = false)

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "UserEmployee")
@@ -18,6 +19,8 @@ public class UserEmployee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_employee_id;
 
+    @Column(name="uuid", nullable = false, unique = true, updatable = false)
+    private UUID uuid;
 
     @Column(name="user_employee_name", length = 100)
     private String user_employee_name;

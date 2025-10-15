@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "Action")
@@ -17,6 +18,9 @@ public class Action {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer action_id;
+
+    @Column(name="uuid", nullable = false, unique = true, updatable = false)
+    private UUID uuid;
 
     @Column(name="action_name", length = 50)
     private String action_name;

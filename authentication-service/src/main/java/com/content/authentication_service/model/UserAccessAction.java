@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "UserAccessAction")
@@ -16,6 +17,9 @@ public class UserAccessAction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_access_action_id;
+
+    @Column(name="uuid", nullable = false, unique = true, updatable = false)
+    private UUID access_action_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_module_access_id", nullable = false)
