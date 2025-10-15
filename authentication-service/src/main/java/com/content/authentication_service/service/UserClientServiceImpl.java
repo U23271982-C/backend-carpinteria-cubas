@@ -9,7 +9,6 @@ import com.content.authentication_service.repository.UserClientRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
         UserClient userClient = userClientMapper.toModel(dto);
 
         UUID uuid = UUID.randomUUID();
-        userClient.setUuid(uuid.toString());
+        userClient.setUuid(uuid);
         // Asignar estado activo (ID = 1)
         StateEntity stateEntity = new StateEntity();
         stateEntity.setState_entity_id(1);
@@ -40,7 +39,7 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
     }
 
     @Override
-    public UserClientResponseDTO readById(String uuid) {
+    public UserClientResponseDTO readById(UUID uuid) {
         UserClient userClient = userClientRepository.findAll()
                 .stream()
                 .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
@@ -50,7 +49,7 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
     }
 
     @Override
-    public UserClientResponseDTO update(String uuid, UserClientRequestDTO dto) {
+    public UserClientResponseDTO update(UUID uuid, UserClientRequestDTO dto) {
 
         UserClient existingUser = userClientRepository.findAll()
                 .stream()
@@ -74,7 +73,7 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
     }
 
     @Override
-    public void remove(String uuid) {
+    public void remove(UUID uuid) {
         UserClient userClient = userClientRepository.findAll()
                 .stream()
                 .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados

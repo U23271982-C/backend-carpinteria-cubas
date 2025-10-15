@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/user-clients")
@@ -32,7 +33,7 @@ public class UserClientController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<UserClientResponseDTO> findByUuid(@PathVariable String uuid) {
+    public ResponseEntity<UserClientResponseDTO> findByUuid(@PathVariable UUID uuid) {
         log.info("Fetching user client with ID: {}", uuid);
         UserClientResponseDTO user = userClientService.readById(uuid);
 
@@ -42,7 +43,7 @@ public class UserClientController {
 
     @PutMapping("/{uuid}")
     public ResponseEntity<UserClientResponseDTO> update(
-            @PathVariable String uuid,
+            @PathVariable UUID uuid,
             @Valid @RequestBody UserClientRequestDTO dto) {
         UserClientResponseDTO updatedUser = userClientService.update(uuid, dto);
         return ResponseEntity.ok(updatedUser);
