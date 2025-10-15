@@ -1,4 +1,7 @@
 package com.content.authentication_service.repository;
 
-public class StateEntityRepository {
+import com.content.authentication_service.model.StateEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StateEntityRepository extends JpaRepository<StateEntity, Integer> {
 }
