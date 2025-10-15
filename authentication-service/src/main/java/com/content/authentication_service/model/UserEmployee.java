@@ -34,9 +34,9 @@ public class UserEmployee {
     private StateEntity state_entity_id;
 
     @OneToMany(mappedBy = "user_employee_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<UserRole> user_roles;
+    private List<Session> sesions;
 
     @OneToMany(mappedBy = "user_employee_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Session> sesions;
+    private List<UserModuleAccess> user_module_accesses;
 
 }

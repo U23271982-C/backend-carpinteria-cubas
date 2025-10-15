@@ -31,20 +31,11 @@ public class StateEntity {
     private List<UserEmployee> user_employees;
 
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<UserRole> user_roles;
-
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Role> roles;
-
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Permission> permissions;
-
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<RolePermission> role_permissions;
-
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Session> sessions;
 
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserEmployeePosition> user_employee_positions;
+
+    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Module> modules;
 }
