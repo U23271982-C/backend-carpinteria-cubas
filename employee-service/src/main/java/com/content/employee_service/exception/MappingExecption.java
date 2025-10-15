@@ -1,7 +1,10 @@
 package com.content.employee_service.exception;
 
+import jakarta.validation.UnexpectedTypeException;
 import lombok.Getter;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.util.Arrays;
 
@@ -12,7 +15,10 @@ import java.util.Arrays;
 @Getter
 public enum MappingExecption {
 
-    VALIDACION_EXECPTION(EValidation.class, "Error de validación", HttpStatus.BAD_REQUEST),
+    VALIDACION_EXCEPTION(EValidation.class, "Error de validación", HttpStatus.BAD_REQUEST),
+    VALIDATION_EXCEPTION(MethodArgumentNotValidException.class, "Error de validación", HttpStatus.BAD_REQUEST),
+    CONSTRAINT_VIOLATION(ConstraintViolationException.class, "Error de validación de parámetros", HttpStatus.BAD_REQUEST),
+    UNEXPECTED_TYPE(UnexpectedTypeException.class, "Error de configuración de validación", HttpStatus.BAD_REQUEST),
     GENERIC(Exception.class, "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR),
     SERVICE_LAYER(EServiceLayer.class, "Error en la capa de servicio", HttpStatus.INTERNAL_SERVER_ERROR);
 
