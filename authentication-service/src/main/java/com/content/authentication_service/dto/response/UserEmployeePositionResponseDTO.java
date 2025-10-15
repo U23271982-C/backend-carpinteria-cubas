@@ -4,9 +4,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Builder
-public class UserEmployeeResponseDTO {
+public class UserEmployeePositionResponseDTO {
+
+    private String uuid;
+    private String positionName;
+    private String positionDescription;
+    private String nameStateEntity;
 
 }
