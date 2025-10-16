@@ -13,6 +13,7 @@ public interface ContractTypeMapper
 
     @Mapping(target = "contract_type_name", source = "contract_type_name")
     @Mapping(target = "description", source = "descripcion")
+    @Mapping(target = "uuid", source = "uuid")
     @Override
     ContractTypeResponseDTO toDTO(ContractType model);
 

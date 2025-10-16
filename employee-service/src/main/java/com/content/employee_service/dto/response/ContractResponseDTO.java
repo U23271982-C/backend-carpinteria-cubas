@@ -13,6 +13,6 @@ public class ContractResponseDTO {
     private String contract_name;
     private LocalDateTime start_date;
     private LocalDateTime end_date;
-    private int contract_type_id;
+    private UUID contract_type_uuid;
     private double salary;
 }

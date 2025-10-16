@@ -1,6 +1,7 @@
 package com.content.employee_service.dto.request;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.content.employee_service.utility.ValidateGroup;
 import jakarta.validation.constraints.*;
@@ -32,9 +33,8 @@ public class ContractRequestDTO {
     private LocalDateTime end_date;
 
     // Tipo de contrato (ID)
-    @Positive(message = "El ID del tipo de contrato debe ser un número positivo", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
-    @NotNull(message = "El ID tipo de contrato no puede ser nulo", groups = ValidateGroup.OnCreate.class)
-    private Integer contract_type_uuid;
+    @NotNull(message = "El UUID del tipo de contrato es obligatorio", groups = ValidateGroup.OnCreate.class)
+    private UUID contract_type_uuid;
 
     // Salario del contrato
     @Positive(message = "El salario debe ser un número positivo", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})

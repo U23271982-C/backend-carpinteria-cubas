@@ -1,0 +1,81 @@
+package com.content.employee_service.service;
+
+import com.content.employee_service.dto.request.ContractTypeRequestDTO;
+import com.content.employee_service.dto.response.ContractTypeResponseDTO;
+import com.content.employee_service.exception.EServiceLayer;
+import com.content.employee_service.mapper.mapperImpl.ContractTypeMapper;
+import com.content.employee_service.model.ContractType;
+import com.content.employee_service.model.StateEntity;
+import com.content.employee_service.repository.ContractTypeRepository;
+import com.content.employee_service.service.abstractService.ServiceAbs;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, ContractTypeResponseDTO> {
+    private final ContractTypeRepository contractTypeRepository;
+    private final ContractTypeMapper contractTypeMapper;
+
+    @Override
+    public ContractTypeResponseDTO create(ContractTypeRequestDTO dto) {
+        log.info("ContractTypeService.create()");
+
+        ContractType model = contractTypeMapper.toModel(dto);
+        model.setUuid(UUID.randomUUID());
+        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build());
+
+        ContractType modelSave = contractTypeRepository.save(model);
+        return contractTypeMapper.toDTO(modelSave);
+    }
+
+    @Override
+    public List<ContractTypeResponseDTO> allList() {
+        log.info("ContractTypeService.allList()");
+        return contractTypeRepository.findAll().stream().map(contractTypeMapper::toDTO).toList();
+    }
+
+    @Override
+    public ContractTypeResponseDTO readByUUID(UUID uuid) {
+        log.info("ContractTypeService.readByUUID()");
+
+        ContractType model = searchEntityByUUID(uuid);
+
+        return contractTypeMapper.toDTO(model);
+    }
+
+    @Override
+    public void remove(UUID uuid) {
+        log.info("ContractTypeService.remove()");
+        // Buscamos el tipo de contrato por su UUID
+        ContractType model_existente = searchEntityByUUID(uuid);
+        contractTypeRepository.delete(model_existente);
+    }
+
+    @Override
+    public ContractTypeResponseDTO updateByUUID(UUID uuid, ContractTypeRequestDTO dto) {
+        log.info("ContractTypeService.updateByUUID()");
+        // Buscamos el contrato por su UUID
+        ContractType model_existente = searchEntityByUUID(uuid);
+        // Actualizamos los datos
+        ContractType model_actualizado = contractTypeMapper.toModel(dto);
+        // Agregamos id y el uuid del objeto existente
+        model_actualizado.setUuid(model_existente.getUuid());
+        model_actualizado.setContract_type_id(model_existente.getContract_type_id());
+
+        // Guardamos los cambios
+        ContractType model_guardado = contractTypeRepository.save(model_actualizado);
+        // Retornamos el DTO con los datos actualizados
+        return contractTypeMapper.toDTO(model_guardado);
+    }
+
+    private ContractType searchEntityByUUID(UUID uuid) {
+        return contractTypeRepository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
+                (String.format("No se encontró el tipo de contrato con el id público: %s", uuid)));
+    }
+}

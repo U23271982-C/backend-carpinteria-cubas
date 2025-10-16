@@ -49,7 +49,7 @@ public class ContractController {
 
     @PutMapping("/{uuid}")
     public ResponseEntity<ContractResponseDTO> updateByUUID
-            (@PathVariable UUID uuid, @Valid @RequestBody ContractRequestDTO contractRequestDTO) {
+            (@PathVariable UUID uuid, @Validated(ValidateGroup.OnUpdate.class) @RequestBody ContractRequestDTO contractRequestDTO) {
         log.info("Recibida solicitud para actualizar contrato por su UUID");
 
         return ResponseEntity.ok(service.updateByUUID(uuid, contractRequestDTO));
