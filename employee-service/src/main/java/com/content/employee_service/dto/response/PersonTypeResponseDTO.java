@@ -10,4 +10,5 @@ import java.util.UUID;
 public class PersonTypeResponseDTO {
     private UUID uuid;
     private String person_type_name;
+    private String state_entity;
 }

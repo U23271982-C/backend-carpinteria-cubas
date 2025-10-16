@@ -12,10 +12,12 @@ public interface PersonTypeMapper
         extends Convert<PersonType, PersonTypeRequestDTO, PersonTypeResponseDTO> {
     @Mapping(target = "person_type_name", source = "person_type_name")
     @Mapping(target = "uuid", source = "uuid")
+    @Mapping(target = "state_entity", source = "state_entity_id.state_entity_name")
     @Override
     PersonTypeResponseDTO toDTO(PersonType model);
 
     @Mapping(target = "person_type_name", source = "person_type_name")
+    @Mapping(target = "state_entity_id.uuid", source = "state_entity_uuid")
     @Override
     PersonType toModel(PersonTypeRequestDTO dto);
 }
