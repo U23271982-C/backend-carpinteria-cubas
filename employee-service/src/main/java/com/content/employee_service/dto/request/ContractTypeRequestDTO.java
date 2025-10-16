@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.UUID;
+
 /**
  * Data Transfer Object para la entidad ContractType.
  * Este DTO incluye lista de las entidades relaciones.
@@ -23,4 +25,6 @@ public class ContractTypeRequestDTO {
     @NotBlank(message = "La descripción del tipo de contrato no puede estar ser vacío", groups = ValidateGroup.OnCreate.class)
     @Size(min = 1, max = 250, message = "La descripción del tipo de contrato no puede pasar los 250 caracteres", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
     private String description;
+
+    private UUID state_entity_uuid;
 }

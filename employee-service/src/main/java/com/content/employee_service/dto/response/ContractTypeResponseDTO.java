@@ -11,4 +11,5 @@ public class ContractTypeResponseDTO {
     private UUID uuid;
     private String contract_type_name;
     private String description;
+    private String state_entity;
 }
