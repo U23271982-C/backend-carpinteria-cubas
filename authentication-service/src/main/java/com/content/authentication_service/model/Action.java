@@ -28,6 +28,10 @@ public class Action {
     @Column(name="action_description", length = 100)
     private String action_description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_entity_id", nullable = false)
+    private StateEntity state_entity_id;
+
     @OneToMany(mappedBy = "action_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserAccessAction> user_access_actions;
 

@@ -38,4 +38,7 @@ public class StateEntity {
 
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Module> modules;
+
+    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Action> actions;
 }
