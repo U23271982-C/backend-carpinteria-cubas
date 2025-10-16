@@ -58,7 +58,10 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
 
         // Buscamos el tipo de persona por su UUID
         PersonType model_existente = searchEntityByUUID(uuid);
-        repository.delete(model_existente);
+        // Cambiamos el estado del tipo de persona a eliminado
+        model_existente.setState_entity_id(StateEntity.builder().state_entity_id(3).build());
+
+        repository.save(model_existente);
     }
 
     @Override

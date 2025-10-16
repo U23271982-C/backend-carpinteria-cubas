@@ -76,7 +76,10 @@ public class ContractService implements ServiceAbs<ContractRequestDTO, ContractR
 
         // Buscamos el tipo de persona por su UUID
         Contract model_existente = searchEntityByUUID(uuid);
-        contractRepository.delete(model_existente);
+        // Cambiamos el estado del contrato a eliminado
+        model_existente.setState_entity_id(StateEntity.builder().state_entity_id(3).build());
+
+        contractRepository.save(model_existente);
     }
 
     @Override

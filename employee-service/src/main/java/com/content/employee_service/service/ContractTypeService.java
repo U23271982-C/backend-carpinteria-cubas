@@ -58,7 +58,10 @@ public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, C
         log.info("ContractTypeService.remove()");
         // Buscamos el tipo de contrato por su UUID
         ContractType model_existente = searchEntityByUUID(uuid);
-        contractTypeRepository.delete(model_existente);
+        // Cambiamos el estado del tipo de contrato a eliminado
+        model_existente.setState_entity_id(StateEntity.builder().state_entity_id(3).build());
+
+        contractTypeRepository.save(model_existente);
     }
 
     @Override
