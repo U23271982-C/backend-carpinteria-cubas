@@ -1,8 +1,6 @@
 package com.content.authentication_service.model;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +17,7 @@ public class UserAccessAction {
     private Integer user_access_action_id;
 
     @Column(name="uuid", nullable = false, unique = true, updatable = false)
-    private UUID access_action_id;
+    private UUID uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_module_access_id", nullable = false)
@@ -28,8 +26,4 @@ public class UserAccessAction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "action_id", nullable = false)
     private Action action_id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_entity_id", nullable = false)
-    private StateEntity state_entity_id;
 }

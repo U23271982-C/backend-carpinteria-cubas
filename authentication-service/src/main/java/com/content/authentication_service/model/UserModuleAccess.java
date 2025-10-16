@@ -17,7 +17,7 @@ public class UserModuleAccess {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer user_module_access_id;
 
-    @Column(name="access_granted_at", nullable = false, updatable = false, unique = true )
+    @Column(name="uuid", nullable = false, updatable = false, unique = true )
     private UUID uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,10 +27,6 @@ public class UserModuleAccess {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "module_id", nullable = false)
     private Module module_id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_entity_id", nullable = false)
-    private StateEntity state_entity_id;
 
     @OneToMany(mappedBy = "user_module_access_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserAccessAction> user_access_actions;
