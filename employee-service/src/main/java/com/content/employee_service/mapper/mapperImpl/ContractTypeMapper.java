@@ -3,13 +3,15 @@ package com.content.employee_service.mapper.mapperImpl;
 import com.content.employee_service.dto.request.ContractTypeRequestDTO;
 import com.content.employee_service.dto.response.ContractTypeResponseDTO;
 import com.content.employee_service.mapper.convert.Convert;
+import com.content.employee_service.mapper.convert.UpdatePatch;
 import com.content.employee_service.model.ContractType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ContractTypeMapper
-        extends Convert<ContractType, ContractTypeRequestDTO, ContractTypeResponseDTO> {
+        extends Convert<ContractType, ContractTypeRequestDTO, ContractTypeResponseDTO>,
+        UpdatePatch<ContractTypeRequestDTO, ContractType> {
 
     @Mapping(target = "contract_type_name", source = "contract_type_name")
     @Mapping(target = "description", source = "descripcion")

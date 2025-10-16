@@ -63,13 +63,10 @@ public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, C
         // Buscamos el contrato por su UUID
         ContractType model_existente = searchEntityByUUID(uuid);
         // Actualizamos los datos
-        ContractType model_actualizado = contractTypeMapper.toModel(dto);
-        // Agregamos id y el uuid del objeto existente
-        model_actualizado.setUuid(model_existente.getUuid());
-        model_actualizado.setContract_type_id(model_existente.getContract_type_id());
+        contractTypeMapper.updateFromDto(dto, model_existente);
 
         // Guardamos los cambios
-        ContractType model_guardado = contractTypeRepository.save(model_actualizado);
+        ContractType model_guardado = contractTypeRepository.save(model_existente);
         // Retornamos el DTO con los datos actualizados
         return contractTypeMapper.toDTO(model_guardado);
     }
