@@ -37,7 +37,11 @@ public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, C
     @Override
     public List<ContractTypeResponseDTO> allList() {
         log.info("ContractTypeService.allList()");
-        return contractTypeRepository.findAll().stream().map(contractTypeMapper::toDTO).toList();
+        // lista menos los eliminados
+        return contractTypeRepository.findAll().stream()
+                .filter(contractType -> contractType.getState_entity_id().getState_entity_id() != 3)
+                .map(contractTypeMapper::toDTO)
+                .toList();
     }
 
     @Override

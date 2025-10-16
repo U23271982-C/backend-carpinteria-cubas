@@ -54,7 +54,11 @@ public class ContractService implements ServiceAbs<ContractRequestDTO, ContractR
     @Override
     public List<ContractResponseDTO> allList() {
         log.info("ContractService.allList()");
-        return contractRepository.findAll().stream().map(contractMapper::toDTO).toList();
+        // lista menos los eliminados
+        return contractRepository.findAll().stream()
+                .filter(contract -> contract.getState_entity_id().getState_entity_id() != 3)
+                .map(contractMapper::toDTO)
+                .toList();
     }
 
     @Override

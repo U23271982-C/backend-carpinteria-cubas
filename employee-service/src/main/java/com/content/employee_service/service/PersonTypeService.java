@@ -37,8 +37,10 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
     @Override
     public List<PersonTypeResponseDTO> allList() {
         log.info("PersonTypeService.allList()");
-
-        return repository.findAll().stream().map(personTypeMapper::toDTO).toList();
+        // lista menos los eliminados
+        return repository.findAll().stream()
+                .filter(personType -> personType.getState_entity_id().getState_entity_id() != 3)
+                .map(personTypeMapper::toDTO).toList();
     }
 
     @Override
