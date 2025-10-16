@@ -20,4 +20,5 @@ public class EmployeeResponseDTO {
     private UUID post_uuid;
     private UUID contract_uuid;
     private UUID distric_uuid;
+    private String state_entity;
 }

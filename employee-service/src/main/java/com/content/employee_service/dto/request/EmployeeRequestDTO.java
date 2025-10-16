@@ -59,4 +59,5 @@ public class EmployeeRequestDTO {
     @NotBlank(message = "La dirección de email es obligatoria", groups = ValidateGroup.OnCreate.class)
     private String direction_email;
 
+    private UUID state_entity_uuid;
 }

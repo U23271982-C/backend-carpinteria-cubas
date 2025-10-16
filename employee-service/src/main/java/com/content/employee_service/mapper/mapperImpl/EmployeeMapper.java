@@ -24,6 +24,7 @@ public interface EmployeeMapper
     @Mapping(target = "contract_uuid", source = "contract_id.uuid")
     @Mapping(target = "distric_uuid", source = "distric_id.uuid")
     @Mapping(target = "uuid", source = "uuid")
+    @Mapping(target = "state_entity", source = "state_entity_id.state_entity_name")
     @Override
     EmployeeResponseDTO toDTO(Employee modelo);
 
@@ -37,6 +38,7 @@ public interface EmployeeMapper
     @Mapping(target = "post_id.uuid", source = "post_id_uuid")
     @Mapping(target = "contract_id.uuid", source = "contract_id_uuid")
     @Mapping(target = "distric_id.uuid", source = "distric_id_uuid")
+    @Mapping(target = "state_entity_id.uuid", source = "state_entity_uuid")
     @Override
     Employee toModel(EmployeeRequestDTO dto);
 }
