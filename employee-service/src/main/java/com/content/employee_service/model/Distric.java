@@ -3,6 +3,7 @@ package com.content.employee_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -23,6 +24,12 @@ public class Distric {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer distric_id;
+
+    /**
+     * ID público y único de cada tipo de trabajador.
+     */
+    @Column(nullable = false, unique = true)
+    private UUID uuid;
 
     @Column(name = "district_name", nullable = false, length = 100)
     private String district_name;
