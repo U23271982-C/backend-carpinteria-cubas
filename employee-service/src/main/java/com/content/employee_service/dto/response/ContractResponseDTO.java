@@ -15,4 +15,5 @@ public class ContractResponseDTO {
     private LocalDateTime end_date;
     private UUID contract_type_uuid;
     private double salary;
+    private String state_entity;
 }

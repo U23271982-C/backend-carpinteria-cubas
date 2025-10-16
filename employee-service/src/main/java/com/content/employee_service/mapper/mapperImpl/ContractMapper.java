@@ -18,6 +18,7 @@ public interface ContractMapper
     @Mapping(target = "contract_type_uuid", source = "contract_type_id.uuid")
     @Mapping(target = "salary", source = "salary")
     @Mapping(target = "uuid", source = "uuid")
+    @Mapping(target = "state_entity", source = "state_entity_id.state_entity_name")
     @Override
     ContractResponseDTO toDTO(Contract model);
 
@@ -25,6 +26,7 @@ public interface ContractMapper
     @Mapping(target = "start_date", source = "start_date")
     @Mapping(target = "end_date", source = "end_date")
     @Mapping(target = "salary", source = "salary")
+    @Mapping(target = "state_entity_id.uuid", source = "state_entity_uuid")
     @Override
     Contract toModel(ContractRequestDTO dto);
 }
