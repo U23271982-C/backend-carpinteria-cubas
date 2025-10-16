@@ -13,12 +13,15 @@ public interface ContactMapper
     @Mapping(target = "employee_id", source = "employee_id.employee_id")
     @Mapping(target = "phone_number", source = "phone_number")
     @Mapping(target = "email", source = "email")
+    @Mapping(target = "uuid", source = "uuid")
+    @Mapping(target = "state_entity", source = "state_entity_id.state_entity_name")
     @Override
     ContactResponseDTO toDTO(Contact model);
 
     @Mapping(target = "employee_id.employee_id", source = "employee_id")
     @Mapping(target = "phone_number", source = "phone_number")
     @Mapping(target = "email", source = "email")
+    @Mapping(target = "state_entity_id.uuid", source = "state_entity_uuid")
     @Override
     Contact toModel(ContactRequestDTO dto);
 }

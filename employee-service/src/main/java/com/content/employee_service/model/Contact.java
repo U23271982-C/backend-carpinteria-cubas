@@ -3,6 +3,8 @@ package com.content.employee_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 /**
  *
  * Entidad que representa la información de contacto de un empleado.
@@ -21,6 +23,12 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer contact_id;
+
+    /**
+     * ID público y único de cada tipo de trabajador.
+     */
+    @Column(nullable = false, unique = true)
+    private UUID uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)

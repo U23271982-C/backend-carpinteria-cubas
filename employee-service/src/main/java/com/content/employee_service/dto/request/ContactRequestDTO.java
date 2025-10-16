@@ -3,6 +3,8 @@ package com.content.employee_service.dto.request;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.UUID;
+
 /**
  * Data Transfer Object para la entidad Contact.
  * Este DTO no incluye lista de las entidades relaciones.
@@ -29,4 +31,5 @@ public class ContactRequestDTO {
     @Email(message = "El correo electrónico debe tener un formato válido")
     private String email;
 
+    private UUID state_entity_uuid;
 }
