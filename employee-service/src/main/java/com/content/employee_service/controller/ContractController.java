@@ -22,7 +22,7 @@ public class ContractController {
     private final ContractService service;
 
     @PostMapping
-    public ResponseEntity<ContractResponseDTO> createPersonType
+    public ResponseEntity<ContractResponseDTO> createContract
             (@Validated(ValidateGroup.OnCreate.class) @RequestBody ContractRequestDTO contractRequestDTO) {
         log.info("Recibida solicitud para crear contrato");
 

@@ -31,7 +31,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<PostResponseDTO>> getAllContracts() {
+    public ResponseEntity<Iterable<PostResponseDTO>> getAllPosts() {
         log.info("Recibida solicitud para obtener todos los cargos");
 
         Iterable<PostResponseDTO> contracts = service.allList();

@@ -23,7 +23,7 @@ public class EmployeeController {
     private final EmployeeService service;
 
     @PostMapping
-    public ResponseEntity<EmployeeResponseDTO> createPersonType
+    public ResponseEntity<EmployeeResponseDTO> createEmployee
             (@Validated(ValidateGroup.OnCreate.class) @RequestBody EmployeeRequestDTO employeeRequestDTO) {
         log.info("Recibida solicitud para crear empleado");
 
@@ -33,7 +33,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<EmployeeResponseDTO>> getAllContracts() {
+    public ResponseEntity<Iterable<EmployeeResponseDTO>> getAllEmployees() {
         log.info("Recibida solicitud para obtener todos los empleados");
 
         Iterable<EmployeeResponseDTO> contracts = service.allList();

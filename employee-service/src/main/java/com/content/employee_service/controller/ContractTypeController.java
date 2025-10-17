@@ -20,7 +20,7 @@ import java.util.UUID;
 public class ContractTypeController {
     private final ContractTypeService service;
     @PostMapping
-    public ResponseEntity<ContractTypeResponseDTO> createPersonType
+    public ResponseEntity<ContractTypeResponseDTO> createContractType
             (@Validated(ValidateGroup.OnCreate.class) @RequestBody ContractTypeRequestDTO contractTypeRequestDTO) {
         log.info("Recibida solicitud para crear tipo de contrato");
 

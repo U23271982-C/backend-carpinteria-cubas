@@ -31,7 +31,7 @@ public class DistricController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<DistrictResponseDTO>> getAllContracts() {
+    public ResponseEntity<Iterable<DistrictResponseDTO>> getAllDistricts() {
         log.info("Recibida solicitud para obtener todos los distritos");
 
         Iterable<DistrictResponseDTO> contracts = service.allList();

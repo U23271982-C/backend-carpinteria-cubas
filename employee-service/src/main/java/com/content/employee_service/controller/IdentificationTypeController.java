@@ -31,7 +31,7 @@ public class IdentificationTypeController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<IdentificationTypeResponseDTO>> getAllContracts() {
+    public ResponseEntity<Iterable<IdentificationTypeResponseDTO>> getAllIdentificationType() {
         log.info("Recibida solicitud para obtener todos los contratos");
 
         Iterable<IdentificationTypeResponseDTO> contracts = service.allList();
