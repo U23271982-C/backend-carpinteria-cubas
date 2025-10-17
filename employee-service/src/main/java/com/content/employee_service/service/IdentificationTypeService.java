@@ -102,6 +102,6 @@ public class IdentificationTypeService implements
      */
     private IdentificationType searchEntityByUUID(UUID uuid) {
         return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
-                (String.format("No se encontró el contrato con el id público: %s", uuid)));
+                (String.format("No se encontró el tipo de identificación con el id público: %s", uuid)));
     }
 }

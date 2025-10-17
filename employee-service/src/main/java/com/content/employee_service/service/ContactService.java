@@ -109,6 +109,6 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
      */
     private void validateRelations(ContactRequestDTO dto){
         employeeRepository.findByUuid(dto.getEmployee_id_uuid())
-                .orElseThrow(() -> new EServiceLayer("El empleado no existe"));
+                .orElseThrow(() -> new EServiceLayer("El contacto no existe"));
     }
 }
