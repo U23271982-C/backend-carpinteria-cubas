@@ -1,10 +1,13 @@
 package com.content.employee_service.service.abstractService;
 
+import jakarta.transaction.Transactional;
+
 /**
  * Método que permite registrar y persistir una entidad en la base de datos.
- * @param <DRQ> Request DTO
- * @param <DRE> Response DTO
+ * @param <DRQ> request DTO
+ * @param <DRE> response DTO
  */
+@Transactional
 public interface Creatable<DRQ, DRE> {
     DRE create(DRQ dto);
 }

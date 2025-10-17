@@ -1,10 +1,12 @@
 package com.content.employee_service.service.abstractService;
 
+import jakarta.transaction.Transactional;
+
 /**
  * Agrupación de métodos que se deben implementar en el servicio del modelo
- * @param <DRE> Response DTO
+ * @param <DRE> response DTO
  */
-
+@Transactional
 public interface ServiceAbs<DRQ,DRE>
         extends Creatable<DRQ,DRE>,
         Readable<DRE>,

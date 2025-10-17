@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -23,6 +24,12 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer employee_id;
+
+    /**
+     * ID público y único.
+     */
+    @Column(nullable = false, unique = true)
+    private UUID uuid;
 
     @Column(name = "employee_name", nullable = false, length = 100)
     private String employee_name;

@@ -1,8 +1,10 @@
-package com.content.employee_service.dto.Request;
+package com.content.employee_service.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.UUID;
 
 /**
  * Data Transfer Object para la entidad PersonType.
@@ -19,4 +21,5 @@ public class PersonTypeRequestDTO {
     @NotBlank(message = "El nombre del tipo de persona no puede estar en blanco")
     private String person_type_name;
 
+    private UUID state_entity_uuid;
 }
