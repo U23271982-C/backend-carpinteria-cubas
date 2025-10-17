@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class ContactResponseDTO {
     private UUID uuid;
-    private int employee_id;
+    private UUID employee_id_uuid;
     private String phone_number;
     private String email;
     private String state_entity;

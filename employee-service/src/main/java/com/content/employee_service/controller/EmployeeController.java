@@ -68,5 +68,4 @@ public class EmployeeController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("FUNCTIONALITY TEST");
     }
-
 }
