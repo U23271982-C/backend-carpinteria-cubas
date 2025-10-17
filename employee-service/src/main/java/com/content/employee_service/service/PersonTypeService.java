@@ -79,6 +79,11 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
         return personTypeMapper.toDTO(model_actualizado);
     }
 
+    /**
+     * Busca el tipo de persona por su UUID
+     * @param uuid
+     * @return
+     */
     private PersonType searchEntityByUUID(UUID uuid) {
         return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
                 (String.format("No se encontró el tipo de persona con el id público: %s", uuid)));

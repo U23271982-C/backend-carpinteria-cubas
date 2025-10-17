@@ -4,7 +4,6 @@ import com.content.employee_service.dto.request.PostRequestDTO;
 import com.content.employee_service.dto.response.PostResponseDTO;
 import com.content.employee_service.exception.EServiceLayer;
 import com.content.employee_service.mapper.mapperImpl.PostMapper;
-import com.content.employee_service.model.ContractType;
 import com.content.employee_service.model.Post;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.PostRepository;

@@ -81,6 +81,11 @@ public class DistricService implements ServiceAbs<DistrictRequestDTO, DistrictRe
         return districtMapper.toDTO(model_guardado);
     }
 
+    /**
+     * Busca el distrito por su UUID
+     * @param uuid
+     * @return
+     */
     private Distric searchEntityByUUID(UUID uuid) {
         return districRepository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
                 (String.format("No se encontró el distrito con el id público: %s", uuid)));

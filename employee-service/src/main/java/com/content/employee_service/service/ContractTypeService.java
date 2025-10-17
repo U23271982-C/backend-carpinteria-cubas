@@ -78,6 +78,11 @@ public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, C
         return contractTypeMapper.toDTO(model_guardado);
     }
 
+    /**
+     * Busca el tipo de contrato por su UUID
+     * @param uuid
+     * @return
+     */
     private ContractType searchEntityByUUID(UUID uuid) {
         return contractTypeRepository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
                 (String.format("No se encontró el tipo de contrato con el id público: %s", uuid)));

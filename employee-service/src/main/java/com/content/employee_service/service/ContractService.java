@@ -101,11 +101,6 @@ public class ContractService implements ServiceAbs<ContractRequestDTO, ContractR
 
         // Actualizamos los datos
         contractMapper.updateFromDto(dto, model_existente);
-        /*Contract model_mapeado = contractMapper.toModel(dto);
-
-        model_mapeado.setContract_id( model_existente.getContract_id());
-        model_mapeado.setUuid(model_existente.getUuid());*/
-
 
         // Guardamos los cambios
         Contract model_actualizado = contractRepository.save(model_existente);
@@ -113,6 +108,11 @@ public class ContractService implements ServiceAbs<ContractRequestDTO, ContractR
         return contractMapper.toDTO(model_actualizado);
     }
 
+    /**
+     * Busca el contrato por su UUID
+     * @param uuid
+     * @return
+     */
     private Contract searchEntityByUUID(UUID uuid) {
         return contractRepository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
                 (String.format("No se encontró el contrato con el id público: %s", uuid)));

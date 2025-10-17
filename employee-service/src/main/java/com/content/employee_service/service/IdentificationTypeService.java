@@ -82,6 +82,11 @@ public class IdentificationTypeService implements
         log.info("IdentificationTypeService.updateByUUID()");
 
         IdentificationType model_existente = searchEntityByUUID(uuid);
+        // Corroboramos todas las relaciones
+        if(dto.getPerson_type_uuid() != null) {
+            personTypeRepository.findByUuid(dto.getPerson_type_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El tipo de persona no existe"));
+        }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
         // Guardamos los cambios
@@ -90,6 +95,11 @@ public class IdentificationTypeService implements
         return mapper.toDTO(model_existente);
     }
 
+    /**
+     * Busca tipo de indentificacion por su UUID
+     * @param uuid
+     * @return
+     */
     private IdentificationType searchEntityByUUID(UUID uuid) {
         return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
                 (String.format("No se encontró el contrato con el id público: %s", uuid)));
