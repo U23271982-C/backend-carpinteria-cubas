@@ -22,16 +22,12 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
     private final EmployeeMapper mapper;
 
     private final IdentificationTypeRepository identificationTypeRepository;
-    private final IdentificationTypeMapper identificationTypeMapper;
 
     private final PostRepository postRepository;
-    private final PostMapper postMapper;
 
     private final ContractRepository contractRepository;
-    private final ContractMapper contractMapper;
 
     private final DistricRepository districRepository;
-    private final DistrictMapper districtMapper;
 
     @Transactional
     @Override
@@ -104,6 +100,20 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         log.info("EmployeeService.updateByUUID()");
         // Buscamos el employee por su UUID
         Employee model_existente = searchEntityByUUID(uuid);
+        // Corroboramos todas las relaciones
+        if(dto.getIdentification_type_uuid() != null) {
+            identificationTypeRepository.findByUuid(dto.getIdentification_type_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El tipo de identificación no existe"));
+        } if (dto.getPost_id_uuid() != null) {
+            postRepository.findByUuid(dto.getPost_id_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El tipo de cargo no existe"));
+        } if (dto.getContract_id_uuid() != null) {
+            contractRepository.findByUuid(dto.getContract_id_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El tipo de contrato no existe"));
+        } if (dto.getDistric_id_uuid() != null) {
+            districRepository.findByUuid(dto.getDistric_id_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El tipo de distrito no existe"));
+        }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
         // Guardamos los cambios
@@ -112,6 +122,11 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         return mapper.toDTO(model_existente);
     }
 
+    /**
+     * Busca el empleado por su UUID
+     * @param uuid
+     * @return
+     */
     private Employee searchEntityByUUID(UUID uuid) {
         return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
                 (String.format("No se encontró el empleado con el id público: %s", uuid)));
