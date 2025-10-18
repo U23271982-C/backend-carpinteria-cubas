@@ -31,7 +31,7 @@ public interface SaleMapper
      * hour_sale, se agrega en el servicio<br>
      * subtotal, se agrega en el servicio<br>
      * total, se agrega en el servicio<br>
-     * @param dto Request DTO
+     * @param dto request DTO
      * @return Model Sale
      */
     @Mapping(target = "id", ignore = true)

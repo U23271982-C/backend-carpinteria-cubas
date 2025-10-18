@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Entidad que representa el estado de diferentes entidades en el sistema (0: Eliminado; 1: Activo; 2: Inactivo).
@@ -21,6 +22,13 @@ public class StateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer state_entity_id;
+
+    /**
+     * ID público y único de cada tipo de trabajador.
+     */
+    @Column(nullable = false, unique = true)
+    private UUID uuid;
+
     @Column(name = "state_entity_name", nullable = false, length = 100)
     private String state_entity_name;
 

@@ -3,6 +3,7 @@ package com.content.employee_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -22,6 +23,12 @@ public class IdentificationType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // autoincrement en MySQL
     private Integer identification_type_id;
+
+    /**
+     * ID público y único
+     */
+    @Column(nullable = false, unique = true)
+    private UUID uuid;
 
     @Column(name = "identification_type_name", nullable = false, length = 100)
     private String identification_type_name;

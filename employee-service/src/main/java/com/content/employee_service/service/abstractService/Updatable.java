@@ -1,10 +1,15 @@
 package com.content.employee_service.service.abstractService;
 
+import jakarta.transaction.Transactional;
+
+import java.util.UUID;
+
 /**
  *
- * @param <DRQ> Request DTO
- * @param <DRE> Response DTO
+ * @param <DRQ> request DTO
+ * @param <DRE> response DTO
  */
+@Transactional
 public interface Updatable<DRQ,DRE> {
-    DRE update(int id, DRQ dto);
+    DRE updateByUUID(UUID uuid, DRQ dto);
 }
