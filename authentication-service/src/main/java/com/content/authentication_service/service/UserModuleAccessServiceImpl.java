@@ -39,7 +39,7 @@ public class UserModuleAccessServiceImpl implements ServiceAbs<UserModuleAccessR
         if(userModuleAccess.getModule_id().getUuid() != null){
             Module module = moduleRepository.findAll()
                     .stream()
-                    .filter(mod -> mod.getUuid().equals(userModuleAccess.getModule_id().getUuid()))
+                    .filter(mod -> mod.getUuid().equals(userModuleAccess.getModule_id().getUuid()) && mod.getState_entity_id().getState_entity_id() == 1)
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("No se encontro module"));
             userModuleAccess.setModule_id(module);
@@ -47,7 +47,7 @@ public class UserModuleAccessServiceImpl implements ServiceAbs<UserModuleAccessR
         if (userModuleAccess.getUser_employee_id().getUuid() != null){
             UserEmployee userEmployee = userEmployeeRepository.findAll()
                     .stream()
-                    .filter(ue -> ue.getUuid().equals(userModuleAccess.getUser_employee_id().getUuid()))
+                    .filter(ue -> ue.getUuid().equals(userModuleAccess.getUser_employee_id().getUuid()) && ue.getState_entity_id().getState_entity_id() == 1)
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("No se encontro user_employee"));
             userModuleAccess.setUser_employee_id(userEmployee);
@@ -68,16 +68,55 @@ public class UserModuleAccessServiceImpl implements ServiceAbs<UserModuleAccessR
 
     @Override
     public UserModuleAccessResponseDTO readById(UUID uuid) {
-        return null;
+        return userModuleAccessRepository.findAll()
+                .stream()
+                .filter( userModuleAccess -> userModuleAccess.getUuid().equals(uuid))
+                .map(userModuleAccessMapper::toDTO)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontro user_module_access"));
     }
 
     @Override
     public void remove(UUID uuid) {
-
+        UserModuleAccess userModuleAccess = userModuleAccessRepository.findAll()
+                .stream()
+                .filter( uma -> uma.getUuid().equals(uuid))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontro user_module_access"));
+        userModuleAccessRepository.delete(userModuleAccess);
     }
 
     @Override
     public UserModuleAccessResponseDTO update(UUID uuid, UserModuleAccessRequestDTO dto) {
-        return null;
+        UserModuleAccess existingUserModuleAccess = userModuleAccessRepository.findAll()
+                .stream()
+                .filter( uma -> uma.getUuid().equals(uuid))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontro user_module_access"));
+
+        if (dto.getModule_uuid() != null) {
+            Module module = moduleRepository.findAll()
+                    .stream()
+                    .filter(mod -> mod.getUuid().equals(dto.getModule_uuid()) && mod.getState_entity_id().getState_entity_id() == 1)
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("No se encontro module"));
+            existingUserModuleAccess.setModule_id(module);
+        }
+        UserModuleAccess updatedUserModuleAccess = userModuleAccessRepository.save(existingUserModuleAccess);
+        return userModuleAccessMapper.toDTO(updatedUserModuleAccess);
+    }
+
+    public List<UserModuleAccessResponseDTO> getByUserEmployeeUuid(UUID userEmployeeUuid) {
+        UserEmployee userEmloyee = userEmployeeRepository .findAll()
+                .stream()
+                .filter(ue -> ue.getUuid().equals(userEmployeeUuid))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontro user_employee"));
+
+        return userModuleAccessRepository.findAll()
+                .stream()
+                .filter(uma -> uma.getUser_employee_id().equals(userEmloyee))
+                .map(userModuleAccessMapper::toDTO)
+                .toList();
     }
 }
