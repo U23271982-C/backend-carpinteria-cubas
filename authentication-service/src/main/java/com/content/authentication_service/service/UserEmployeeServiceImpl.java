@@ -6,9 +6,11 @@ import com.content.authentication_service.mapper.UserEmployeeMapper;
 import com.content.authentication_service.model.StateEntity;
 import com.content.authentication_service.model.UserEmployee;
 import com.content.authentication_service.model.UserEmployeePosition;
+import com.content.authentication_service.model.UserModuleAccess;
 import com.content.authentication_service.repository.StateEntityRepository;
 import com.content.authentication_service.repository.UserEmployeePositionRepository;
 import com.content.authentication_service.repository.UserEmployeeRepository;
+import com.content.authentication_service.repository.UserModuleAccessRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
     private final UserEmployeeRepository userEmployeeRepository;
     private final StateEntityRepository stateEntityRepository;
     private final UserEmployeePositionRepository userEmployeePositionRepository;
+    private final UserModuleAccessRepository userModuleAccessRepository;
 
 
     @Override
@@ -92,9 +95,16 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
                     .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
+
+
             StateEntity deletedState = new StateEntity();
             deletedState.setState_entity_id(3); // Estado eliminado
             userEmployee.setState_entity_id(deletedState);
+            List<UserModuleAccess> userModuleAccess = userModuleAccessRepository.findAll()
+                    .stream()
+                    .filter(uma -> uma.getUser_employee_id().equals(userEmployee))
+                    .toList();
+            userModuleAccessRepository.deleteAll(userModuleAccess);
             userEmployeeRepository.save(userEmployee);
     }
 
