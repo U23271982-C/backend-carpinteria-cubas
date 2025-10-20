@@ -35,7 +35,18 @@ public class UserAccessActionServiceImpl implements ServiceAbs<UserAccessActionR
 
         UUID uuid = UUID.randomUUID();
         userAccessAction.setUuid(uuid);
+        UserAccessAction exist = userAccessActionRepository.findAll()
+                .stream()
+                .filter( uaa -> uaa.getUser_module_access_id().getUuid().equals(userAccessAction.getUser_module_access_id().getUuid()) &&
+                        uaa.getAction_id().getUuid().equals(userAccessAction.getAction_id().getUuid()))
+                .findFirst()
+                .orElse(null);
+        // Validar si ya existe un UserAccessAction con el mismo user_module_access_id y action_id
+        if (exist != null){
+            throw new RuntimeException("Ya existe un UserAccessAction con el mismo user_module_access_id y action_id");
+        }
 
+        // Asignar UserModuleAccess
         if(userAccessAction.getUser_module_access_id().getUuid() != null){
             // Logic to fetch and set UserModuleAccess entity
             UserModuleAccess userModuleAccess = userModuleAccessRepository.findAll()
@@ -46,6 +57,7 @@ public class UserAccessActionServiceImpl implements ServiceAbs<UserAccessActionR
             userAccessAction.setUser_module_access_id(userModuleAccess);
 
         }
+        // Asignar Action
         if(userAccessAction.getAction_id().getUuid() != null){
             Action action = actionRepository.findAll()
                     .stream()

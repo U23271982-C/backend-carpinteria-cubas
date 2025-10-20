@@ -31,7 +31,4 @@ public class Session {
     @Column(name="succesed")
     private Boolean succesed;
 
-    @Column(name="ip_address", length = 100)
-    private String ip_address;
-
 }

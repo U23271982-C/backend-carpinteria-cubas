@@ -35,8 +35,21 @@ public class UserModuleAccessServiceImpl implements ServiceAbs<UserModuleAccessR
 
         UUID uuid = UUID.randomUUID();
         userModuleAccess.setUuid(uuid);
+        UserModuleAccess exist = userModuleAccessRepository.findAll()
+                .stream()
+                .filter( uma -> uma.getModule_id().getUuid().equals(userModuleAccess.getModule_id().getUuid()) &&
+                        uma.getUser_employee_id().getUuid().equals(userModuleAccess.getUser_employee_id().getUuid()))
+                .findFirst()
+                .orElse(null);
+        // Validar si ya existe un UserModuleAccess con el mismo module_id y user_employee_id
+        if (exist != null){
+            throw new RuntimeException("Ya existe un UserModuleAccess con el mismo module_id y user_employee_id");
+        }
 
-        if(userModuleAccess.getModule_id().getUuid() != null){
+
+
+        // Asignar Module
+        if(userModuleAccess.getModule_id().getUuid() != null && !userModuleAccess.getModule_id().getUuid().toString().isEmpty()){
             Module module = moduleRepository.findAll()
                     .stream()
                     .filter(mod -> mod.getUuid().equals(userModuleAccess.getModule_id().getUuid()) && mod.getState_entity_id().getState_entity_id() == 1)
@@ -44,7 +57,8 @@ public class UserModuleAccessServiceImpl implements ServiceAbs<UserModuleAccessR
                     .orElseThrow(() -> new RuntimeException("No se encontro module"));
             userModuleAccess.setModule_id(module);
         }
-        if (userModuleAccess.getUser_employee_id().getUuid() != null){
+        // Asignar UserEmployee
+        if (userModuleAccess.getUser_employee_id().getUuid() != null && !userModuleAccess.getUser_employee_id().getUuid().toString().isEmpty()) {
             UserEmployee userEmployee = userEmployeeRepository.findAll()
                     .stream()
                     .filter(ue -> ue.getUuid().equals(userModuleAccess.getUser_employee_id().getUuid()) && ue.getState_entity_id().getState_entity_id() == 1)
