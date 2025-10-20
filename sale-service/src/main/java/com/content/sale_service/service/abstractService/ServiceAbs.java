@@ -2,7 +2,7 @@ package com.content.sale_service.service.abstractService;
 
 /**
  * Agrupación de métodos que se deben implementar en el servicio del modelo
- * @param <DRE> Response DTO
+ * @param <DRE> response DTO
  */
 public interface ServiceAbs<DRQ,DRE>
         extends Creatable<DRQ,DRE>,
