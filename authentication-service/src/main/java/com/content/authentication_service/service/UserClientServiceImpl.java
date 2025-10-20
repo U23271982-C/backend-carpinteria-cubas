@@ -50,6 +50,15 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
         return userClientMapper.toDTO(userClient);
     }
 
+    public UserClientResponseDTO readByFirebaseUid(String firebaseUid) {
+        UserClient userClient = userClientRepository.findAll()
+                .stream()
+                .filter(user -> user.getFireBaseUid().equals(firebaseUid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con Firebase UID: " + firebaseUid));
+        return userClientMapper.toDTO(userClient);
+    }
+
     @Override
     public UserClientResponseDTO update(UUID uuid, UserClientRequestDTO dto) {
 
@@ -74,6 +83,29 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
         return userClientMapper.toDTO(updatedUser);
     }
 
+    public UserClientResponseDTO updateByFirebaseUid(String firebaseUid, UserClientRequestDTO dto) {
+
+        UserClient existingUser = userClientRepository.findAll()
+                .stream()
+                .filter(user -> user.getFireBaseUid().equals(firebaseUid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con Firebase UID: " + firebaseUid));
+
+        // Actualizar campos permitidos (no actualizamos firebaseUid)
+        if (dto.getFullName() != null && !dto.getFullName().trim().isEmpty()) {
+            existingUser.setUser_client_full_name(dto.getFullName());
+        }
+        if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+            existingUser.setUser_client_phone(dto.getPhone());
+        }
+        if (dto.getAddress() != null && !dto.getAddress().trim().isEmpty()) {
+            existingUser.setUser_client_address(dto.getAddress());
+        }
+
+        UserClient updatedUser = userClientRepository.save(existingUser);
+        return userClientMapper.toDTO(updatedUser);
+    }
+
     @Override
     public void remove(UUID uuid) {
         UserClient userClient = userClientRepository.findAll()
@@ -81,6 +113,19 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
                 .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
+
+        StateEntity stateEntity = new StateEntity();
+        stateEntity.setState_entity_id(3); //Estado Eliminado
+        userClient.setState_entity_id(stateEntity);
+        userClientRepository.save(userClient);
+    }
+
+    public void removeByFirebaseUid(String firebaseUid) {
+        UserClient userClient = userClientRepository.findAll()
+                .stream()
+                .filter(user -> user.getFireBaseUid().equals(firebaseUid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con Firebase UID: " + firebaseUid));
 
         StateEntity stateEntity = new StateEntity();
         stateEntity.setState_entity_id(3); //Estado Eliminado
