@@ -28,9 +28,6 @@ public class Department extends BaseEntity {
     @Column(name = "department_name", nullable = false, length = 100)
     private String department_name;
 
-    @Column(name = "department_code", length = 10)
-    private String department_code;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;

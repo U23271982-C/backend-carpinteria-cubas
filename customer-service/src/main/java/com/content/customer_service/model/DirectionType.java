@@ -1,8 +1,10 @@
 package com.content.customer_service.model;
 
+import com.content.customer_service.model.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.UUID;
+import lombok.experimental.SuperBuilder;
+import java.util.List;
 
 /**
  * Entidad que representa el tipo de dirección.
@@ -14,18 +16,15 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class DirectionType {
+@SuperBuilder
+public class DirectionType extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer direction_type_id; // ID interno para la base de datos
 
-    @Column(name = "uuid", nullable = false, unique = true, updatable = false)
-    private String uuid; // UUID público para la API
-
-    @Column(name = "type_name", nullable = false, length = 50)
-    private String type_name;
+    @Column(name = "direction_type_name", nullable = false, length = 50)
+    private String direction_type_name;
 
     @Column(name = "description", length = 255)
     private String description;
@@ -34,10 +33,6 @@ public class DirectionType {
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
 
-    @PrePersist
-    private void generateUuid() {
-        if (this.uuid == null) {
-            this.uuid = UUID.randomUUID().toString();
-        }
-    }
+    @OneToMany(mappedBy = "direction_type_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Direction> directions;
 }
