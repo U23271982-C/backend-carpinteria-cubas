@@ -34,11 +34,11 @@ public class Direction extends BaseEntity {
     @Column(name = "direction_name", length = 50)
     private String direction_name;
 
-    @Column(name = "address_line_1", nullable = false, length = 255)
-    private String address_line_1;
+    @Column(name = "direction_number", length = 20)
+    private String direction_number;
 
-    @Column(name = "address_line_2", length = 255)
-    private String address_line_2;
+    @Column(name = "reference", length = 100)
+    private String reference;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district_id", nullable = false)
