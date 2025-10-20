@@ -31,9 +31,6 @@ public class StateEntity {
     private List<UserEmployee> user_employees;
 
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Session> sessions;
-
-    @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserEmployeePosition> user_employee_positions;
 
     @OneToMany(mappedBy = "state_entity_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

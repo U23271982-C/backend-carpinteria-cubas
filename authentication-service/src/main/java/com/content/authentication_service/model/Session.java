@@ -34,7 +34,4 @@ public class Session {
     @Column(name="ip_address", length = 100)
     private String ip_address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "state_entity_id", nullable = false)
-    private StateEntity state_entity_id;
 }

@@ -25,6 +25,9 @@ public class UserEmployee {
     @Column(name="user_employee_name", length = 100)
     private String user_employee_name;
 
+    @Column(name="password", length = 100, nullable = false, updatable = false)
+    private String password;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_employee_position_id")
     private UserEmployeePosition user_employee_position_id;

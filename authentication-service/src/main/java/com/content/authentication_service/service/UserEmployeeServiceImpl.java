@@ -63,6 +63,10 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
             throw new RuntimeException("user_employee_position_id es obligatorio");
         }
 
+        if (userEmployee.getPassword() == null || userEmployee.getPassword().isEmpty()) {
+            throw new RuntimeException("La contraseña es obligatoria");
+        }
+
         // Guardar entidad en la base de datos
         UserEmployee savedUserEmployee = userEmployeeRepository.save(userEmployee);
         // Convertir entidad guardada a DTO y retornarlo
@@ -138,7 +142,9 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
                     .orElseThrow(() -> new RuntimeException("Estado no encontrado con UUID: " + dto.getStateUUID()));
             existingUserEmployee.setState_entity_id(stateEntity);
         }
-
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            existingUserEmployee.setPassword(dto.getPassword());
+        }
         UserEmployee updatedUserEmployee = userEmployeeRepository.save(existingUserEmployee);
         return userEmployeeMapper.toDTO(updatedUserEmployee);
     }
