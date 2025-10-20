@@ -26,8 +26,8 @@ public interface UserEmployeeMapper extends Convert<UserEmployee, UserEmployeeRe
 
     @Mapping(target = "user_employee_id", ignore = true)
     @Mapping(target = "uuid", ignore = true)
-    @Mapping(target = "full_Name", source = "full_name")
-    @Mapping(target = "user_employee_name", source = "name")
+    @Mapping(target = "full_name", source = "full_name")
+    @Mapping(target = "user_employee_name", source = "user_name")
     @Mapping(target = "password", source = "password")
     @Mapping(target = "user_employee_position_id.uuid", source = "positionUUID")
     @Mapping(target = "user_employee_phone", source = "phone")

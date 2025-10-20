@@ -37,7 +37,7 @@ public class UserEmployeeController {
         log.info("Fetching user employee with ID: {}", uuid);
         UserEmployeeResponseDTO userEmployee = userEmployeeServiceImpl.readById(uuid);
 
-        log.info("User employee encontrado: {} ", userEmployee.getName());
+        log.info("User employee encontrado: {} ", userEmployee.getUser_name());
         return ResponseEntity.ok(userEmployee);
     }
 

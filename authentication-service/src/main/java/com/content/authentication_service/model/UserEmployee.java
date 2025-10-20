@@ -23,7 +23,7 @@ public class UserEmployee {
     private UUID uuid;
 
     @Column(name="full_name", length = 150, nullable = false)
-    private String full_Name;
+    private String full_name;
 
     @Column(name="user_employee_name", length = 100)
     private String user_employee_name;

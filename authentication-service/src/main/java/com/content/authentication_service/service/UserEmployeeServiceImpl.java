@@ -63,7 +63,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
             throw new RuntimeException("user_employee_position_id es obligatorio");
         }
 
-        if(userEmployee.getFull_Name() == null || userEmployee.getFull_Name().isEmpty()) {
+        if(userEmployee.getFull_name() == null || userEmployee.getFull_name().isEmpty()) {
             throw new RuntimeException("El nombre completo es obligatorio");
         }
 
@@ -129,7 +129,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
 
         if (dto.getFull_name() != null) {
-            existingUserEmployee.setFull_Name(dto.getFull_name());
+            existingUserEmployee.setFull_name(dto.getFull_name());
         }
 
         if (dto.getUser_name() != null) {
