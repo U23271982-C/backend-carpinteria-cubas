@@ -1,8 +1,11 @@
 package com.content.customer_service.model;
 
+import com.content.customer_service.model.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.UUID;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 /**
  * Entidad que representa un distrito.
@@ -14,21 +17,15 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class District {
+@SuperBuilder
+public class District extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer district_id; // ID interno para la base de datos
 
-    @Column(name = "uuid", nullable = false, unique = true, updatable = false)
-    private String uuid; // UUID público para la API
-
     @Column(name = "district_name", nullable = false, length = 100)
     private String district_name;
-
-    @Column(name = "district_code", length = 10)
-    private String district_code;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "province_id", nullable = false)
@@ -38,10 +35,6 @@ public class District {
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
 
-    @PrePersist
-    private void generateUuid() {
-        if (this.uuid == null) {
-            this.uuid = UUID.randomUUID().toString();
-        }
-    }
+    @OneToMany(mappedBy = "district_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Direction> customers;
 }
