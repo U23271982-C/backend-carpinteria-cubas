@@ -10,12 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/user-client")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*")
 public class UserClientController {
 
     private final UserClientServiceImpl userClientService;
@@ -32,20 +32,20 @@ public class UserClientController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{uuid}")
-    public ResponseEntity<UserClientResponseDTO> findByUuid(@PathVariable UUID uuid) {
-        log.info("Fetching user client with ID: {}", uuid);
-        UserClientResponseDTO user = userClientService.readById(uuid);
+    @GetMapping("/{uid}")
+    public ResponseEntity<UserClientResponseDTO> findByFireBaseUID(@PathVariable String uid) {
+        log.info("Fetching user client with ID: {}", uid);
+        UserClientResponseDTO user = userClientService.readByFirebaseUid(uid);
 
         log.info("User encontrado: {} {}", user.getFullName(), user.getEmail());
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/{uuid}")
+    @PutMapping("/{uid}")
     public ResponseEntity<UserClientResponseDTO> update(
-            @PathVariable UUID uuid,
+            @PathVariable String uid,
             @Valid @RequestBody UserClientRequestDTO dto) {
-        UserClientResponseDTO updatedUser = userClientService.update(uuid, dto);
+        UserClientResponseDTO updatedUser = userClientService.updateByFirebaseUid(uid, dto);
         return ResponseEntity.ok(updatedUser);
     }
 }
