@@ -1,5 +1,6 @@
 package com.content.customer_service.dto.request;
 
+import com.content.customer_service.util.ValidatorGroups;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.UUID;
 
 /**
  * DTO para la solicitud de creación/actualización de un Distrito.
@@ -19,14 +22,14 @@ import lombok.Setter;
 @Builder
 public class DistrictRequestDTO {
 
-    // Nombre del distrito (ejemplo: "Miraflores", "San Isidro", "Barranco")
-    @NotBlank(message = "El nombre del distrito no debe estar vacío")
-    @Size(max = 100, message = "El nombre del distrito no debe exceder los 100 caracteres")
+    // Nombre del distrito
+    @NotBlank(groups = ValidatorGroups.Create.class, message = "El nombre del distrito es obligatorio")
+    @Size(max = 100, message = "El nombre del distrito no puede exceder 100 caracteres", groups = ValidatorGroups.Update.class)
     private String district_name;
 
     // ID de la provincia asociada
-    @Positive(message = "El ID de la provincia debe ser un número positivo")
-    @NotNull(message = "El ID de la provincia no debe ser nulo")
-    private Integer province_id;
+    @NotNull(message = "El UUID de la provincia no debe ser nulo", groups = ValidatorGroups.Create.class)
+    private UUID province_uuid;
 
+    private UUID state_entity_uuid;
 }
