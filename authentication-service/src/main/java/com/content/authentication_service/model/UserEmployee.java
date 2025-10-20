@@ -22,6 +22,9 @@ public class UserEmployee {
     @Column(name="uuid", nullable = false, unique = true, updatable = false)
     private UUID uuid;
 
+    @Column(name="full_name", length = 150, nullable = false)
+    private String full_Name;
+
     @Column(name="user_employee_name", length = 100)
     private String user_employee_name;
 

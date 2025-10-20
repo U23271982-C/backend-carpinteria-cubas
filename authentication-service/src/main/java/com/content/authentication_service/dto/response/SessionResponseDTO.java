@@ -12,11 +12,12 @@ import java.util.List;
 @Builder
 public class SessionResponseDTO {
 
+    private String full_name;
     private String user_employee_name;
     private String user_position;
     private String user_phone;
     private String session_date;
-    private List<UserModuleAccessResponseDTO> user_module_access;
+    private List<UserModuleAccessResponseDTO> modules_access;
     private Boolean succesed;
 
 }

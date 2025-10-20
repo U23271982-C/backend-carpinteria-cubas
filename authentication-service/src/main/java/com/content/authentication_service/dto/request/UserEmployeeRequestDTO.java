@@ -13,8 +13,12 @@ import java.util.UUID;
 public class UserEmployeeRequestDTO {
 
     @NotBlank
+    @Size(min = 1, max = 150)
+    private String full_name;
+
+    @NotBlank
     @Size(min = 1, max = 100)
-    private String name;
+    private String user_name;
 
     @NotBlank
     @Size(min = 6, max = 100)

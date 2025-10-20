@@ -63,6 +63,14 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
             throw new RuntimeException("user_employee_position_id es obligatorio");
         }
 
+        if(userEmployee.getFull_Name() == null || userEmployee.getFull_Name().isEmpty()) {
+            throw new RuntimeException("El nombre completo es obligatorio");
+        }
+
+        if(userEmployee.getUser_employee_name() == null || userEmployee.getUser_employee_name().isEmpty()) {
+            throw new RuntimeException("El nombre de usuario es obligatorio");
+        }
+
         if (userEmployee.getPassword() == null || userEmployee.getPassword().isEmpty()) {
             throw new RuntimeException("La contraseña es obligatoria");
         }
@@ -120,8 +128,12 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
 
-        if (dto.getName() != null) {
-            existingUserEmployee.setUser_employee_name(dto.getName());
+        if (dto.getFull_name() != null) {
+            existingUserEmployee.setFull_Name(dto.getFull_name());
+        }
+
+        if (dto.getUser_name() != null) {
+            existingUserEmployee.setUser_employee_name(dto.getUser_name());
         }
         if (dto.getPhone() != null) {
             existingUserEmployee.setUser_employee_phone(dto.getPhone());
