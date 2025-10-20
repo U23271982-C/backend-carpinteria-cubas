@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 /**
  * Entidad que representa el tipo de cliente.
  */
@@ -22,8 +24,8 @@ public class ClientType extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer client_type_id; // ID interno para la base de datos
 
-    @Column(name = "type_name", nullable = false, length = 50)
-    private String type_name;
+    @Column(name = "client_type_name", nullable = false, length = 50)
+    private String client_type_name;
 
     @Column(name = "description", length = 255)
     private String description;
@@ -31,4 +33,7 @@ public class ClientType extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
+
+    @OneToMany(mappedBy = "client_type_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Client> clients;
 }
