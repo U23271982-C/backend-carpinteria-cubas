@@ -10,6 +10,7 @@ import com.content.authentication_service.repository.UserEmployeeRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +26,13 @@ public class SessionServiceImpl implements ServiceAbs<SessionRequestDTO, Session
     private final SessionRepository sessionRepository;
     private final UserEmployeeRepository userEmployeeRepository;
     private final SessionMapper sessionMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public SessionResponseDTO create(SessionRequestDTO dto) {
-        String username = dto.getUsername();
-        String password = dto.getPassword();
-
         UserEmployee userEmployee = userEmployeeRepository.findAll()
                 .stream()
-                .filter(user -> user.getUser_employee_name().equals(username) && user.getPassword().equals(password))
+                .filter(user -> user.getUser_employee_name().equals(dto.getUsername()) && passwordEncoder.matches(dto.getPassword(), user.getPassword()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
         if (userEmployee == null) {

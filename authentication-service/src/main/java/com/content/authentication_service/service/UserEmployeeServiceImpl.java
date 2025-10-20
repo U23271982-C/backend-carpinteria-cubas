@@ -14,6 +14,7 @@ import com.content.authentication_service.repository.UserModuleAccessRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
     private final StateEntityRepository stateEntityRepository;
     private final UserEmployeePositionRepository userEmployeePositionRepository;
     private final UserModuleAccessRepository userModuleAccessRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -74,6 +76,8 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
         if (userEmployee.getPassword() == null || userEmployee.getPassword().isEmpty()) {
             throw new RuntimeException("La contraseña es obligatoria");
         }
+        String encryptedPassword = passwordEncoder.encode(userEmployee.getPassword());
+        userEmployee.setPassword(encryptedPassword);
 
         // Guardar entidad en la base de datos
         UserEmployee savedUserEmployee = userEmployeeRepository.save(userEmployee);
@@ -155,7 +159,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
             existingUserEmployee.setState_entity_id(stateEntity);
         }
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            existingUserEmployee.setPassword(dto.getPassword());
+            existingUserEmployee.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         UserEmployee updatedUserEmployee = userEmployeeRepository.save(existingUserEmployee);
         return userEmployeeMapper.toDTO(updatedUserEmployee);
