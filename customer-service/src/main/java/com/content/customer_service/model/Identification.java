@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 /**
  * Entidad que representa la identificación de un cliente.
  * ACTUALIZADA para usar SuperBuilder y herencia UUID
@@ -16,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder // Cambiado de @Builder a @SuperBuilder
+@SuperBuilder
 public class Identification extends BaseEntity {
 
     @Id
@@ -31,10 +33,10 @@ public class Identification extends BaseEntity {
     private IdentificationType identification_type_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "person_type_id", nullable = false)
-    private PersonType person_type_id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
+
+    @OneToMany(mappedBy = "identification_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Client> clients;
+
 }
