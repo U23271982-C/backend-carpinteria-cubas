@@ -3,55 +3,40 @@ package com.content.customer_service.dto.response;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * DTO de respuesta para Cliente - Solo expone UUIDs, nunca IDs internos
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ClientResponseDTO {
 
-    private String uuid; // UUID público - NUNCA exponemos el ID interno
-    private String clientName;
-    private String clientLastName;
-    private LocalDateTime registrationDate;
-
-    // Referencias usando UUIDs, no IDs internos
-    private String clientTypeUuid;
-    private String clientTypeName;
-
-    private String identificationUuid;
-    private String identificationNumber;
-    private String identificationTypeName;
-
-    private String stateEntityUuid;
-    private String stateName;
+    private UUID client_uuid;
+    private String client_name;
+    private String client_last_name;
+    private LocalDateTime registration_date;
+    private UUID client_type_uuid;
+    private UUID identification_uuid;
+    private String state_entity_name;
 
     // Listas de contactos y direcciones (solo UUIDs)
     private List<ContactSummaryDTO> contacts;
     private List<DirectionSummaryDTO> directions;
 
     @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class ContactSummaryDTO {
-        private String uuid;
         private String phoneNumber;
         private String email;
+        private String state_entity_name;
     }
 
     @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class DirectionSummaryDTO {
-        private String uuid;
-        private String directionName;
-        private String addressLine1;
-        private String districtName;
-        private String provinceName;
+        private String direction_type_name;
+        private String direction_name;
+        private String direction_number;
+        private String reference;
+        private String district_name;
+        private String state_entity_name;
     }
 }
