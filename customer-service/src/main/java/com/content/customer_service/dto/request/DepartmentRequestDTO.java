@@ -4,6 +4,7 @@ import com.content.customer_service.util.ValidatorGroups;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,9 +16,7 @@ import java.util.UUID;
  * Nota: El departamento se crea automáticamente si no existe al registrar una dirección.
  */
 
-@Getter
-@Setter
-@Builder
+@Data
 public class DepartmentRequestDTO {
 
     // Nombre del departamento

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,9 +17,7 @@ import java.util.UUID;
  * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
  */
 
-@Getter
-@Setter
-@Builder
+@Data
 public class IdentificationTypeRequestDTO {
 
     // Nombre del tipo de identificación (ejemplo: "DNI", "RUC", "Pasaporte", "Carnet de Extranjería")

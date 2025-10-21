@@ -1,71 +1,38 @@
 package com.content.customer_service.dto.request;
 
+import com.content.customer_service.util.ValidatorGroups;
 import lombok.*;
 import jakarta.validation.constraints.*;
+
+import java.util.UUID;
 
 /**
  * DTO de request para Direction - Usa UUIDs para referencias
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class DirectionRequestDTO {
 
-    private String directionName;
+    @NotBlank(message = "El cliente es obligatorio",groups = ValidatorGroups.Create.class)
+    private UUID client_uuid;
 
-    @NotBlank(message = "La línea de dirección 1 es obligatoria")
-    @Size(max = 255, message = "La dirección no puede exceder 255 caracteres")
-    private String addressLine1;
+    @NotBlank(message = "El tipo de dirección es obligatorio", groups = ValidatorGroups.Create.class)
+    private UUID direction_type_uuid;
 
-    @Size(max = 255, message = "La dirección línea 2 no puede exceder 255 caracteres")
-    private String addressLine2;
+    @NotBlank(message = "La direccion es obligatoria", groups = ValidatorGroups.Create.class)
+    @Size(max = 100, message = "La dirección no puede exceder 100 caracteres" , groups = ValidatorGroups.Update.class)
+    private String direction_Name;
 
-    @NotBlank(message = "El cliente es obligatorio")
-    private String clientUuid;
+    @NotBlank(message = "El numero de la direccion es obligatoria", groups = ValidatorGroups.Create.class)
+    @Size(max = 6, message = "El numero de la direccion no puede exceder 6 caracteres", groups = ValidatorGroups.Update.class)
+    @Pattern(regexp = "\\d{6}", message = "El numero de la direccion debe contener solo números", groups = {ValidatorGroups.Create.class, ValidatorGroups.Update.class})
+    private String direction_number;
 
-    @NotBlank(message = "El tipo de dirección es obligatorio")
-    private String directionTypeUuid;
+    @Size(max = 255, message = "La referencia no puede exceder los 255 caracteres")
+    private String reference;
 
-    @NotBlank(message = "El distrito es obligatorio")
-    private String districtUuid;
+    @NotBlank(message = "El distrito es obligatorio" ,groups = {ValidatorGroups.Create.class, ValidatorGroups.Update.class})
+    private UUID district_uuid;
 
-    @NotBlank(message = "El estado es obligatorio")
-    private String stateEntityUuid;
+    private UUID state_entity_uuid;
 
-    // Métodos adicionales para compatibilidad con servicios legacy
-    public String getClient_id() {
-        return clientUuid;
-    }
-
-    public String getDirection_type_id() {
-        return directionTypeUuid;
-    }
-
-    public String getDirection_name() {
-        return directionName;
-    }
-
-    public String getDirection_number() {
-        return addressLine1;
-    }
-
-    public String getReference() {
-        return addressLine2;
-    }
-
-    public String getDepartment_name() {
-        // Este método será manejado por el servicio usando el districtUuid
-        return null;
-    }
-
-    public String getProvince_name() {
-        // Este método será manejado por el servicio usando el districtUuid
-        return null;
-    }
-
-    public String getDistrict_name() {
-        // Este método será manejado por el servicio usando el districtUuid
-        return null;
-    }
 }

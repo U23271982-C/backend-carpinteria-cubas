@@ -4,6 +4,7 @@ import com.content.customer_service.util.ValidatorGroups;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,9 +15,7 @@ import java.util.UUID;
  * Solo incluye los campos que deben ser proporcionados manualmente desde el frontend.
  */
 
-@Getter
-@Setter
-@Builder
+@Data
 public class PersonTypeRequestDTO {
 
     // Nombre del tipo de persona (ejemplo: "Natural", "Jurídica")

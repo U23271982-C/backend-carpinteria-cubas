@@ -1,38 +1,30 @@
 package com.content.customer_service.dto.request;
 
+import com.content.customer_service.util.ValidatorGroups;
 import lombok.*;
 import jakarta.validation.constraints.*;
+
+import java.util.UUID;
 
 /**
  * DTO de request para Contact - Usa UUIDs para referencias
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ContactRequestDTO {
 
-    @NotBlank(message = "El número de teléfono es obligatorio")
-    @Size(max = 20, message = "El teléfono no puede exceder 20 caracteres")
-    private String phoneNumber;
+    @NotBlank(message = "El cliente es obligatorio", groups = ValidatorGroups.Create.class)
+    private UUID client_uuid;
 
-    @NotBlank(message = "El email es obligatorio")
-    @Email(message = "El email debe tener formato válido")
-    @Size(max = 100, message = "El email no puede exceder 100 caracteres")
+    @NotBlank(message = "El número de teléfono es obligatorio", groups = ValidatorGroups.Create.class)
+    @Size(max = 12, message = "El teléfono no puede exceder 12 caracteres", groups = ValidatorGroups.Update.class)
+    @Pattern(regexp = "\\d{12}", message = "El numero de telefono debe contener solo números", groups = {ValidatorGroups.Create.class, ValidatorGroups.Update.class})
+    private String phone_number;
+
+    @NotBlank(message = "El email es obligatorio", groups = ValidatorGroups.Create.class)
+    @Email(message = "El email debe tener formato válido", groups = {ValidatorGroups.Create.class, ValidatorGroups.Update.class})
+    @Size(max = 100, message = "El email no puede exceder 100 caracteres", groups = ValidatorGroups.Update.class)
     private String email;
 
-    @NotBlank(message = "El cliente es obligatorio")
-    private String clientUuid;
+    private UUID state_entity_uuid;
 
-    @NotBlank(message = "El estado es obligatorio")
-    private String stateEntityUuid;
-
-    // Métodos adicionales para compatibilidad con servicios legacy
-    public String getClient_id() {
-        return clientUuid;
-    }
-
-    public String getPhone_number() {
-        return phoneNumber;
-    }
 }

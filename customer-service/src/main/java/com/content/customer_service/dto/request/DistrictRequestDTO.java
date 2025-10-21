@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,9 +18,7 @@ import java.util.UUID;
  * Nota: El distrito se crea automáticamente si no existe al registrar una dirección.
  */
 
-@Getter
-@Setter
-@Builder
+@Data
 public class DistrictRequestDTO {
 
     // Nombre del distrito
