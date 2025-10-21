@@ -20,7 +20,7 @@ public class DirectionRequestDTO {
 
     @NotBlank(message = "La direccion es obligatoria", groups = ValidatorGroups.Create.class)
     @Size(max = 100, message = "La dirección no puede exceder 100 caracteres" , groups = ValidatorGroups.Update.class)
-    private String direction_Name;
+    private String direction_name;
 
     @NotBlank(message = "El numero de la direccion es obligatoria", groups = ValidatorGroups.Create.class)
     @Size(max = 6, message = "El numero de la direccion no puede exceder 6 caracteres", groups = ValidatorGroups.Update.class)

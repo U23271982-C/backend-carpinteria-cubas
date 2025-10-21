@@ -13,9 +13,7 @@ public interface DepartmentMapper
         extends Convert<Department, DepartmentRequestDTO, DepartmentResponseDTO>,
         UpdatePatch<DepartmentRequestDTO, Department> {
 
-
-
-    @Mapping(target = "department_uuid", source = "department_uuid")
+    @Mapping(target = "department_uuid", source = "uuid")
     @Mapping(target = "department_name", source = "department_name")
     @Mapping(target = "state_entity_name", source = "state_entity_id.state_entity_name")
     @Override

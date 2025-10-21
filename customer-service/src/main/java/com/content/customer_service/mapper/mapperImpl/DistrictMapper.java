@@ -13,10 +13,10 @@ public interface DistrictMapper
         extends Convert<District, DistrictRequestDTO, DistrictResponseDTO>,
         UpdatePatch<DistrictRequestDTO, District> {
 
-    @Mapping(target = "district_uuid", source = "district_uuid")
+    @Mapping(target = "district_uuid", source = "uuid")
     @Mapping(target = "district_name", source = "district_name")
     @Mapping(target = "province_uuid", source = "province_id.uuid")
-    @Mapping(target = "state_entity_name", source = "state_entity_id.state_name")
+    @Mapping(target = "state_entity_name", source = "state_entity_id.state_entity_name")
     @Override
     DistrictResponseDTO toDTO(District model);
 

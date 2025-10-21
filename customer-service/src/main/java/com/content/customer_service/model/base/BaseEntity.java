@@ -18,7 +18,7 @@ import java.util.UUID;
 public abstract class BaseEntity {
 
     @Column(name = "uuid", nullable = false, unique = true, updatable = false, length = 36)
-    private String uuid;
+    private UUID uuid;
 
     // Constructor sin argumentos requerido por JPA
     protected BaseEntity() {
@@ -30,7 +30,7 @@ public abstract class BaseEntity {
     @PrePersist
     private void generateUuid() {
         if (this.uuid == null) {
-            this.uuid = UUID.randomUUID().toString();
+            this.uuid = UUID.randomUUID();
         }
     }
 

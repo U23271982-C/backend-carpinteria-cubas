@@ -15,14 +15,14 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface IdentificationMapper
         extends Convert<Identification, IdentificationRequestDTO, IdentificationResponseDTO>,
-        UpdatePatch<IdentificationTypeRequestDTO, Identification> {
+        UpdatePatch<IdentificationRequestDTO, Identification> {
 
     /**
      * Convierte Identification a IdentificationResponseDTO - SOLO UUIDs
      */
-    @Mapping(target = "identification_uuid", source = "identification_uuid")
+    @Mapping(target = "identification_uuid", source = "uuid")
     @Mapping(target = "identification_number", source = "identification_number")
-    @Mapping(target = "identification_type_uuid", source = "identification_type_id.identification_type_uuid")
+    @Mapping(target = "identification_type_uuid", source = "identification_type_id.uuid")
     @Mapping(target = "state_entity_name", source = "state_entity_id.state_entity_name")
     @Override
     IdentificationResponseDTO toDTO(Identification modelo);

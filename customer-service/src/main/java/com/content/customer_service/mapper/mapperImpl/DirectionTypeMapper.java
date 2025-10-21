@@ -1,29 +1,29 @@
 package com.content.customer_service.mapper.mapperImpl;
 
-import com.content.customer_service.dto.request.DistrictRequestDTO;
-import com.content.customer_service.dto.response.DistrictResponseDTO;
+import com.content.customer_service.dto.request.DirectionTypeRequestDTO;
+import com.content.customer_service.dto.response.DirectionTypeResponseDTO;
 import com.content.customer_service.mapper.convert.Convert;
 import com.content.customer_service.mapper.convert.UpdatePatch;
-import com.content.customer_service.model.District;
+import com.content.customer_service.model.DirectionType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface DirectionTypeMapper
-        extends Convert<District, DistrictRequestDTO, DistrictResponseDTO>,
-        UpdatePatch<DistrictRequestDTO, District> {
+        extends Convert<DirectionType, DirectionTypeRequestDTO, DirectionTypeResponseDTO>,
+        UpdatePatch<DirectionTypeRequestDTO, DirectionType> {
 
-    @Mapping(target = "district_uuid", source = "district_uuid")
-    @Mapping(target = "district_name", source = "district_name")
-    @Mapping(target = "province_uuid", source = "province_id.uuid")
-    @Mapping(target = "state_entity_name", source = "state_entity_id.state_name")
+    @Mapping(target = "direction_type_uuid", source = "uuid")
+    @Mapping(target = "direction_type_name", source = "direction_type_name")
+    @Mapping(target = "description", source = "description")
+    @Mapping(target = "state_entity_name", source = "state_entity_id.state_entity_name")
     @Override
-    DistrictResponseDTO toDTO(District model);
+    DirectionTypeResponseDTO toDTO(DirectionType model);
 
 
-    @Mapping(target = "district_name", source = "district_name")
-    @Mapping(target = "province_id.uuid", source = "province_uuid")
+    @Mapping(target = "direction_type_name", source = "direction_type_name")
+    @Mapping(target = "description", source = "description")
     @Mapping(target = "state_entity_id.uuid", source = "state_entity_uuid")
     @Override
-    District toModel(DistrictRequestDTO dto);
+    DirectionType toModel(DirectionTypeRequestDTO dto);
 }

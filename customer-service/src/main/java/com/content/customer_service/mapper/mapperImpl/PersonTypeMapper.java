@@ -13,7 +13,7 @@ public interface PersonTypeMapper
         extends Convert<PersonType, PersonTypeRequestDTO, PersonTypeResponseDTO>,
         UpdatePatch<PersonTypeRequestDTO, PersonType> {
 
-    @Mapping(target = "person_type_uuid", source = "person_type_uuid")
+    @Mapping(target = "person_type_uuid", source = "uuid")
     @Mapping(target = "person_type_name", source = "person_type_name")
     @Mapping(target = "state_entity_name", source = "state_entity_id.state_entity_name")
     @Override

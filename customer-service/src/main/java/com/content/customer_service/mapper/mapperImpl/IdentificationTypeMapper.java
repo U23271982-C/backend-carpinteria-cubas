@@ -13,10 +13,10 @@ public interface IdentificationTypeMapper
         extends Convert<IdentificationType, IdentificationTypeRequestDTO, IdentificationTypeResponseDTO>,
         UpdatePatch<IdentificationTypeRequestDTO, IdentificationType> {
 
-    @Mapping(target = "identification_type_uuid", source = "identification_type_uuid")
+    @Mapping(target = "identification_type_uuid", source = "uuid")
     @Mapping(target = "identification_type_name", source = "identification_type_name")
     @Mapping(target = "person_type_uuid", source = "person_type_id.uuid")
-    @Mapping(target = "state_entity_name", source = "state_entity_id.state_name")
+    @Mapping(target = "state_entity_name", source = "state_entity_id.state_entity_name")
     @Override
     IdentificationTypeResponseDTO toDTO(IdentificationType model);
 

@@ -23,7 +23,7 @@ public class StateEntity extends BaseEntity {
     private Integer state_entity_id; // ID interno para la base de datos
 
     @Column(name = "state_name", nullable = false, length = 50)
-    private String state_name;
+    private String state_entity_name;
 
     @Column(name = "description", length = 255)
     private String description;

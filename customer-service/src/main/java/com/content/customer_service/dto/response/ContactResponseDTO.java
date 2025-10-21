@@ -12,7 +12,7 @@ public class ContactResponseDTO {
 
     private UUID contact_uuid;
     private UUID client_uuid;
-    private String phoneNumber;
+    private String phone_number;
     private String email;
     private String state_entity_name;
 
