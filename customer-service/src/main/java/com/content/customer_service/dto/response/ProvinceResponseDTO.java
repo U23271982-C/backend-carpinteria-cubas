@@ -1,22 +1,17 @@
 package com.content.customer_service.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import java.util.UUID;
 
 /**
  * DTO de respuesta para Provincia.
  */
-@Getter
-@Setter
-@Builder
+@Data
 public class ProvinceResponseDTO {
 
-    private Integer province_id;
+    private UUID province_uuid;
     private String province_name;
-    private Integer department_id;
-    private String department_name;
-    private Integer state_entity_id;
+    private UUID department_uuid;
     private String state_entity_name;
 
 }
