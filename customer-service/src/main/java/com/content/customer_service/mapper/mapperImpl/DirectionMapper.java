@@ -1,4 +1,4 @@
-package com.content.customer_service.mapper;
+package com.content.customer_service.mapper.mapperImpl;
 
 import com.content.customer_service.dto.request.DirectionRequestDTO;
 import com.content.customer_service.dto.response.DirectionResponseDTO;

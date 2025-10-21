@@ -2,7 +2,7 @@ package com.content.customer_service.service;
 
 import com.content.customer_service.dto.request.DirectionRequestDTO;
 import com.content.customer_service.dto.response.DirectionResponseDTO;
-import com.content.customer_service.mapper.DirectionMapper;
+import com.content.customer_service.mapper.mapperImpl.DirectionMapper;
 import com.content.customer_service.model.*;
 import com.content.customer_service.repository.*;
 import com.content.customer_service.service.abstractService.ServiceAbs;

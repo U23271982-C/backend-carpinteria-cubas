@@ -6,20 +6,7 @@ package com.content.customer_service.mapper.convert;
  * @param <DRQ> DTO de Request (entrada)
  * @param <DRE> DTO de Response (salida)
  */
-public interface Convert<M, DRQ, DRE> {
+public interface Convert<M, DRQ, DRE> extends ConvertModel<M, DRQ>, ConvertDTO<M, DRE> {
 
-    /**
-     * Convierte un modelo a DTO de respuesta
-     * @param modelo Entidad del modelo
-     * @return DTO de respuesta
-     */
-    DRE toDTO(M modelo);
-
-    /**
-     * Convierte un DTO de request a modelo
-     * @param dto DTO de entrada
-     * @return Entidad del modelo
-     */
-    M toModel(DRQ dto);
 }
 

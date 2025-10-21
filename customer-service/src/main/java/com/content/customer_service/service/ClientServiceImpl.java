@@ -2,7 +2,7 @@ package com.content.customer_service.service;
 
 import com.content.customer_service.dto.request.ClientRequestDTO;
 import com.content.customer_service.dto.response.ClientResponseDTO;
-import com.content.customer_service.mapper.ClientMapper;
+import com.content.customer_service.mapper.mapperImpl.ClientMapper;
 import com.content.customer_service.model.Client;
 import com.content.customer_service.model.ClientType;
 import com.content.customer_service.model.Identification;

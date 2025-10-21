@@ -2,7 +2,7 @@ package com.content.customer_service.service;
 
 import com.content.customer_service.dto.request.ContactRequestDTO;
 import com.content.customer_service.dto.response.ContactResponseDTO;
-import com.content.customer_service.mapper.ContactMapper;
+import com.content.customer_service.mapper.mapperImpl.ContactMapper;
 import com.content.customer_service.model.Client;
 import com.content.customer_service.model.Contact;
 import com.content.customer_service.model.StateEntity;
