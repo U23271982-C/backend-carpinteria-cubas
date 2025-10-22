@@ -1,13 +1,14 @@
 package com.content.customer_service.service.abstractService;
 
+import jakarta.transaction.Transactional;
+
+import java.util.UUID;
+
 /**
  * Interfaz para eliminar una entidad
  */
+@Transactional
 public interface Removable {
-    /**
-     * Elimina una entidad por su ID
-     * @param id ID de la entidad a eliminar
-     */
-    void remove(int id);
+    void remove(UUID uuid);
 }
 

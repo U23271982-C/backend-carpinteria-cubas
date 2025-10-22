@@ -2,7 +2,7 @@ package com.content.customer_service.controller;
 
 import com.content.customer_service.dto.request.ClientRequestDTO;
 import com.content.customer_service.dto.response.ClientResponseDTO;
-import com.content.customer_service.service.ClientServiceImpl;
+import com.content.customer_service.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ClientController {
 
-    private final ClientServiceImpl clientService;
+    private final ClientService clientService;
 
     /**
      * Crear un nuevo cliente

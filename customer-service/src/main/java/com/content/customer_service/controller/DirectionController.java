@@ -2,7 +2,7 @@ package com.content.customer_service.controller;
 
 import com.content.customer_service.dto.request.DirectionRequestDTO;
 import com.content.customer_service.dto.response.DirectionResponseDTO;
-import com.content.customer_service.service.DirectionServiceImpl;
+import com.content.customer_service.service.DirectionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class DirectionController {
 
-    private final DirectionServiceImpl directionService;
+    private final DirectionService directionService;
 
     /**
      * Crear una nueva dirección

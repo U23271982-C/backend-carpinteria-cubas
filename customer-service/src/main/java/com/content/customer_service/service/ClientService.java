@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ClientServiceImpl implements ServiceAbs<ClientRequestDTO, ClientResponseDTO> {
+public class ClientService implements ServiceAbs<ClientRequestDTO, ClientResponseDTO> {
 
     private final ClientRepository clientRepository;
     private final ClientTypeRepository clientTypeRepository;

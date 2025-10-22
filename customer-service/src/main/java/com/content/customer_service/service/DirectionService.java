@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DirectionServiceImpl implements ServiceAbs<DirectionRequestDTO, DirectionResponseDTO> {
+public class DirectionService implements ServiceAbs<DirectionRequestDTO, DirectionResponseDTO> {
 
     private final DirectionRepository directionRepository;
     private final ClientRepository clientRepository;

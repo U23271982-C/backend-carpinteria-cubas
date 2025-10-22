@@ -2,7 +2,7 @@ package com.content.customer_service.controller;
 
 import com.content.customer_service.dto.request.ContactRequestDTO;
 import com.content.customer_service.dto.response.ContactResponseDTO;
-import com.content.customer_service.service.ContactServiceImpl;
+import com.content.customer_service.service.ContactService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 public class ContactController {
 
-    private final ContactServiceImpl contactService;
+    private final ContactService contactService;
 
     /**
      * Crear un nuevo contacto

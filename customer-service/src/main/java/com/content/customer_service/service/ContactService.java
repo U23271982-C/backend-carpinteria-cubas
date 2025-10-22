@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ContactServiceImpl implements ServiceAbs<ContactRequestDTO, ContactResponseDTO> {
+public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResponseDTO> {
 
     private final ContactRepository contactRepository;
     private final ClientRepository clientRepository;
