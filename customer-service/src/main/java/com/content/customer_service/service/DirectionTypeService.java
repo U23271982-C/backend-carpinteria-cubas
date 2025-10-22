@@ -8,6 +8,7 @@ import com.content.customer_service.model.DirectionType;
 import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.DirectionTypeRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class DirectionTypeService implements ServiceAbs<DirectionTypeRequestDTO,
     private final DirectionTypeMapper directionTypeMapper;
     private final DirectionTypeRepository directionTypeRepository;
 
+    @Transactional
     @Override
     public DirectionTypeResponseDTO create(DirectionTypeRequestDTO dto) {
         log.info("DirectionTypeService.create()");
@@ -31,6 +33,7 @@ public class DirectionTypeService implements ServiceAbs<DirectionTypeRequestDTO,
         return directionTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<DirectionTypeResponseDTO> allList() {
         log.info("DirectionTypeService.allList()");
@@ -40,6 +43,7 @@ public class DirectionTypeService implements ServiceAbs<DirectionTypeRequestDTO,
                 .toList();
     }
 
+    @Transactional
     @Override
     public DirectionTypeResponseDTO readByUUID(UUID uuid) {
         log.info("DirectionTypeService.readByUUID()");
@@ -47,6 +51,7 @@ public class DirectionTypeService implements ServiceAbs<DirectionTypeRequestDTO,
         return directionTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("DirectionTypeService.remove()");
@@ -55,6 +60,7 @@ public class DirectionTypeService implements ServiceAbs<DirectionTypeRequestDTO,
         directionTypeRepository.save(model_existing);
     }
 
+    @Transactional
     @Override
     public DirectionTypeResponseDTO updateByUUID(UUID uuid, DirectionTypeRequestDTO dto) {
         log.info("DirectionTypeService.updateByUUID()");

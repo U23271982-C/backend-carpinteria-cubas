@@ -2,6 +2,7 @@ package com.content.customer_service.service;
 
 import com.content.customer_service.dto.request.ClientRequestDTO;
 import com.content.customer_service.dto.response.ClientResponseDTO;
+import com.content.customer_service.exception.EServiceLayer;
 import com.content.customer_service.mapper.mapperImpl.ClientMapper;
 import com.content.customer_service.model.Client;
 import com.content.customer_service.model.ClientType;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -32,155 +34,81 @@ import java.util.stream.Collectors;
 public class ClientService implements ServiceAbs<ClientRequestDTO, ClientResponseDTO> {
 
     private final ClientRepository clientRepository;
+    private final ClientMapper clientMapper;
     private final ClientTypeRepository clientTypeRepository;
     private final IdentificationRepository identificationRepository;
-    private final StateEntityRepository stateEntityRepository;
-    private final ClientMapper clientMapper;
-    private final UtilityValidator utilityValidator;
 
     @Transactional
     @Override
     public ClientResponseDTO create(ClientRequestDTO dto) {
-        log.info("Iniciando creación de cliente: {} {}", dto.getClientName(), dto.getClientLastName());
-
-        // Validar datos del cliente
-        utilityValidator.validate(dto);
-
-        // Verificar que el tipo de cliente existe usando UUID
-        ClientType clientType = clientTypeRepository.findByUuid(dto.getClientTypeUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Tipo de cliente no encontrado con UUID: " + dto.getClientTypeUuid()));
-
-        // Verificar que la identificación existe usando UUID
-        Identification identification = identificationRepository.findByUuid(dto.getIdentificationUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Identificación no encontrada con UUID: " + dto.getIdentificationUuid()));
-
-        // Verificar que el estado existe usando UUID
-        StateEntity stateEntity = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado con UUID: " + dto.getStateEntityUuid()));
-
-        // Crear el cliente
-        Client client = Client.builder()
-                .client_name(dto.getClientName())
-                .client_last_name(dto.getClientLastName())
-                .registration_date(LocalDateTime.now())
-                .client_type_id(clientType)
-                .identification_id(identification)
-                .state_entity_id(stateEntity)
-                .build();
-
-        Client savedClient = clientRepository.save(client);
-
-        log.info("Cliente creado exitosamente con UUID: {}", savedClient.getUuid());
-        return convertToResponseDTO(savedClient);
-    }
-
-    @Override
-    public ClientResponseDTO getByUuid(String uuid) {
-        log.info("Buscando cliente por UUID: {}", uuid);
-
-        Client client = clientRepository.findActiveByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + uuid));
-
-        return convertToResponseDTO(client);
-    }
-
-    @Override
-    public List<ClientResponseDTO> getAll() {
-        log.info("Obteniendo todos los clientes activos");
-
-        List<Client> clients = clientRepository.findAllActive();
-        return clients.stream()
-                .map(this::convertToResponseDTO)
-                .collect(Collectors.toList());
+        log.info("ClientService.create()");
+        ClientType clientTypeReading =
+                clientTypeRepository.findByUuid(dto.getClient_type_uuid())
+                        .orElseThrow(() -> new EServiceLayer("El tipo de cliente no existe"));
+        Identification identificationReading =
+                identificationRepository.findByUuid(dto.getIdentification_uuid())
+                        .orElseThrow(() -> new EServiceLayer("La identificación no existe"));
+        // Convertimos de DTO a modelo
+        Client model = clientMapper.toModel(dto);
+        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build()); // ACTIVO
+        model.setRegistration_date(LocalDateTime.now());
+        model.setClient_type_id(clientTypeReading);
+        model.setIdentification_id(identificationReading);
+        model = clientRepository.save(model);
+        return clientMapper.toDTO(model);
     }
 
     @Transactional
     @Override
-    public ClientResponseDTO update(String uuid, ClientRequestDTO dto) {
-        log.info("Actualizando cliente con UUID: {}", uuid);
-
-        // Buscar cliente por UUID
-        Client client = clientRepository.findActiveByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + uuid));
-
-        // Validar datos
-        utilityValidator.validate(dto);
-
-        // Buscar entidades relacionadas por UUID
-        ClientType clientType = clientTypeRepository.findByUuid(dto.getClientTypeUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Tipo de cliente no encontrado"));
-
-        Identification identification = identificationRepository.findByUuid(dto.getIdentificationUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Identificación no encontrada"));
-
-        StateEntity stateEntity = stateEntityRepository.findByUuid(dto.getStateEntityUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Estado no encontrado"));
-
-        // Actualizar datos
-        client.setClient_name(dto.getClientName());
-        client.setClient_last_name(dto.getClientLastName());
-        client.setClient_type_id(clientType);
-        client.setIdentification_id(identification);
-        client.setState_entity_id(stateEntity);
-
-        Client updatedClient = clientRepository.save(client);
-
-        log.info("Cliente actualizado exitosamente con UUID: {}", uuid);
-        return convertToResponseDTO(updatedClient);
+    public List<ClientResponseDTO> allList() {
+        log.info("ClientService.allList()");
+        return clientRepository.findAll().stream()
+                .filter(client -> client.getState_entity_id().getState_entity_id() !=3) // Solo activos
+                .map(clientMapper::toDTO)
+                .toList();
     }
 
     @Transactional
     @Override
-    public void delete(String uuid) {
-        log.info("Eliminando cliente con UUID: {}", uuid);
-
-        Client client = clientRepository.findActiveByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con UUID: " + uuid));
-
-        // Soft delete: cambiar a estado inactivo
-        StateEntity inactiveState = stateEntityRepository.findByStateName("INACTIVO")
-                .orElseThrow(() -> new EntityNotFoundException("Estado INACTIVO no encontrado"));
-
-        client.setState_entity_id(inactiveState);
-        clientRepository.save(client);
-
-        log.info("Cliente eliminado (soft delete) exitosamente con UUID: {}", uuid);
+    public ClientResponseDTO readByUUID(UUID uuid) {
+        log.info("ClientService.readByUUID()");
+        Client model = searchEntityByUUID(uuid);
+        return clientMapper.toDTO(model);
     }
 
-    // Método auxiliar para convertir entidad a DTO de respuesta
-    private ClientResponseDTO convertToResponseDTO(Client client) {
-        return ClientResponseDTO.builder()
-                .uuid(client.getUuid()) // Solo exponemos UUID, nunca el ID interno
-                .clientName(client.getClient_name())
-                .clientLastName(client.getClient_last_name())
-                .registrationDate(client.getRegistration_date())
-                .clientTypeUuid(client.getClient_type_id().getUuid())
-                .clientTypeName(client.getClient_type_id().getType_name())
-                .identificationUuid(client.getIdentification_id().getUuid())
-                .identificationNumber(client.getIdentification_id().getIdentification_number())
-                .identificationTypeName(client.getIdentification_id().getIdentification_type_id().getType_name())
-                .stateEntityUuid(client.getState_entity_id().getUuid())
-                .stateName(client.getState_entity_id().getState_name())
-                .build();
+    @Transactional
+    @Override
+    public void remove(UUID uuid) {
+        log.info("ClientService.remove()");
+        Client model_exiting = searchEntityByUUID(uuid);
+        model_exiting.setState_entity_id(StateEntity.builder().state_entity_id(3).build()); // INACTIVO
+        clientRepository.save(model_exiting);
     }
 
-    // Método para buscar por número de identificación
-    public ClientResponseDTO getByIdentificationNumber(String identificationNumber) {
-        log.info("Buscando cliente por número de identificación: {}", identificationNumber);
-
-        Client client = clientRepository.findByIdentificationNumber(identificationNumber)
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con número de identificación: " + identificationNumber));
-
-        return convertToResponseDTO(client);
+    @Transactional
+    @Override
+    public ClientResponseDTO updateByUUID(UUID uuid, ClientRequestDTO dto) {
+        log.info("ClientService.updateByUUID()");
+        Client model = searchEntityByUUID(uuid);
+        if (dto.getClient_type_uuid() != null) {
+            ClientType clientTypeReading =
+                    clientTypeRepository.findByUuid(dto.getClient_type_uuid())
+                            .orElseThrow(() -> new EServiceLayer("El tipo de cliente no existe"));
+            model.setClient_type_id(clientTypeReading);
+        }if (dto.getIdentification_uuid() != null) {
+            Identification identificationReading =
+                    identificationRepository.findByUuid(dto.getIdentification_uuid())
+                            .orElseThrow(() -> new EServiceLayer("La identificación no existe"));
+            model.setIdentification_id(identificationReading);
+        }
+        clientMapper.updateFromDto(dto, model);
+        model = clientRepository.save(model);
+        return clientMapper.toDTO(model);
     }
 
-    // Método para buscar por nombre
-    public List<ClientResponseDTO> searchByName(String searchTerm) {
-        log.info("Buscando clientes por nombre: {}", searchTerm);
-
-        List<Client> clients = clientRepository.findByNameContainingIgnoreCase(searchTerm);
-        return clients.stream()
-                .map(this::convertToResponseDTO)
-                .collect(Collectors.toList());
+    private Client searchEntityByUUID(UUID uuid) {
+        log.info("ClientService.searchEntityByUUID()");
+        return clientRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EServiceLayer("El cliente con UUID " + uuid + " no existe"));
     }
 }

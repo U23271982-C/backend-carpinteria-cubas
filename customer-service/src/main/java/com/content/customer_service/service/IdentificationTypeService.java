@@ -11,6 +11,7 @@ import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.IdentificationTypeRepository;
 import com.content.customer_service.repository.PersonTypeRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class IdentificationTypeService implements ServiceAbs<IdentificationTypeR
     private final IdentificationTypeMapper identificationTypeMapper;
     private final PersonTypeRepository personTypeRepository;
 
+    @Transactional
     @Override
     public IdentificationTypeResponseDTO create(IdentificationTypeRequestDTO dto) {
         log.info("IdentificationTypeService.create()");
@@ -41,6 +43,7 @@ public class IdentificationTypeService implements ServiceAbs<IdentificationTypeR
         return identificationTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<IdentificationTypeResponseDTO> allList() {
         log.info("IdentificationTypeService.allList()");
@@ -50,6 +53,7 @@ public class IdentificationTypeService implements ServiceAbs<IdentificationTypeR
                 .toList();
     }
 
+    @Transactional
     @Override
     public IdentificationTypeResponseDTO readByUUID(UUID uuid) {
         log.info("IdentificationTypeService.readByUUID()");
@@ -57,6 +61,7 @@ public class IdentificationTypeService implements ServiceAbs<IdentificationTypeR
         return identificationTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("IdentificationTypeService.remove()");
@@ -65,6 +70,7 @@ public class IdentificationTypeService implements ServiceAbs<IdentificationTypeR
         identificationTypeRepository.save(model_exiting);
     }
 
+    @Transactional
     @Override
     public IdentificationTypeResponseDTO updateByUUID(UUID uuid, IdentificationTypeRequestDTO dto) {
         log.info("IdentificationTypeService.updateByUUID()");

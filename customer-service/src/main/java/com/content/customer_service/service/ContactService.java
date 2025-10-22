@@ -12,6 +12,7 @@ import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.ClientRepository;
 import com.content.customer_service.repository.ContactRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
     private final ContactMapper contactMapper;
     private final ClientRepository clientRepository;
 
+    @Transactional
     @Override
     public ContactResponseDTO create(ContactRequestDTO dto) {
         log.info("ContactService.create()");
@@ -43,6 +45,7 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
         return contactMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<ContactResponseDTO> allList() {
         log.info("ContactService.allList()");
@@ -52,6 +55,7 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
                 .toList();
     }
 
+    @Transactional
     @Override
     public ContactResponseDTO readByUUID(UUID uuid) {
         log.info("ContactService.readByUUID()");
@@ -59,6 +63,7 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
         return contactMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("ContactService.remove()");
@@ -67,6 +72,7 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
         contactRepository.save(model);
     }
 
+    @Transactional
     @Override
     public ContactResponseDTO updateByUUID(UUID uuid, ContactRequestDTO dto) {
         log.info("ContactService.updateByUUID()");

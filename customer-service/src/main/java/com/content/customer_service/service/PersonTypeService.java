@@ -8,6 +8,7 @@ import com.content.customer_service.model.PersonType;
 import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.PersonTypeRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
     private final PersonTypeRepository personTypeRepository;
     private final PersonTypeMapper personTypeMapper;
 
+    @Transactional
     @Override
     public PersonTypeResponseDTO create(PersonTypeRequestDTO dto) {
         log.info("PersonTypeService.create()");
@@ -31,6 +33,7 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
         return personTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<PersonTypeResponseDTO> allList() {
         log.info("PersonTypeService.allList()");
@@ -40,6 +43,7 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
                 .toList();
     }
 
+    @Transactional
     @Override
     public PersonTypeResponseDTO readByUUID(UUID uuid) {
         log.info("PersonTypeService.readByUUID()");
@@ -47,6 +51,7 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
         return personTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("PersonTypeService.remove()");
@@ -55,6 +60,7 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
         personTypeRepository.save(model_existente);
     }
 
+    @Transactional
     @Override
     public PersonTypeResponseDTO updateByUUID(UUID uuid, PersonTypeRequestDTO dto) {
         log.info("PersonTypeService.updateByUUID()");

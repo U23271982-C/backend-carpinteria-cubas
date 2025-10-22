@@ -8,6 +8,7 @@ import com.content.customer_service.model.ClientType;
 import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.ClientTypeRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class ClientTypeService implements ServiceAbs<ClientTypeRequestDTO, Clien
     private final ClientTypeRepository clientTypeRepository;
     private final ClientTypeMapper clientTypeMapper;
 
+    @Transactional
     @Override
     public ClientTypeResponseDTO create(ClientTypeRequestDTO dto) {
         log.info("ClientTypeService.create()");
@@ -31,6 +33,7 @@ public class ClientTypeService implements ServiceAbs<ClientTypeRequestDTO, Clien
         return clientTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<ClientTypeResponseDTO> allList() {
         log.info("ClientTypeService.allList()");
@@ -40,6 +43,7 @@ public class ClientTypeService implements ServiceAbs<ClientTypeRequestDTO, Clien
                 .toList();
     }
 
+    @Transactional
     @Override
     public ClientTypeResponseDTO readByUUID(UUID uuid) {
         log.info("ClientTypeService.readByUUID()");
@@ -47,6 +51,7 @@ public class ClientTypeService implements ServiceAbs<ClientTypeRequestDTO, Clien
         return clientTypeMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("ClientTypeService.remove()");
@@ -55,6 +60,7 @@ public class ClientTypeService implements ServiceAbs<ClientTypeRequestDTO, Clien
         clientTypeRepository.save(model_existente);
     }
 
+    @Transactional
     @Override
     public ClientTypeResponseDTO updateByUUID(UUID uuid, ClientTypeRequestDTO dto) {
         log.info("ClientTypeService.updateByUUID()");

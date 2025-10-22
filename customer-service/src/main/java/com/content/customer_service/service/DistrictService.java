@@ -9,6 +9,7 @@ import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.DistrictRepository;
 import com.content.customer_service.repository.ProvinceRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class DistrictService implements ServiceAbs<DistrictRequestDTO, DistrictR
     private final DistrictMapper districtMapper;
     private final ProvinceRepository provinceRepository;
 
+    @Transactional
     @Override
     public DistrictResponseDTO create(DistrictRequestDTO dto) {
         log.info("DistrictService.create()");
@@ -39,6 +41,7 @@ public class DistrictService implements ServiceAbs<DistrictRequestDTO, DistrictR
         return districtMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<DistrictResponseDTO> allList() {
         log.info("DistrictService.allList()");
@@ -48,6 +51,7 @@ public class DistrictService implements ServiceAbs<DistrictRequestDTO, DistrictR
                 .toList();
     }
 
+    @Transactional
     @Override
     public DistrictResponseDTO readByUUID(UUID uuid) {
         log.info("DistrictService.readByUUID()");
@@ -55,6 +59,7 @@ public class DistrictService implements ServiceAbs<DistrictRequestDTO, DistrictR
         return districtMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("DistrictService.remove()");
@@ -63,6 +68,7 @@ public class DistrictService implements ServiceAbs<DistrictRequestDTO, DistrictR
         districtRepository.save(model);
     }
 
+    @Transactional
     @Override
     public DistrictResponseDTO updateByUUID(UUID uuid, DistrictRequestDTO dto) {
         log.info("DistrictService.updateByUUID()");

@@ -12,6 +12,7 @@ import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.IdentificationRepository;
 import com.content.customer_service.repository.IdentificationTypeRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class IdentificationService implements ServiceAbs<IdentificationRequestDT
     private final IdentificationMapper identificationMapper;
     private final IdentificationTypeRepository identificationTypeRepository;
 
+    @Transactional
     @Override
     public IdentificationResponseDTO create(IdentificationRequestDTO dto) {
         log.info("IdentificationService.create()");
@@ -40,6 +42,7 @@ public class IdentificationService implements ServiceAbs<IdentificationRequestDT
         return identificationMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<IdentificationResponseDTO> allList() {
         log.info("IdentificationService.allList()");
@@ -49,6 +52,7 @@ public class IdentificationService implements ServiceAbs<IdentificationRequestDT
                 .toList();
     }
 
+    @Transactional
     @Override
     public IdentificationResponseDTO readByUUID(UUID uuid) {
         log.info("IdentificationService.readByUUID()");
@@ -56,6 +60,7 @@ public class IdentificationService implements ServiceAbs<IdentificationRequestDT
         return identificationMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("IdentificationService.remove()");
@@ -64,6 +69,7 @@ public class IdentificationService implements ServiceAbs<IdentificationRequestDT
         identificationRepository.save(model);
     }
 
+    @Transactional
     @Override
     public IdentificationResponseDTO updateByUUID(UUID uuid, IdentificationRequestDTO dto) {
         log.info("IdentificationService.updateByUUID()");

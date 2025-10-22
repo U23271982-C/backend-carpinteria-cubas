@@ -8,6 +8,7 @@ import com.content.customer_service.model.Department;
 import com.content.customer_service.model.StateEntity;
 import com.content.customer_service.repository.DepartmentRepository;
 import com.content.customer_service.service.abstractService.ServiceAbs;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class DepartmentService implements ServiceAbs<DepartmentRequestDTO, Depar
     private final DepartmentRepository departmentRepository;
     private final DepartmentMapper departmentMapper;
 
+    @Transactional
     @Override
     public DepartmentResponseDTO create(DepartmentRequestDTO dto) {
         log.info("Create department {}", dto);
@@ -31,6 +33,7 @@ public class DepartmentService implements ServiceAbs<DepartmentRequestDTO, Depar
         return departmentMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public List<DepartmentResponseDTO> allList() {
         log.info("DepartmentService.allList()");
@@ -41,6 +44,7 @@ public class DepartmentService implements ServiceAbs<DepartmentRequestDTO, Depar
                 .toList();
     }
 
+    @Transactional
     @Override
     public DepartmentResponseDTO readByUUID(UUID uuid) {
         log.info("DepartmentService.readByUUID()");
@@ -48,6 +52,7 @@ public class DepartmentService implements ServiceAbs<DepartmentRequestDTO, Depar
         return departmentMapper.toDTO(model);
     }
 
+    @Transactional
     @Override
     public void remove(UUID uuid) {
         log.info("DepartmentService.remove()");
@@ -56,6 +61,7 @@ public class DepartmentService implements ServiceAbs<DepartmentRequestDTO, Depar
         departmentRepository.save(model_existing);
     }
 
+    @Transactional
     @Override
     public DepartmentResponseDTO updateByUUID(UUID uuid, DepartmentRequestDTO dto) {
         log.info("DepartmentService.updateByUUID()");
