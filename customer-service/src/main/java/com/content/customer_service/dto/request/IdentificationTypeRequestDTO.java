@@ -27,7 +27,7 @@ public class IdentificationTypeRequestDTO {
 
     // ID del tipo de persona asociada
     @NotNull(message = "El UUID del tipo de persona no debe ser nulo", groups = ValidatorGroups.Create.class)
-    private UUID person_type_id;
+    private UUID person_type_uuid;
 
     private UUID state_entity_uuid;
 }

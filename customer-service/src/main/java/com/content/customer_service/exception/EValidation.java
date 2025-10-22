@@ -10,8 +10,8 @@ import java.util.List;
 public class EValidation extends RuntimeException {
     private final List<ObjectErrorValidation> listErrors;
 
-    public EValidation(String message, List<ObjectErrorValidation> listErrors) {
-        super(message);
+    public EValidation(List<ObjectErrorValidation> listErrors) {
+        super("Error de validación");
         this.listErrors = listErrors;
     }
 }
