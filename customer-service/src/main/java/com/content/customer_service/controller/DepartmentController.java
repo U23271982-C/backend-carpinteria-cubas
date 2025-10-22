@@ -38,7 +38,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<DepartmentResponseDTO> readByUUID(@PathVariable java.util.UUID uuid) {
+    public ResponseEntity<DepartmentResponseDTO> readByUUID(@PathVariable UUID uuid) {
         log.info("Solicitud recibida para obtener un departamento por su UUID");
         return ResponseEntity.ok(service.readByUUID(uuid));
     }

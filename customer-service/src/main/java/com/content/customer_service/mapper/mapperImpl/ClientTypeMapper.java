@@ -5,8 +5,10 @@ import com.content.customer_service.dto.response.ClientTypeResponseDTO;
 import com.content.customer_service.mapper.convert.Convert;
 import com.content.customer_service.mapper.convert.UpdatePatch;
 import com.content.customer_service.model.ClientType;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+@Mapper(componentModel = "spring")
 public interface ClientTypeMapper
         extends Convert<ClientType, ClientTypeRequestDTO, ClientTypeResponseDTO>,
         UpdatePatch<ClientTypeRequestDTO, ClientType> {
