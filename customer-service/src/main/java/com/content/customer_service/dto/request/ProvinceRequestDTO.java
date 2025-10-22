@@ -28,7 +28,7 @@ public class ProvinceRequestDTO {
 
     // UUID del departamento asociado
     @NotNull(groups = ValidatorGroups.Create.class, message = "El UUID del departamento es obligatorio")
-    private UUID department_UUID;
+    private UUID department_uuid;
 
     private UUID state_entity_uuid;
 

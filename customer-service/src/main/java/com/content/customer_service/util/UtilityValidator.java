@@ -26,17 +26,17 @@ public class UtilityValidator {
      * @param <T> Tipo del objeto
      */
     public <T> void validate(T object) {
-        Set<ConstraintViolation<T>> violations = validator.validate(object);
+        Set<ConstraintViolation<T>> errores = validator.validate(object);
+        mapMessageErrores(errores);
+    }
 
-        if (!violations.isEmpty()) {
-            List<ObjectErrorValidation> errors = violations.stream()
-                    .map(violation -> new ObjectErrorValidation(
-                            violation.getPropertyPath().toString(),
-                            violation.getMessage()
-                    ))
-                    .collect(Collectors.toList());
+    private static <T> void mapMessageErrores(Set<ConstraintViolation<T>> errores) {
+        if (!errores.isEmpty()) {
+            List<ObjectErrorValidation> listErrores = errores.stream()
+                    .map(error ->
+                            new ObjectErrorValidation(error.getPropertyPath().toString(), error.getMessage())).toList();
 
-            throw new EValidation("Errores de validación en los datos proporcionados", errors);
+            throw new EValidation(listErrores);
         }
     }
 }

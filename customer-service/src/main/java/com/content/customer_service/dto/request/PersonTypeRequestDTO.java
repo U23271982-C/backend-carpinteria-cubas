@@ -21,7 +21,7 @@ public class PersonTypeRequestDTO {
     // Nombre del tipo de persona (ejemplo: "Natural", "Jurídica")
     @NotBlank(message = "El nombre del tipo de persona no debe estar vacío", groups = ValidatorGroups.Create.class)
     @Size(max = 100, message = "El nombre del tipo de persona no debe exceder los 100 caracteres", groups = ValidatorGroups.Update.class)
-    private String persona_type_name;
+    private String person_type_name;
 
     private UUID state_entity_uuid;
 

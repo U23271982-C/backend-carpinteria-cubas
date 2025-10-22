@@ -10,7 +10,7 @@ import java.util.UUID;
 public class PersonTypeResponseDTO {
 
     private UUID person_type_uuid;
-    private String persona_type_name;
+    private String person_type_name;
     private String state_entity_name;
 
 }

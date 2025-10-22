@@ -32,7 +32,7 @@ public class ProvinceService implements ServiceAbs<ProvinceRequestDTO, ProvinceR
     public ProvinceResponseDTO create(ProvinceRequestDTO dto) {
         log.info("ProvinceService.create()");
         Department department_reading =
-                departmentRepository.findByUuid(dto.getDepartment_UUID())
+                departmentRepository.findByUuid(dto.getDepartment_uuid())
                         .orElseThrow(() -> new EServiceLayer("El departamento no existe"));
         Province model = provinceMapper.toModel(dto);
         model.setState_entity_id(StateEntity.builder().state_entity_id(1).build());
@@ -73,9 +73,9 @@ public class ProvinceService implements ServiceAbs<ProvinceRequestDTO, ProvinceR
     public ProvinceResponseDTO updateByUUID(UUID uuid, ProvinceRequestDTO dto) {
         log.info("ProvinceService.updateByUUID()");
         Province model_exiting = searchEntityByUUID(uuid);
-        if (dto.getDepartment_UUID() != null) {
+        if (dto.getDepartment_uuid() != null) {
             Department department_reading =
-                    departmentRepository.findByUuid(dto.getDepartment_UUID())
+                    departmentRepository.findByUuid(dto.getDepartment_uuid())
                             .orElseThrow(() -> new EServiceLayer("El departamento no existe"));
             model_exiting.setDepartment_id(department_reading);
         }

@@ -21,7 +21,7 @@ public interface DirectionMapper
      */
     @Mapping(target = "direction_uuid", source = "uuid")
     @Mapping(target = "client_uuid", source = "client_id.uuid")
-    @Mapping(target = "direction_type_uuid", source = "directionType_id.uuid")
+    @Mapping(target = "direction_type_uuid", source = "direction_type_id.uuid")
     @Mapping(target = "direction_name", source = "direction_name")
     @Mapping(target = "direction_number", source = "direction_number")
     @Mapping(target = "reference", source = "reference")
@@ -34,7 +34,7 @@ public interface DirectionMapper
      * Convierte DirectionRequestDTO a Direction
      */
     @Mapping(target = "client_id.uuid", source = "client_uuid")
-    @Mapping(target = "directionType_id.uuid", source = "direction_type_uuid")
+    @Mapping(target = "direction_type_id.uuid", source = "direction_type_uuid")
     @Mapping(target = "direction_name", source = "direction_name")
     @Mapping(target = "direction_number", source = "direction_number")
     @Mapping(target = "reference", source = "reference")
