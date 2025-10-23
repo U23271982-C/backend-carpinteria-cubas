@@ -5,6 +5,7 @@ import com.content.authentication_service.jwt.JwtEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
 
@@ -24,11 +26,16 @@ public class SecurityConfig {
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/register", "/auth/login")
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers( "/auth/login")
                         .permitAll()
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtEntryPoint()))
+                        .anyRequest().authenticated() // Todas las demás requieren autenticación
+                )
+                .httpBasic(AbstractHttpConfigurer::disable) // Deshabilitar Basic Auth porque usamos JWT
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(jwtEntryPoint())
+                        .accessDeniedHandler(accessDeniedHandler()) // Manejar acceso denegado
+                )
                 .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -45,6 +52,11 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return  new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 
     @Bean

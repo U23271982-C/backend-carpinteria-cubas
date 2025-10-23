@@ -6,12 +6,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -56,5 +61,19 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
+    public List<GrantedAuthority> extractAuthorities(String token) {
+        Claims claims = extractAllClaims(token);
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, String>> authoritiesList = (List<Map<String, String>>) claims.get("authorities");
+
+        if (authoritiesList != null) {
+            return authoritiesList.stream()
+                    .map(authMap -> new SimpleGrantedAuthority(authMap.get("authority")))
+                    .collect(Collectors.toList());
+        }
+
+        return List.of();
+    }
 
 }
