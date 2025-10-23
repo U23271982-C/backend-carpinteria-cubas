@@ -99,7 +99,20 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
      */
     private Contact searchEntityByUUID(UUID uuid){
         return repository.findByUuid(uuid)
-                .orElseThrow(() -> new RuntimeException("El contacto no existe"));
+                .filter(entity -> entity.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                        () -> {
+                            if (repository.findByUuid(uuid).isPresent()) {
+                                // El empleado existe, pero fue filtrado (estado == 3)
+                                throw new EServiceLayer("El contacto está eliminado");
+                            } else {
+                                // El empleado nunca fue encontrado
+                                return new EServiceLayer(
+                                        String.format("No se encontró el contacto con el id público: %s", uuid)
+                                );
+                            }
+                        }
+                );
     }
 
     /**

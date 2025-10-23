@@ -114,7 +114,20 @@ public class ContractService implements ServiceAbs<ContractRequestDTO, ContractR
      * @return
      */
     private Contract searchEntityByUUID(UUID uuid) {
-        return contractRepository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
-                (String.format("No se encontró el contrato con el id público: %s", uuid)));
+        return contractRepository.findByUuid(uuid)
+                .filter(entity -> entity.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                        () -> {
+                            if (contractRepository.findByUuid(uuid).isPresent()) {
+                                // El empleado existe, pero fue filtrado (estado == 3)
+                                throw new EServiceLayer("El contrato está eliminado");
+                            } else {
+                                // El empleado nunca fue encontrado
+                                return new EServiceLayer(
+                                        String.format("No se encontró el contrato con el id público: %s", uuid)
+                                );
+                            }
+                        }
+                );
     }
 }

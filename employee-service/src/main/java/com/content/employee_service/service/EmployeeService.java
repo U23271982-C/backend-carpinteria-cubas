@@ -126,13 +126,26 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         return mapper.toDTO(model_existente);
     }
 
-    /**
+    /**mejo
      * Busca el empleado por su UUID
      * @param uuid
      * @return
      */
     private Employee searchEntityByUUID(UUID uuid) {
-        return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
-                (String.format("No se encontró el empleado con el id público: %s", uuid)));
+        return repository.findByUuid(uuid)
+                .filter(employee -> employee.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                    () -> {
+                        if (repository.findByUuid(uuid).isPresent()) {
+                            // El empleado existe, pero fue filtrado (estado == 3)
+                            throw new EServiceLayer("El empleado está eliminado");
+                        } else {
+                            // El empleado nunca fue encontrado
+                            return new EServiceLayer(
+                                    String.format("No se encontró el empleado con el id público: %s", uuid)
+                            );
+                        }
+                    }
+                );
     }
 }
