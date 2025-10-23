@@ -5,7 +5,6 @@ import com.content.authentication_service.dto.response.UserEmployeePositionRespo
 import com.content.authentication_service.mapper.UserEmployeePositionMapper;
 import com.content.authentication_service.model.StateEntity;
 import com.content.authentication_service.model.UserEmployeePosition;
-import com.content.authentication_service.repository.StateEntityRepository;
 import com.content.authentication_service.repository.UserEmployeePositionRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;

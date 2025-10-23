@@ -1,6 +1,5 @@
 package com.content.authentication_service.dto.response;
 
-import com.content.authentication_service.mapper.UserModuleAccessMapper;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

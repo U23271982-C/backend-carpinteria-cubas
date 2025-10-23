@@ -1,10 +1,11 @@
 package com.content.authentication_service.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.validation.constraints.NotBlank;
+
 import java.util.UUID;
 
 @Builder

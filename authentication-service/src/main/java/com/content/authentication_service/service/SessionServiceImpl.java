@@ -6,11 +6,9 @@ import com.content.authentication_service.mapper.SessionMapper;
 import com.content.authentication_service.model.Session;
 import com.content.authentication_service.model.UserEmployee;
 import com.content.authentication_service.repository.SessionRepository;
-import com.content.authentication_service.repository.UserEmployeeRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -2,7 +2,6 @@ package com.content.authentication_service.controller;
 
 import com.content.authentication_service.dto.request.UserEmployeePositionRequestDTO;
 import com.content.authentication_service.dto.response.UserEmployeePositionResponseDTO;
-import com.content.authentication_service.model.UserEmployeePosition;
 import com.content.authentication_service.service.UserEmployeePositionServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

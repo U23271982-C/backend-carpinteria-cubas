@@ -6,7 +6,6 @@ import com.content.authentication_service.mapper.ModuleMapper;
 import com.content.authentication_service.model.Module;
 import com.content.authentication_service.model.StateEntity;
 import com.content.authentication_service.repository.ModuleRepository;
-import com.content.authentication_service.repository.StateEntityRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
