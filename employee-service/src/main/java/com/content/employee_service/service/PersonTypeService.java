@@ -7,6 +7,7 @@ import com.content.employee_service.mapper.mapperImpl.PersonTypeMapper;
 import com.content.employee_service.model.PersonType;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.PersonTypeRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
     private final PersonTypeRepository repository;
     private final PersonTypeMapper personTypeMapper;
 
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public PersonTypeResponseDTO create(PersonTypeRequestDTO dto) {
         log.info("PersonTypeService.create()");
@@ -70,9 +72,21 @@ public class PersonTypeService implements ServiceAbs<PersonTypeRequestDTO, Perso
 
         // Buscamos el tipo de persona por su UUID
          PersonType model_existente = searchEntityByUUID(uuid);
-        // Actualizamos los datos
-        model_existente.setPerson_type_name(dto.getPerson_type_name());
+        /*
+        model_existente.setPerson_type_name(dto.getPerson_type_name());*/
 
+        // Actualizamos el estado del tipo de persona
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(StateEntity.builder()
+                            // Agregamos el nuevo id del estado, para que se pueda asociar con FK
+                            .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+        }
+
+        // Actualizamos los datos
+        personTypeMapper.updateFromDto(dto, model_existente);
         // Guardamos los cambios
         PersonType model_actualizado = repository.save(model_existente);
 
