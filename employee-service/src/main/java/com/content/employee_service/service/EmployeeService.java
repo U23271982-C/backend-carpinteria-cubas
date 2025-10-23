@@ -102,17 +102,21 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         Employee model_existente = searchEntityByUUID(uuid);
         // Corroboramos todas las relaciones
         if(dto.getIdentification_type_uuid() != null) {
-            identificationTypeRepository.findByUuid(dto.getIdentification_type_uuid())
+            IdentificationType identification_type_existing = identificationTypeRepository.findByUuid(dto.getIdentification_type_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de identificación no existe"));
+            model_existente.setIdentification_type_id(identification_type_existing);
         } if (dto.getPost_id_uuid() != null) {
-            postRepository.findByUuid(dto.getPost_id_uuid())
+            Post post_existing = postRepository.findByUuid(dto.getPost_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de cargo no existe"));
+            model_existente.setPost_id(post_existing);
         } if (dto.getContract_id_uuid() != null) {
-            contractRepository.findByUuid(dto.getContract_id_uuid())
+            Contract contract_existing = contractRepository.findByUuid(dto.getContract_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de contrato no existe"));
+            model_existente.setContract_id(contract_existing);
         } if (dto.getDistric_id_uuid() != null) {
-            districRepository.findByUuid(dto.getDistric_id_uuid())
+            Distric distric_existing = districRepository.findByUuid(dto.getDistric_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de distrito no existe"));
+            model_existente.setDistric_id(distric_existing);
         }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
