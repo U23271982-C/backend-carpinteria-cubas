@@ -1,4 +1,4 @@
-package com.content.authentication_service.config;
+package com.content.authentication_service.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

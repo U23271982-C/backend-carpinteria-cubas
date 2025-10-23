@@ -1,5 +1,6 @@
 package com.content.authentication_service.config;
 
+import com.content.authentication_service.exception.CustomAccessDeniedHandler;
 import com.content.authentication_service.jwt.JwtAuthenticationFilter;
 import com.content.authentication_service.jwt.JwtEntryPoint;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +21,6 @@ import java.util.List;
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-
-
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
