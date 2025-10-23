@@ -6,6 +6,7 @@ import com.content.authentication_service.mapper.UserEmployeeMapper;
 import com.content.authentication_service.model.*;
 import com.content.authentication_service.model.Module;
 import com.content.authentication_service.repository.UserEmployeeRepository;
+import com.content.authentication_service.repository.UserModuleAccessRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
     private final UserEmployeeRepository userEmployeeRepository;
     private final StateEntityServiceImpl stateEntityService;
     private final UserEmployeePositionServiceImpl userEmployeePositionServiceImpl;
-    private final UserModuleAccessServiceImpl userModuleAccessServiceImpl;
+    private final UserModuleAccessRepository userModuleAccessRepository;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -39,6 +40,9 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
     @Override
     public UserEmployeeResponseDTO create(UserEmployeeRequestDTO dto) {
         // Convertir DTO a entidad
+        if(existsByUserEmployeeName(dto.getUser_name())){
+            throw new RuntimeException("El nombre de usuario ya existe");
+        }
         UserEmployee userEmployee = userEmployeeMapper.toModel(dto);
         // Generar y asignar UUID
         UUID uuid = UUID.randomUUID();
@@ -94,7 +98,11 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
     public void remove(UUID uuid) {
         UserEmployee userEmployee = findByUuid(uuid);
         userEmployee.setState_entity_id(stateEntityService.deleteEntity());
-        userModuleAccessServiceImpl.removeByUserEmployeeUuid(uuid);
+        List<UserModuleAccess> userModuleAccessList = userModuleAccessRepository.findAll()
+                .stream()
+                .filter(uma -> uma.getUser_employee_id().equals(userEmployee))
+                .toList();
+        userModuleAccessRepository.deleteAll(userModuleAccessList);
         userEmployeeRepository.save(userEmployee);
     }
 
@@ -159,7 +167,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
         UserEmployee userEmployee = userEmployeeRepository.findAll()
                 .stream()
                 .filter(user -> user.getUser_employee_name().equals(username) &&
-                        user.getState_entity_id().getState_entity_id() != 3)
+                        user.getState_entity_id().getState_entity_id() == 1)
                 .findFirst()
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<GrantedAuthority> authorities = getUserAuthorities(userEmployee);
@@ -212,7 +220,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
         return userEmployeeRepository.findAll()
                 .stream()
                 .anyMatch(userEmployee -> userEmployee.getUser_employee_name().equals(userEmployeeName) &&
-                        userEmployee.getState_entity_id().getState_entity_id() != 3);
+                        userEmployee.getState_entity_id().getState_entity_id() == 1);
     }
 
 
