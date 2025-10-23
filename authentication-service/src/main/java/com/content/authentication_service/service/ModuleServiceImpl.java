@@ -24,7 +24,7 @@ public class ModuleServiceImpl implements ServiceAbs<ModuleRequestDTO, ModuleRes
 
     private final ModuleRepository moduleRepository;
     private final ModuleMapper moduleMapper;
-    private final StateEntityRepository stateEntityRepository;
+    private final StateEntityServiceImpl stateEntityServiceImpl;
 
     @Override
     public ModuleResponseDTO create(ModuleRequestDTO dto) {
@@ -35,17 +35,8 @@ public class ModuleServiceImpl implements ServiceAbs<ModuleRequestDTO, ModuleRes
 
         if(module.getState_entity_id().getUuid() == null){
             log.info("No se proporcionó state_entity_id, asignando estado predeterminado (activo)");
-            // Aquí deberías implementar la lógica para asignar el estado predeterminado
-            // Por ejemplo, podrías buscar el estado "activo" en la base de datos y asignarlo
-            // module.setState_entity_id(defaultState);
-            StateEntity defaultState = stateEntityRepository.findAll()
-                    .stream()
-                    .filter(stateEntity -> stateEntity.getState_entity_id() == 1)
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("No se encontro state_entity"));
-            module.setState_entity_id(defaultState);
+            module.setState_entity_id(stateEntityServiceImpl.getStateActive());
         }
-
         Module savedModule = moduleRepository.save(module);
         return moduleMapper.toDTO(savedModule);
     }
@@ -61,35 +52,19 @@ public class ModuleServiceImpl implements ServiceAbs<ModuleRequestDTO, ModuleRes
 
     @Override
     public ModuleResponseDTO readById(UUID uuid) {
-        Module module = moduleRepository.findAll()
-                .stream()
-                .filter(mod -> mod.getUuid().equals(uuid) && mod.getState_entity_id().getState_entity_id() != 3)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro el module con uuid: " + uuid));
-        return moduleMapper.toDTO(module);
+        return moduleMapper.toDTO(findByUUID(uuid));
     }
 
     @Override
     public void remove(UUID uuid) {
-        Module module = moduleRepository.findAll()
-                .stream()
-                .filter(mod -> mod.getUuid().equals(uuid) && mod.getState_entity_id().getState_entity_id() != 3)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro el module con uuid: " + uuid));
-
-        StateEntity deletedState =  new StateEntity();
-        deletedState.setState_entity_id(3);
-        module.setState_entity_id(deletedState);
+        Module module = findByUUID(uuid);
+        module.setState_entity_id(stateEntityServiceImpl.deleteEntity());
         moduleRepository.save(module);
     }
 
     @Override
     public ModuleResponseDTO update(UUID uuid, ModuleRequestDTO dto) {
-        Module existingModule = moduleRepository.findAll()
-                .stream()
-                .filter(mod -> mod.getUuid().equals(uuid) && mod.getState_entity_id().getState_entity_id() != 3)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro el module con uuid: " + uuid));
+        Module existingModule = findByUUID(uuid);
 
         if (dto.getModule_name() != null && !dto.getModule_name().trim().isEmpty()) {
             existingModule.setModule_name(dto.getModule_name());
@@ -99,14 +74,27 @@ public class ModuleServiceImpl implements ServiceAbs<ModuleRequestDTO, ModuleRes
         }
 
         if (dto.getStateEntityuuid() != null) {
-            StateEntity stateEntityNew = stateEntityRepository.findAll()
-                    .stream()
-                    .filter(stateEntity -> stateEntity.getUuid().equals(dto.getStateEntityuuid()))
-                    .findFirst().orElseThrow(() -> new RuntimeException("Estado no encontrado con UUID: " + dto.getStateEntityuuid()));
+            StateEntity stateEntityNew = stateEntityServiceImpl.getByUUID(dto.getStateEntityuuid());
             existingModule.setState_entity_id(stateEntityNew);
         }
-
         Module updatedModule = moduleRepository.save(existingModule);
         return moduleMapper.toDTO(updatedModule);
+    }
+
+
+    public Module findByUUID(UUID uuid) {
+        return moduleRepository.findAll()
+                .stream()
+                .filter( mod -> mod.getUuid().equals(uuid) && mod.getState_entity_id().getState_entity_id() != 3)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontro el module con uuid: " + uuid));
+    }
+
+    public Module findByUUIDActive(UUID uuid) {
+        return moduleRepository.findAll()
+                .stream()
+                .filter( mod -> mod.getUuid().equals(uuid) && mod.getState_entity_id().getState_entity_id() == 1)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontro el module activo con uuid: " + uuid));
     }
 }

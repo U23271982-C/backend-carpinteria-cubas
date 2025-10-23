@@ -24,20 +24,12 @@ import java.util.UUID;
 public class SessionServiceImpl implements ServiceAbs<SessionRequestDTO, SessionResponseDTO> {
 
     private final SessionRepository sessionRepository;
-    private final UserEmployeeRepository userEmployeeRepository;
     private final SessionMapper sessionMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final UserEmployeeServiceImpl userEmployeeServiceImpl;
 
     @Override
     public SessionResponseDTO create(SessionRequestDTO dto) {
-        UserEmployee userEmployee = userEmployeeRepository.findAll()
-                .stream()
-                .filter(user -> user.getUser_employee_name().equals(dto.getUsername()) && passwordEncoder.matches(dto.getPassword(), user.getPassword()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
-        if (userEmployee == null) {
-            throw new RuntimeException("User not found");
-        } else {
+        UserEmployee userEmployee = userEmployeeServiceImpl.getByUserAndPassword(dto.getUsername(), dto.getPassword());
             Session session = new Session();
             session.setUuid(UUID.randomUUID());
             session.setUser_employee_id(userEmployee);
@@ -45,7 +37,6 @@ public class SessionServiceImpl implements ServiceAbs<SessionRequestDTO, Session
             session.setSuccesed(true);
             Session session_save = sessionRepository.save(session);
             return sessionMapper.toDTO(session_save);
-        }
     }
 
     @Override

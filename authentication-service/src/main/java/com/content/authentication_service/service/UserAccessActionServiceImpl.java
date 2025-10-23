@@ -26,8 +26,8 @@ public class UserAccessActionServiceImpl implements ServiceAbs<UserAccessActionR
 
     private final UserAccessActionRepository userAccessActionRepository;
     private final UserAccesActionMapper userAccesActionMapper;
-    private final UserModuleAccessRepository userModuleAccessRepository;
-    private final ActionRepository actionRepository;
+    private final UserModuleAccessServiceImpl userModuleAccessServiceImpl;
+    private final ActionServiceImpl actionServiceImpl;
 
     @Override
     public UserAccessActionResponseDTO create(UserAccessActionRequestDTO dto) {
@@ -35,36 +35,18 @@ public class UserAccessActionServiceImpl implements ServiceAbs<UserAccessActionR
 
         UUID uuid = UUID.randomUUID();
         userAccessAction.setUuid(uuid);
-        UserAccessAction exist = userAccessActionRepository.findAll()
-                .stream()
-                .filter( uaa -> uaa.getUser_module_access_id().getUuid().equals(userAccessAction.getUser_module_access_id().getUuid()) &&
-                        uaa.getAction_id().getUuid().equals(userAccessAction.getAction_id().getUuid()))
-                .findFirst()
-                .orElse(null);
         // Validar si ya existe un UserAccessAction con el mismo user_module_access_id y action_id
-        if (exist != null){
+        if (existsByUserModuleAccessIdAndActionId(userAccessAction.getUser_module_access_id().getUuid(), userAccessAction.getUser_module_access_id().getUuid())) {
             throw new RuntimeException("Ya existe un UserAccessAction con el mismo user_module_access_id y action_id");
         }
 
         // Asignar UserModuleAccess
         if(userAccessAction.getUser_module_access_id().getUuid() != null){
-            // Logic to fetch and set UserModuleAccess entity
-            UserModuleAccess userModuleAccess = userModuleAccessRepository.findAll()
-                    .stream()
-                    .filter(uma -> uma.getUuid().equals(userAccessAction.getUser_module_access_id().getUuid()) && uma.getUser_module_access_id() != null)
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("No se encontro user_module_access"));
-            userAccessAction.setUser_module_access_id(userModuleAccess);
-
+            userAccessAction.setUser_module_access_id(userModuleAccessServiceImpl.findByUUID(userAccessAction.getUser_module_access_id().getUuid()));
         }
         // Asignar Action
         if(userAccessAction.getAction_id().getUuid() != null){
-            Action action = actionRepository.findAll()
-                    .stream()
-                    .filter(act -> act.getUuid().equals(userAccessAction.getAction_id().getUuid()) && act.getState_entity_id().getState_entity_id() == 1)
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("No se encontro action"));
-            userAccessAction.setAction_id(action);
+            userAccessAction.setAction_id(actionServiceImpl.findByUUID(userAccessAction.getAction_id().getUuid()));
         }
         UserAccessAction savedUserAccessAction = userAccessActionRepository.save(userAccessAction);
         return userAccesActionMapper.toDTO(savedUserAccessAction);
@@ -81,53 +63,50 @@ public class UserAccessActionServiceImpl implements ServiceAbs<UserAccessActionR
 
     @Override
     public UserAccessActionResponseDTO readById(UUID uuid) {
-        return userAccessActionRepository.findAll()
-                .stream()
-                .filter( userAccessAction -> userAccessAction.getUuid().equals(uuid))
-                .map(userAccesActionMapper::toDTO)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro user_access_action"));
+        return userAccesActionMapper.toDTO(findByUUID(uuid));
     }
 
     @Override
     public void remove(UUID uuid) {
-        UserAccessAction userAccessAction = userAccessActionRepository.findAll()
-                .stream()
-                .filter( userAccessAction1 -> userAccessAction1.getUuid().equals(uuid))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro user_access_action"));
-        userAccessActionRepository.delete(userAccessAction);
+        userAccessActionRepository.delete(findByUUID(uuid));
     }
 
     @Override
     public UserAccessActionResponseDTO update(UUID uuid, UserAccessActionRequestDTO dto) {
-        UserAccessAction userAccessAction = userAccessActionRepository.findAll()
-                .stream()
-                .filter( uaa -> uaa.getUuid().equals(uuid))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro user_access_action"));
+        UserAccessAction userAccessAction = findByUUID(uuid);
         if(dto.getAction_uuid() != null){
-            Action action = actionRepository.findAll()
-                    .stream()
-                    .filter(act -> act.getUuid().equals(dto.getAction_uuid()) && act.getState_entity_id().getState_entity_id() == 1)
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("No se encontro action"));
-            userAccessAction.setAction_id(action);
+            userAccessAction.setAction_id(actionServiceImpl.findByUUID(dto.getAction_uuid()));
         }
         UserAccessAction savedUserAccessAction = userAccessActionRepository.save(userAccessAction);
         return userAccesActionMapper.toDTO(savedUserAccessAction);
     }
 
-    public List<UserAccessActionResponseDTO> getByUserModuleAccess(UUID userModuleAccess) {
-        UserModuleAccess uma = userModuleAccessRepository.findAll()
+
+    public UserAccessAction findByUUID(UUID uuid){
+        return userAccessActionRepository.findAll()
                 .stream()
-                .filter( umac -> umac.getUuid().equals(userModuleAccess))
+                .filter( uaa -> uaa.getUuid().equals(uuid))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro user_module_access"));
+                .orElseThrow(() -> new RuntimeException("No se encontro user_access_action"));
+    }
+
+
+    public List<UserAccessActionResponseDTO> getByUserModuleAccess(UUID userModuleAccess) {
+        UserModuleAccess uma = userModuleAccessServiceImpl.findByUUID(userModuleAccess);
         return userAccessActionRepository.findAll()
                 .stream()
                 .filter( uaa -> uaa.getUser_module_access_id().equals(uma))
                 .map(userAccesActionMapper::toDTO)
                 .toList();
-        }
+    }
+
+
+    // Validar si ya existe un UserAccessAction con el mismo user_module_access_id y action_id
+    public boolean existsByUserModuleAccessIdAndActionId(UUID userModuleAccessId, UUID actionId){
+        return userAccessActionRepository.findAll()
+                .stream()
+                .anyMatch( uaa -> uaa.getUser_module_access_id().getUuid().equals(userModuleAccessId) &&
+                        uaa.getAction_id().getUuid().equals(actionId));
+    }
+
 }
