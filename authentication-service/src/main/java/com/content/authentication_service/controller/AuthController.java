@@ -11,14 +11,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/login")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
     private final AuthService authService;
     private final SessionServiceImpl sessionServiceImpl;
 
-    @PostMapping("/login")
+    @PostMapping()
     public ResponseEntity<String> login(@Valid @RequestBody LoginUserRequestDTO loginUserRequestDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             return ResponseEntity.badRequest().body("Revise sus credenciales");
@@ -30,10 +30,5 @@ public class AuthController {
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-
-    @GetMapping("/check-auth")
-    public ResponseEntity<String> checkAuth(){
-        return ResponseEntity.ok().body("Autenticado");
     }
 }
