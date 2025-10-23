@@ -2,6 +2,7 @@ package com.content.authentication_service.controller;
 
 import com.content.authentication_service.dto.request.LoginUserDTO;
 import com.content.authentication_service.service.AuthService;
+import com.content.authentication_service.service.SessionServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
     private final AuthService authService;
+    private final SessionServiceImpl sessionServiceImpl;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginUserDTO loginUserDTO, BindingResult bindingResult) {
@@ -23,6 +25,7 @@ public class AuthController {
         }
         try{
             String jwt = authService.authenticate(loginUserDTO.getUsername(), loginUserDTO.getPassword());
+            sessionServiceImpl.create(loginUserDTO);
             return ResponseEntity.ok(jwt);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

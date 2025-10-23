@@ -1,5 +1,6 @@
 package com.content.authentication_service.controller;
 
+import com.content.authentication_service.dto.request.LoginUserDTO;
 import com.content.authentication_service.dto.request.SessionRequestDTO;
 import com.content.authentication_service.dto.response.SessionResponseDTO;
 import com.content.authentication_service.service.SessionServiceImpl;
@@ -21,7 +22,7 @@ public class SessionController {
     private final SessionServiceImpl sessionServiceImpl;
 
     @PostMapping
-    public ResponseEntity<SessionResponseDTO> creat(@Valid @RequestBody SessionRequestDTO dto) {
+    public ResponseEntity<SessionResponseDTO> creat(@Valid @RequestBody LoginUserDTO dto) {
         SessionResponseDTO userEmployee = sessionServiceImpl.create(dto);
         return ResponseEntity.ok(userEmployee);
     }
