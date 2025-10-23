@@ -1,6 +1,6 @@
 package com.content.authentication_service.controller;
 
-import com.content.authentication_service.dto.request.LoginUserDTO;
+import com.content.authentication_service.dto.request.LoginUserRequestDTO;
 import com.content.authentication_service.service.AuthService;
 import com.content.authentication_service.service.SessionServiceImpl;
 import jakarta.validation.Valid;
@@ -19,13 +19,13 @@ public class AuthController {
     private final SessionServiceImpl sessionServiceImpl;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginUserDTO loginUserDTO, BindingResult bindingResult) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginUserRequestDTO loginUserRequestDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             return ResponseEntity.badRequest().body("Revise sus credenciales");
         }
         try{
-            String jwt = authService.authenticate(loginUserDTO.getUsername(), loginUserDTO.getPassword());
-            sessionServiceImpl.create(loginUserDTO);
+            String jwt = authService.authenticate(loginUserRequestDTO.getUsername(), loginUserRequestDTO.getPassword());
+            sessionServiceImpl.create(loginUserRequestDTO);
             return ResponseEntity.ok(jwt);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -1,7 +1,6 @@
 package com.content.authentication_service.service;
 
-import com.content.authentication_service.dto.request.LoginUserDTO;
-import com.content.authentication_service.dto.request.SessionRequestDTO;
+import com.content.authentication_service.dto.request.LoginUserRequestDTO;
 import com.content.authentication_service.dto.response.SessionResponseDTO;
 import com.content.authentication_service.mapper.SessionMapper;
 import com.content.authentication_service.model.Session;
@@ -20,14 +19,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class SessionServiceImpl implements ServiceAbs<LoginUserDTO, SessionResponseDTO> {
+public class SessionServiceImpl implements ServiceAbs<LoginUserRequestDTO, SessionResponseDTO> {
 
     private final SessionRepository sessionRepository;
     private final SessionMapper sessionMapper;
     private final UserEmployeeServiceImpl userEmployeeServiceImpl;
 
     @Override
-    public SessionResponseDTO create(LoginUserDTO dto) {
+    public SessionResponseDTO create(LoginUserRequestDTO dto) {
         UserEmployee userEmployee = userEmployeeServiceImpl.getByUserAndPassword(dto.getUsername(), dto.getPassword());
         Session session = new Session();
         session.setUuid(UUID.randomUUID());
@@ -54,7 +53,7 @@ public class SessionServiceImpl implements ServiceAbs<LoginUserDTO, SessionRespo
     }
 
     @Override
-    public SessionResponseDTO update(UUID uuid, LoginUserDTO dto) {
+    public SessionResponseDTO update(UUID uuid, LoginUserRequestDTO dto) {
         return null;
     }
 
