@@ -80,8 +80,9 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
         Contact model_existente = searchEntityByUUID(uuid);
         // Corroboramos si existe el empleado
         if (dto.getEmployee_id_uuid() != null) {
-            employeeRepository.findByUuid(dto.getEmployee_id_uuid())
+            Employee employee_reading = employeeRepository.findByUuid(dto.getEmployee_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El empleado no existe"));
+            model_existente.setEmployee_id(employee_reading);
         }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
