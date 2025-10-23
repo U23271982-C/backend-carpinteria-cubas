@@ -40,7 +40,7 @@ public class ContractRequestDTO {
     @Positive(message = "El salario debe ser un número positivo", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
     @NotNull(message = "El salario no puede ser nulo", groups = ValidateGroup.OnCreate.class)
     @Digits(integer = 10, fraction = 2,message = "El salario no puede tener más de 10 dígitos", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
-    private double salary;
+    private Double salary;
 
     private UUID state_entity_uuid;
 }
