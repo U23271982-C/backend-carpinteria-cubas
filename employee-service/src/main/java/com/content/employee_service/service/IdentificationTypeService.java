@@ -84,8 +84,9 @@ public class IdentificationTypeService implements
         IdentificationType model_existente = searchEntityByUUID(uuid);
         // Corroboramos todas las relaciones
         if(dto.getPerson_type_uuid() != null) {
-            personTypeRepository.findByUuid(dto.getPerson_type_uuid())
+            PersonType person_type_reading = personTypeRepository.findByUuid(dto.getPerson_type_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de persona no existe"));
+            model_existente.setPerson_type_id(person_type_reading);
         }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
