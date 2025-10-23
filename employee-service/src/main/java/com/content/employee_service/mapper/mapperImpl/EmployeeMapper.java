@@ -31,7 +31,7 @@ public interface EmployeeMapper
     @Mapping(target = "employee_name", source = "employee_name")
     @Mapping(target = "employee_last_name", source = "employee_last_name")
     @Mapping(target = "birth_date", source = "birth_date")
-    @Mapping(target = "register_date", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "register_date", expression = "java(com.content.employee_service.utility.TimeHelper.getCurrentLocalDateTime())")
     @Mapping(target = "identification_number", source = "identification_number")
     @Mapping(target = "direction_email", source = "direction_email")
     @Mapping(target = "direction_name", source = "direction_name")
