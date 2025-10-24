@@ -41,7 +41,11 @@ public class IdentificationTypeService implements
         IdentificationType model = mapper.toModel(dto);
         // Asignamos el UUID y el tipo de persona
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build());
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
         model.setPerson_type_id(person_type_reading);
 
         IdentificationType modelSave = repository.save(model);
@@ -88,9 +92,7 @@ public class IdentificationTypeService implements
             StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
                     .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
 
-            model_existente.setState_entity_id(StateEntity.builder()
-                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
-                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+            model_existente.setState_entity_id(state_entity_exiting);
         }
         // Corroboramos todas las relaciones
         if(dto.getPerson_type_uuid() != null) {

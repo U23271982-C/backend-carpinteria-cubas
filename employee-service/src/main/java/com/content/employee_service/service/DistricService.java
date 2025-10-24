@@ -32,7 +32,11 @@ public class DistricService implements ServiceAbs<DistrictRequestDTO, DistrictRe
 
         Distric model = districtMapper.toModel(dto);
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build());
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
 
         Distric modelSave = districRepository.save(model);
         return districtMapper.toDTO(model);
@@ -79,9 +83,7 @@ public class DistricService implements ServiceAbs<DistrictRequestDTO, DistrictRe
             StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
                     .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
 
-            model_existente.setState_entity_id(StateEntity.builder()
-                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
-                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+            model_existente.setState_entity_id(state_entity_exiting);
         }
         // Actualizamos los datos
         districtMapper.updateFromDto(dto, model_existente);

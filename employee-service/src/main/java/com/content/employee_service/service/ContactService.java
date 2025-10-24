@@ -37,7 +37,12 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
         Contact model = mapper.toModel(dto);
         // Asignamos un UUID y un estado
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build()); // ACTIVO
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
+
         model.setEmployee_id(employee_reading);
 
         model = repository.save(model);
@@ -84,9 +89,7 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
             StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
                     .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
 
-            model_existente.setState_entity_id(StateEntity.builder()
-                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
-                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+            model_existente.setState_entity_id(state_entity_exiting);
         }
         // Corroboramos si existe el empleado
         if (dto.getEmployee_id_uuid() != null) {
