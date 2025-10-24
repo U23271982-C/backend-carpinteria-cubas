@@ -18,6 +18,9 @@ spring:
     properties:
       hibernate:
         dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+jwt:
+  secret : ${JWT_SECRET:d6c0ff14675130d6259dced991adf4ca4f29bce75958d290fa9feebbdef6595d}
+  expiration : ${JWT_EXPIRATION:3600} # Expiración en segundos (1 hora)
 
 eureka:
   client:

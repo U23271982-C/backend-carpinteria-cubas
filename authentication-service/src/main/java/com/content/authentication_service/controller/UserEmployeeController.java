@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,12 +28,14 @@ public class UserEmployeeController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('EMPLEADOS_LEER')")
     public ResponseEntity<List<UserEmployeeResponseDTO>> findAll() {
         List<UserEmployeeResponseDTO> response = userEmployeeServiceImpl.allList();
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{uuid}")
+    @PreAuthorize("hasAnyAuthority('EMPLEADOS_LEER')")
     public ResponseEntity<UserEmployeeResponseDTO> findByUuid(@PathVariable UUID uuid) {
         log.info("Fetching user employee with ID: {}", uuid);
         UserEmployeeResponseDTO userEmployee = userEmployeeServiceImpl.readById(uuid);

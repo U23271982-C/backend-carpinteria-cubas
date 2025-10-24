@@ -1,6 +1,6 @@
 package com.content.authentication_service.service;
 
-import com.content.authentication_service.dto.request.SessionRequestDTO;
+import com.content.authentication_service.dto.request.LoginUserRequestDTO;
 import com.content.authentication_service.dto.response.SessionResponseDTO;
 import com.content.authentication_service.mapper.SessionMapper;
 import com.content.authentication_service.model.Session;
@@ -19,22 +19,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional
-public class SessionServiceImpl implements ServiceAbs<SessionRequestDTO, SessionResponseDTO> {
+public class SessionServiceImpl implements ServiceAbs<LoginUserRequestDTO, SessionResponseDTO> {
 
     private final SessionRepository sessionRepository;
     private final SessionMapper sessionMapper;
     private final UserEmployeeServiceImpl userEmployeeServiceImpl;
 
     @Override
-    public SessionResponseDTO create(SessionRequestDTO dto) {
+    public SessionResponseDTO create(LoginUserRequestDTO dto) {
         UserEmployee userEmployee = userEmployeeServiceImpl.getByUserAndPassword(dto.getUsername(), dto.getPassword());
-            Session session = new Session();
-            session.setUuid(UUID.randomUUID());
-            session.setUser_employee_id(userEmployee);
-            session.setSesion_date(java.time.LocalDateTime.now());
-            session.setSuccesed(true);
-            Session session_save = sessionRepository.save(session);
-            return sessionMapper.toDTO(session_save);
+        Session session = new Session();
+        session.setUuid(UUID.randomUUID());
+        session.setUser_employee_id(userEmployee);
+        session.setSesion_date(java.time.LocalDateTime.now());
+        session.setSuccesed(true);
+        Session session_save = sessionRepository.save(session);
+        return sessionMapper.toDTO(session_save);
     }
 
     @Override
@@ -53,7 +53,11 @@ public class SessionServiceImpl implements ServiceAbs<SessionRequestDTO, Session
     }
 
     @Override
-    public SessionResponseDTO update(UUID uuid, SessionRequestDTO dto) {
+    public SessionResponseDTO update(UUID uuid, LoginUserRequestDTO dto) {
         return null;
     }
+
+
+
+
 }
