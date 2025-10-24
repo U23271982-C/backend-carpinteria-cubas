@@ -13,6 +13,7 @@ import com.content.employee_service.model.ContractType;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.ContractRepository;
 import com.content.employee_service.repository.ContractTypeRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import com.content.employee_service.utility.UtilityValidator;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ContractService implements ServiceAbs<ContractRequestDTO, ContractR
 
     private final ContractTypeMapper contractTypeMapper;
     private final ContractTypeRepository contractTypeRepository;
-
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public ContractResponseDTO create(ContractRequestDTO dto) {
         log.info("ContractService.create()");
@@ -88,7 +89,15 @@ public class ContractService implements ServiceAbs<ContractRequestDTO, ContractR
 
         // Buscamos el contrato por su UUID
         Contract model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
 
+            model_existente.setState_entity_id(StateEntity.builder()
+                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
+                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+        }
         // Validamos si se va actualizar el uuid del tipo de contrato
         if (dto.getContract_type_uuid() != null) {
             ContractType new_contract_type = contractTypeRepository.findByUuid(dto.getContract_type_uuid())

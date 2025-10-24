@@ -8,6 +8,7 @@ import com.content.employee_service.model.ContractType;
 import com.content.employee_service.model.Distric;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.DistricRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class DistricService implements ServiceAbs<DistrictRequestDTO, DistrictRe
     private final DistricRepository districRepository;
     private final DistrictMapper districtMapper;
 
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public DistrictResponseDTO create(DistrictRequestDTO dto) {
         log.info("DistricService.create()");
@@ -72,6 +74,15 @@ public class DistricService implements ServiceAbs<DistrictRequestDTO, DistrictRe
         log.info("DistricService.updateByUUID()");
         // Buscamos el distrito por su UUID
         Distric model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(StateEntity.builder()
+                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
+                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+        }
         // Actualizamos los datos
         districtMapper.updateFromDto(dto, model_existente);
 

@@ -7,6 +7,7 @@ import com.content.employee_service.mapper.mapperImpl.PostMapper;
 import com.content.employee_service.model.Post;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.PostRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class PostService implements ServiceAbs<PostRequestDTO, PostResponseDTO> 
     private final PostRepository repository;
     private final PostMapper mapper;
 
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public PostResponseDTO create(PostRequestDTO dto) {
         log.info("PostService.create()");
@@ -67,6 +69,15 @@ public class PostService implements ServiceAbs<PostRequestDTO, PostResponseDTO> 
         log.info("PostService.updateByUUID()");
         // Buscamos el tipo de contrato por su UUID
         Post model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(StateEntity.builder()
+                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
+                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+        }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
         // Guardamos los cambios

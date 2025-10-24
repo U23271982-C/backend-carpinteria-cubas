@@ -10,6 +10,7 @@ import com.content.employee_service.model.PersonType;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.IdentificationTypeRepository;
 import com.content.employee_service.repository.PersonTypeRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class IdentificationTypeService implements
     private final IdentificationTypeMapper mapper;
 
     private final PersonTypeRepository personTypeRepository;
-
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public IdentificationTypeResponseDTO create(IdentificationTypeRequestDTO dto) {
         log.info("IdentificationTypeService.create()");
@@ -82,6 +83,15 @@ public class IdentificationTypeService implements
         log.info("IdentificationTypeService.updateByUUID()");
 
         IdentificationType model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(StateEntity.builder()
+                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
+                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+        }
         // Corroboramos todas las relaciones
         if(dto.getPerson_type_uuid() != null) {
             PersonType person_type_reading = personTypeRepository.findByUuid(dto.getPerson_type_uuid())

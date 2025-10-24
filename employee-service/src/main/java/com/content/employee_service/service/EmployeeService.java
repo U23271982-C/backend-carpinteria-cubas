@@ -29,6 +29,8 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
 
     private final DistricRepository districRepository;
 
+    private final StateEntityRepository stateEntityRepository;
+
     @Transactional
     @Override
     public EmployeeResponseDTO create(EmployeeRequestDTO dto) {
@@ -100,6 +102,15 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         log.info("EmployeeService.updateByUUID()");
         // Buscamos el employee por su UUID
         Employee model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(StateEntity.builder()
+                    // Agregamos el nuevo id del estado, para que se pueda asociar con FK
+                    .state_entity_id(state_entity_exiting.getState_entity_id()).build());
+        }
         // Corroboramos todas las relaciones
         if(dto.getIdentification_type_uuid() != null) {
             IdentificationType identification_type_existing = identificationTypeRepository.findByUuid(dto.getIdentification_type_uuid())
