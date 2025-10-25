@@ -146,8 +146,11 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEmployee userEmployee = userEmployeeRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado" + username));
-        if (userEmployee.getState_entity_id().getStateId() != 1) {
+        if (userEmployee.getState_entity_id().getStateId() == 2) {
             throw new UsernameNotFoundException("El usuario no está activo: " + username);
+        }
+        if (userEmployee.getState_entity_id().getStateId() == 3) {
+            throw new UsernameNotFoundException("El usuario ha sido bloqueado: " + username);
         }
         /**
          * Construir la lista de autoridades (permisos) del usuario en base a sus accesos a módulos y acciones

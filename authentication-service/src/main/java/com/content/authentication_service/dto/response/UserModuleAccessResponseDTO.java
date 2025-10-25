@@ -15,5 +15,4 @@ public class UserModuleAccessResponseDTO {
     private UUID uuid;
     private String employee_name;
     private String module_name;
-    private List<UserAccessActionResponseDTO> access_permissions;
 }

@@ -1,5 +1,6 @@
 package com.content.authentication_service.controller;
 
+import com.content.authentication_service.dto.request.ChangePasswordRequestDTO;
 import com.content.authentication_service.dto.request.LoginUserRequestDTO;
 import com.content.authentication_service.service.AuthService;
 import com.content.authentication_service.service.SessionServiceImpl;
@@ -35,10 +36,8 @@ public class AuthController {
     }
     @PutMapping("/change-password/{uuid},{password},{newPassword},{confirmPassword}")
     public ResponseEntity<String> resetPassword(@PathVariable UUID uuid,
-                                                @PathVariable String password,
-                                                @PathVariable String newPassword,
-                                                @PathVariable String confirmPassword) {
-        String success = authService.changePassword(uuid, password, newPassword, confirmPassword);
+                                                @RequestBody ChangePasswordRequestDTO changePasswordRequestDTO) {
+        String success = authService.changePassword(uuid, changePasswordRequestDTO);
         return ResponseEntity.ok(success);
     }
 }

@@ -1,5 +1,6 @@
 package com.content.authentication_service.service;
 
+import com.content.authentication_service.dto.request.ChangePasswordRequestDTO;
 import com.content.authentication_service.jwt.JwtUtil;
 import com.content.authentication_service.model.UserEmployee;
 import com.content.authentication_service.repository.UserEmployeeRepository;
@@ -33,15 +34,15 @@ public class AuthService {
         return jwtUtil.generateToken(authResult);
     }
 
-    public String changePassword(UUID employeeUuid, String password, String newPassword, String confirmPassword) {
+    public String changePassword(UUID employeeUuid, ChangePasswordRequestDTO dto) {
         UserEmployee userEmployee = userEmployeeRepository.findByUuid(employeeUuid).orElseThrow(()-> new RuntimeException("Usuario empleado no encontrado"));
-        if (!passwordEncoder.matches(password, userEmployee.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), userEmployee.getPassword())) {
             throw new RuntimeException("Contraseña actual incorrecta");
         }
-        if (!newPassword.equals(confirmPassword)) {
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
             throw new RuntimeException("Las contraseñas no coinciden");
         }
-        userEmployee.setPassword(passwordEncoder.encode(newPassword));
+        userEmployee.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userEmployeeRepository.save(userEmployee);
         return "Contraseña actualizada exitosamente";
     }

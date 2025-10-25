@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", uses = {UserModuleAccessMapper.class})
+@Mapper(componentModel = "spring")
 public interface UserEmployeeMapper extends Convert<UserEmployee, UserEmployeeRequestDTO, UserEmployeeResponseDTO> {
 
     UserEmployeeMapper INSTANCE = Mappers.getMapper(UserEmployeeMapper.class);
@@ -19,7 +19,6 @@ public interface UserEmployeeMapper extends Convert<UserEmployee, UserEmployeeRe
     @Mapping(source = "user_employee_position_id.position_name", target = "position")
     @Mapping(source = "user_employee_phone", target = "phone")
     @Mapping(source = "state_entity_id.state_entity_name", target = "state")
-    @Mapping(source = "user_module_accesses", target = "moduleAccesses")
     @Override
     UserEmployeeResponseDTO toDTO (UserEmployee model);
 

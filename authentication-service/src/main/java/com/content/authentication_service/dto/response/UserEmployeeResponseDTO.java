@@ -18,6 +18,5 @@ public class UserEmployeeResponseDTO {
     private String position;
     private String phone;
     private String state;
-    private List<UserModuleAccessResponseDTO> moduleAccesses;
 
 }

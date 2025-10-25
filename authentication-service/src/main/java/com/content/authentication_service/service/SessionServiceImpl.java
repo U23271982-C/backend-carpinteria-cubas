@@ -31,8 +31,10 @@ public class SessionServiceImpl implements ServiceAbs<LoginUserRequestDTO, Sessi
     @Override
     public SessionResponseDTO create(LoginUserRequestDTO dto) {
         UserEmployee userEmployee = userEmployeeRepository.findByUsername(dto.getUsername()).orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
-        if (userEmployee.getState_entity_id().getStateId() == 1) {
+        if (userEmployee.getState_entity_id().getStateId() == 2) {
             throw new RuntimeException("Usuario inactivo");
+        } if (userEmployee.getState_entity_id().getStateId() == 3) {
+            throw new RuntimeException("Usuario bloqueado");
         }
         if (!passwordEncoder.matches(dto.getPassword(), userEmployee.getPassword())) {
             throw new RuntimeException("Contraseña incorrecta");
