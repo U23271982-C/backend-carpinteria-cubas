@@ -26,7 +26,7 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/login" , "/login/change-password/")
+                        .requestMatchers( "/login" )
                         .permitAll()
                         .anyRequest().authenticated() // Todas las demás requieren autenticación
                 )

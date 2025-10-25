@@ -3,6 +3,7 @@ package com.content.authentication_service.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class UserEmployee {
     @Column(name="username", length = 100)
     private String username;
 
-    @Column(name="password", nullable = false, updatable = false)
+    @Column(name="password", nullable = false)
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,6 +42,9 @@ public class UserEmployee {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
+
+    @Column(name = "last_password_change_timestamp")
+    private Instant lastPasswordChangeTimestamp;
 
     @OneToMany(mappedBy = "user_employee_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Session> sesions;

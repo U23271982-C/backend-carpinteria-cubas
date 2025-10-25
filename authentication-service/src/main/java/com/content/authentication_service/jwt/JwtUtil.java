@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -38,10 +39,33 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails){
+    public Boolean validateToken(String token, UserDetails userDetails, Instant lastPasswordChange) {
         final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        if (!userName.equals(userDetails.getUsername()) || isTokenExpired(token)) {
+            return false;
+        }
+        // Extraemos la fecha de emisión (Issued At) del token
+        final Date issuedAt = extractIssuedAt(token);
+        // Si el usuario cambió su contraseña (lastPasswordChange no es null)
+        // Y el token fue emitido ANTES de ese cambio...
+        /*
+        if (lastPasswordChange != null && issuedAt.toInstant().isBefore(lastPasswordChange)) {
+            // El token es inválido.
+            return false;
+        }
+        // ----> FIN DE LA NUEVA LÓGICA
+
+        return true;
+         */
+        // El token es inválido.
+        return lastPasswordChange == null || !issuedAt.toInstant().isBefore(lastPasswordChange);
+        // ----> FIN DE LA NUEVA LÓGICA
     }
+
+    public Date extractIssuedAt(String token) {
+        return extractAllClaims(token).getIssuedAt();
+    }
+
 
     public Boolean isTokenExpired(String token){
         return extractExpiration(token).before(new Date());

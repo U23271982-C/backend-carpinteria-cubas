@@ -145,17 +145,10 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
      */
     @Override
     public UserDetails loadUserByUsername(String uuid) throws UsernameNotFoundException {
-        UserEmployee userEmployee = userEmployeeRepository.findByUuid(UUID.fromString(uuid)).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado" + uuid));
-        if (userEmployee.getState_entity_id().getStateId() == 2) {
-            throw new UsernameNotFoundException("El usuario no está activo: " + userEmployee.getUsername());
-        }
-        if (userEmployee.getState_entity_id().getStateId() == 3) {
-            throw new UsernameNotFoundException("El usuario ha sido bloqueado: " + userEmployee.getUsername());
-        }
+        UserEmployee userEmployee = findUserByUuid(uuid);
         /**
          * Construir la lista de autoridades (permisos) del usuario en base a sus accesos a módulos y acciones
          */
-
         List<GrantedAuthority> authorities = new ArrayList<>();
         // Recorrer todos los accesos a módulos del usuario
         for (UserModuleAccess moduleAccess : userEmployee.getUser_module_accesses()) {
@@ -173,5 +166,21 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
             }
         }
         return new User(userEmployee.getUuid().toString(), userEmployee.getPassword(), authorities);
+    }
+
+
+    @Transactional(readOnly = true)
+    public UserEmployee findUserByUuid(String uuid) throws UsernameNotFoundException {
+        UserEmployee userEmployee = userEmployeeRepository.findByUuid(UUID.fromString(uuid))
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado" + uuid));
+
+        if (userEmployee.getState_entity_id().getStateId() == 2) {
+            throw new UsernameNotFoundException("El usuario no está activo: " + userEmployee.getUsername());
+        }
+        if (userEmployee.getState_entity_id().getStateId() == 3) {
+            throw new UsernameNotFoundException("El usuario ha sido bloqueado: " + userEmployee.getUsername());
+        }
+
+        return userEmployee;
     }
 }

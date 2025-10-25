@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -29,11 +30,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public String authenticate(LoginUserRequestDTO dto) {
-        UserEmployee user = userEmployeeRepository.findByUsername(dto.getUsername()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Credenciales incorrectas");
-        }
+        UserEmployee user = userEmployeeRepository.findByUsername(dto.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUuid().toString(),dto.getPassword());
+
         Authentication authResult = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authResult);
         return jwtUtil.generateToken(authResult);
@@ -48,6 +48,7 @@ public class AuthService {
             throw new RuntimeException("Las contraseñas no coinciden");
         }
         userEmployee.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userEmployee.setLastPasswordChangeTimestamp(Instant.now());
         userEmployeeRepository.save(userEmployee);
         return "Contraseña actualizada exitosamente";
     }

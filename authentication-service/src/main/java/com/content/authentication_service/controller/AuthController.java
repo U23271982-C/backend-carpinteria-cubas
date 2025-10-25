@@ -34,7 +34,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PutMapping("/change-password/{uuid},{password},{newPassword},{confirmPassword}")
+    @PutMapping("/change-password/{uuid}")
     public ResponseEntity<String> resetPassword(@PathVariable UUID uuid,
                                                 @RequestBody ChangePasswordRequestDTO changePasswordRequestDTO) {
         String success = authService.changePassword(uuid, changePasswordRequestDTO);
