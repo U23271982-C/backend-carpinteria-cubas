@@ -1,6 +1,7 @@
 package com.content.authentication_service.service;
 
 import com.content.authentication_service.dto.request.ChangePasswordRequestDTO;
+import com.content.authentication_service.dto.request.LoginUserRequestDTO;
 import com.content.authentication_service.jwt.JwtUtil;
 import com.content.authentication_service.model.UserEmployee;
 import com.content.authentication_service.repository.UserEmployeeRepository;
@@ -27,8 +28,12 @@ public class AuthService {
     private final UserEmployeeRepository userEmployeeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public String authenticate(String username, String password){
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
+    public String authenticate(LoginUserRequestDTO dto) {
+        UserEmployee user = userEmployeeRepository.findByUsername(dto.getUsername()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Credenciales incorrectas");
+        }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUuid().toString(),dto.getPassword());
         Authentication authResult = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authResult);
         return jwtUtil.generateToken(authResult);

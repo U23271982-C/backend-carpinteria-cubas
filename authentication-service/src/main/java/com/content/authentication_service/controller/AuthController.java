@@ -27,7 +27,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Revise sus credenciales");
         }
         try{
-            String jwt = authService.authenticate(loginUserRequestDTO.getUsername(), loginUserRequestDTO.getPassword());
+            String jwt = authService.authenticate(loginUserRequestDTO);
             sessionServiceImpl.create(loginUserRequestDTO);
             return ResponseEntity.ok(jwt);
         } catch (Exception e){

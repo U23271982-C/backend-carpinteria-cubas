@@ -139,18 +139,18 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
 
     /**
      *
-     * @param username
+     * @param uuid
      * @return
      * @throws UsernameNotFoundException
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEmployee userEmployee = userEmployeeRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado" + username));
+    public UserDetails loadUserByUsername(String uuid) throws UsernameNotFoundException {
+        UserEmployee userEmployee = userEmployeeRepository.findByUuid(UUID.fromString(uuid)).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado" + uuid));
         if (userEmployee.getState_entity_id().getStateId() == 2) {
-            throw new UsernameNotFoundException("El usuario no está activo: " + username);
+            throw new UsernameNotFoundException("El usuario no está activo: " + userEmployee.getUsername());
         }
         if (userEmployee.getState_entity_id().getStateId() == 3) {
-            throw new UsernameNotFoundException("El usuario ha sido bloqueado: " + username);
+            throw new UsernameNotFoundException("El usuario ha sido bloqueado: " + userEmployee.getUsername());
         }
         /**
          * Construir la lista de autoridades (permisos) del usuario en base a sus accesos a módulos y acciones
@@ -172,6 +172,6 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
                 authorities.add(new SimpleGrantedAuthority(permission));
             }
         }
-        return new User(userEmployee.getUsername(), userEmployee.getPassword(), authorities);
+        return new User(userEmployee.getUuid().toString(), userEmployee.getPassword(), authorities);
     }
 }
