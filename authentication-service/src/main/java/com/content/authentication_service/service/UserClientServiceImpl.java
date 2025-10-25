@@ -33,111 +33,67 @@ public class UserClientServiceImpl implements ServiceAbs<UserClientRequestDTO, U
         userClient.setUuid(uuid);
         // Asignar estado activo (ID = 1)
         StateEntity stateEntity = new StateEntity();
-        stateEntity.setState_entity_id(1);
+        stateEntity.setStateId(1);
         userClient.setState_entity_id(stateEntity);
 
         UserClient savedUser = userClientRepository.save(userClient);
         return userClientMapper.toDTO(savedUser);
     }
+    @Override
+    public List<UserClientResponseDTO> allList() {
+        return userClientRepository.findAll()
+                .stream().filter(user -> user.getState_entity_id().getStateId() != 3) // Excluir eliminados
+                .map(userClientMapper::toDTO)
+                .toList();
+    }
 
     @Override
     public UserClientResponseDTO readById(UUID uuid) {
-        UserClient userClient = userClientRepository.findAll()
-                .stream()
-                .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
-        return userClientMapper.toDTO(userClient);
-    }
-
-    public UserClientResponseDTO readByFirebaseUid(String firebaseUid) {
-        UserClient userClient = userClientRepository.findAll()
-                .stream()
-                .filter(user -> user.getFireBaseUid().equals(firebaseUid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con Firebase UID: " + firebaseUid));
+        UserClient userClient = userClientRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
         return userClientMapper.toDTO(userClient);
     }
 
     @Override
     public UserClientResponseDTO update(UUID uuid, UserClientRequestDTO dto) {
-
-        UserClient existingUser = userClientRepository.findAll()
-                .stream()
-                .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
-
+        UserClient existingUser = userClientRepository.findByUuid(uuid).orElseThrow(()-> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
+        if (existingUser.getState_entity_id().getStateId() == 3) {
+            throw new RuntimeException("Usuario no encontrado con UUID: " + uuid);
+        }
         // Actualizar campos permitidos (no actualizamos firebaseUid)
-        if (dto.getFullName() != null && !dto.getFullName().trim().isEmpty()) {
-            existingUser.setUser_client_full_name(dto.getFullName());
-        }
-        if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
-            existingUser.setUser_client_phone(dto.getPhone());
-        }
-        if (dto.getAddress() != null && !dto.getAddress().trim().isEmpty()) {
-            existingUser.setUser_client_address(dto.getAddress());
-        }
-
-        UserClient updatedUser = userClientRepository.save(existingUser);
-        return userClientMapper.toDTO(updatedUser);
-    }
-
-    public UserClientResponseDTO updateByFirebaseUid(String firebaseUid, UserClientRequestDTO dto) {
-
-        UserClient existingUser = userClientRepository.findAll()
-                .stream()
-                .filter(user -> user.getFireBaseUid().equals(firebaseUid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con Firebase UID: " + firebaseUid));
-
-        // Actualizar campos permitidos (no actualizamos firebaseUid)
-        if (dto.getFullName() != null && !dto.getFullName().trim().isEmpty()) {
-            existingUser.setUser_client_full_name(dto.getFullName());
-        }
-        if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
-            existingUser.setUser_client_phone(dto.getPhone());
-        }
-        if (dto.getAddress() != null && !dto.getAddress().trim().isEmpty()) {
-            existingUser.setUser_client_address(dto.getAddress());
-        }
-
-        UserClient updatedUser = userClientRepository.save(existingUser);
-        return userClientMapper.toDTO(updatedUser);
+        return getUserClientResponseDTO(dto, existingUser);
     }
 
     @Override
     public void remove(UUID uuid) {
-        UserClient userClient = userClientRepository.findAll()
-                .stream()
-                .filter(user -> user.getUuid().equals(uuid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
-
+        UserClient userClient = userClientRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
         StateEntity stateEntity = new StateEntity();
-        stateEntity.setState_entity_id(3); //Estado Eliminado
+        stateEntity.setStateId(3); //Estado Eliminado
         userClient.setState_entity_id(stateEntity);
         userClientRepository.save(userClient);
     }
 
-    public void removeByFirebaseUid(String firebaseUid) {
-        UserClient userClient = userClientRepository.findAll()
-                .stream()
-                .filter(user -> user.getFireBaseUid().equals(firebaseUid) && user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con Firebase UID: " + firebaseUid));
-
-        StateEntity stateEntity = new StateEntity();
-        stateEntity.setState_entity_id(3); //Estado Eliminado
-        userClient.setState_entity_id(stateEntity);
-        userClientRepository.save(userClient);
+    public UserClientResponseDTO updateByFirebaseUid(String firebaseUid, UserClientRequestDTO dto) {
+        UserClient existingUser = userClientRepository.findByFireBaseUid(firebaseUid).orElseThrow(()-> new RuntimeException("Usuario no encontrado con Firebase UID: " + firebaseUid));
+        // Actualizar campos permitidos (no actualizamos firebaseUid)
+        return getUserClientResponseDTO(dto, existingUser);
+    }
+    public UserClientResponseDTO readByFirebaseUid(String firebaseUid) {
+        UserClient userClient = userClientRepository.findByFireBaseUid(firebaseUid).orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + firebaseUid));
+        return userClientMapper.toDTO(userClient);
     }
 
-    @Override
-    public List<UserClientResponseDTO> allList() {
-        return userClientRepository.findAll()
-                .stream().filter(user -> user.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .map(userClientMapper::toDTO)
-                .toList();
+    private UserClientResponseDTO getUserClientResponseDTO(UserClientRequestDTO dto, UserClient existingUser) {
+        if (dto.getFullName() != null && !dto.getFullName().trim().isEmpty()) {
+            existingUser.setUser_client_full_name(dto.getFullName());
+        }
+        if (dto.getPhone() != null && !dto.getPhone().trim().isEmpty()) {
+            existingUser.setUser_client_phone(dto.getPhone());
+        }
+        if (dto.getAddress() != null && !dto.getAddress().trim().isEmpty()) {
+            existingUser.setUser_client_address(dto.getAddress());
+        }
+
+        UserClient updatedUser = userClientRepository.save(existingUser);
+        return userClientMapper.toDTO(updatedUser);
     }
 }

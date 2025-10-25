@@ -32,7 +32,7 @@ public class Action {
     @JoinColumn(name = "state_entity_id", nullable = false)
     private StateEntity state_entity_id;
 
-    @OneToMany(mappedBy = "action_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "actionId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserAccessAction> user_access_actions;
 
 }

@@ -14,7 +14,7 @@ public interface SessionMapper extends Convert<Session,SessionRequestDTO, Sessio
 
 
     @Mapping(source = "user_employee_id.full_name", target = "full_name")
-    @Mapping(source = "user_employee_id.user_employee_name", target = "user_employee_name")
+    @Mapping(source = "user_employee_id.username", target = "user_employee_name")
     @Mapping(source = "user_employee_id.user_employee_position_id.position_name", target = "user_position")
     @Mapping(source = "user_employee_id.user_employee_phone", target = "user_phone")
     @Mapping(source = "sesion_date", target = "session_date")
@@ -24,7 +24,7 @@ public interface SessionMapper extends Convert<Session,SessionRequestDTO, Sessio
     SessionResponseDTO toDTO(Session modelo);
 
 
-    @Mapping(target = "user_employee_id.user_employee_name", source = "username")
+    @Mapping(target = "user_employee_id.username", source = "username")
     @Mapping(target = "user_employee_id.password", source = "password")
     @Override
     Session toModel(SessionRequestDTO dto);

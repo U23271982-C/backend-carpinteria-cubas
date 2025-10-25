@@ -25,8 +25,8 @@ public class UserEmployee {
     @Column(name="full_name", length = 150, nullable = false)
     private String full_name;
 
-    @Column(name="user_employee_name", length = 100)
-    private String user_employee_name;
+    @Column(name="username", length = 100)
+    private String username;
 
     @Column(name="password", nullable = false, updatable = false)
     private String password;

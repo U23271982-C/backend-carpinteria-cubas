@@ -5,6 +5,7 @@ import com.content.authentication_service.dto.response.UserEmployeePositionRespo
 import com.content.authentication_service.mapper.UserEmployeePositionMapper;
 import com.content.authentication_service.model.StateEntity;
 import com.content.authentication_service.model.UserEmployeePosition;
+import com.content.authentication_service.repository.StateEntityRepository;
 import com.content.authentication_service.repository.UserEmployeePositionRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
@@ -23,21 +24,16 @@ public class UserEmployeePositionServiceImpl implements ServiceAbs<UserEmployeeP
 
     private final UserEmployeePositionRepository userEmployeePositionRepository;
     private final UserEmployeePositionMapper userEmployeePositionMapper;
-    private final StateEntityServiceImpl stateEntityServiceImpl;
+    private final StateEntityRepository stateEntityRepository;
 
     @Override
     public UserEmployeePositionResponseDTO create(UserEmployeePositionRequestDTO dto) {
-        UserEmployeePosition userEmployeePosition = userEmployeePositionMapper.toModel(dto);
-
-        UUID uuid = UUID.randomUUID();
-        userEmployeePosition.setUuid(uuid);
-
-        if (userEmployeePosition.getState_entity_id().getUuid() == null) {
-            log.info("No se proporcionó state_entity_id, asignando estado predeterminado (activo)");
-            StateEntity defaultState = stateEntityServiceImpl.getStateActive();
-            userEmployeePosition.setState_entity_id(defaultState);
+        if (dto.getStateEntityuuid() != null) {
+            throw new RuntimeException("El State Entity no debe ser proporcionado al crear una posición de empleado");
         }
-
+        UserEmployeePosition userEmployeePosition = userEmployeePositionMapper.toModel(dto);
+        userEmployeePosition.setUuid(UUID.randomUUID());
+        userEmployeePosition.setState_entity_id(stateEntityRepository.findByStateId(1).orElseThrow(() -> new RuntimeException("El State Entity no existe")));
         UserEmployeePosition savedPosition = userEmployeePositionRepository.save(userEmployeePosition);
         return userEmployeePositionMapper.toDTO(savedPosition);
     }
@@ -46,32 +42,30 @@ public class UserEmployeePositionServiceImpl implements ServiceAbs<UserEmployeeP
     public List<UserEmployeePositionResponseDTO> allList() {
         return userEmployeePositionRepository.findAll()
                 .stream()
-                .filter(userEmployeePosition -> userEmployeePosition.getState_entity_id().getState_entity_id() != 3)
+                .filter(userEmployeePosition -> userEmployeePosition.getState_entity_id().getStateId() != 3)
                 .map(userEmployeePositionMapper::toDTO)
                 .toList(); // Excluir eliminados;
     }
 
     @Override
     public UserEmployeePositionResponseDTO readById(UUID uuid) {
-        UserEmployeePosition userEmployeePosition = getByUUID(uuid);
+        UserEmployeePosition userEmployeePosition = userEmployeePositionRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("El usuario no existe"));
         return userEmployeePositionMapper.toDTO(userEmployeePosition);
     }
 
     @Override
     public void remove(UUID uuid) {
-        UserEmployeePosition userEmployeePosition = getByUUID(uuid);
-
+        UserEmployeePosition userEmployeePosition = userEmployeePositionRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("El usuario no existe"));
         StateEntity deletedState = new StateEntity();
-        deletedState.setState_entity_id(3); // Estado eliminado
+        deletedState.setStateId(3); // Estado eliminado
         userEmployeePosition.setState_entity_id(deletedState);
         userEmployeePositionRepository.save(userEmployeePosition);
     }
 
     @Override
     public UserEmployeePositionResponseDTO update(UUID uuid, UserEmployeePositionRequestDTO dto) {
-        UserEmployeePosition existingPosition = getByUUID(uuid);
+        UserEmployeePosition existingPosition = userEmployeePositionRepository.findByUuid(uuid).orElseThrow(() -> new RuntimeException("El usuario no existe"));
         // Actualizar campos permitidos
-
             if (dto.getPositionName() != null && !dto.getPositionName().trim().isEmpty()) {
                 existingPosition.setPosition_name(dto.getPositionName());
             }
@@ -79,26 +73,10 @@ public class UserEmployeePositionServiceImpl implements ServiceAbs<UserEmployeeP
                 existingPosition.setPosition_description(dto.getPositionDescription());
             }
             if (dto.getStateEntityuuid() != null) {
-                StateEntity stateEntityNew = stateEntityServiceImpl.getByUUID(dto.getStateEntityuuid());
+                StateEntity stateEntityNew = stateEntityRepository.findByUuid(dto.getStateEntityuuid()).orElseThrow(() -> new RuntimeException("El State Entity no existe"));
                 existingPosition.setState_entity_id(stateEntityNew);
             }
-
             UserEmployeePosition updatedPosition = userEmployeePositionRepository.save(existingPosition);
             return userEmployeePositionMapper.toDTO(updatedPosition);
-    }
-
-    public UserEmployeePosition getByUUID(UUID uuid){
-        return userEmployeePositionRepository.findAll()
-                .stream()
-                .filter(userEmployeePosition -> userEmployeePosition.getUuid().equals(uuid) && userEmployeePosition.getState_entity_id().getState_entity_id() != 3) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(()-> new RuntimeException("UserEmployeePosition not found"));
-    }
-    public UserEmployeePosition getByUUIDActive(UUID uuid){
-        return userEmployeePositionRepository.findAll()
-                .stream()
-                .filter(userEmployeePosition -> userEmployeePosition.getUuid().equals(uuid) && userEmployeePosition.getState_entity_id().getState_entity_id() == 1) // Excluir eliminados
-                .findFirst()
-                .orElseThrow(()-> new RuntimeException("UserEmployeePosition not found"));
     }
 }

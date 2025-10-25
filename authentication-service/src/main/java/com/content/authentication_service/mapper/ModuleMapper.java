@@ -12,7 +12,7 @@ public interface ModuleMapper extends Convert<Module, ModuleRequestDTO, ModuleRe
     ModuleMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(ModuleMapper.class);
 
     @Mapping(source = "uuid", target = "uuid")
-    @Mapping(source = "module_name", target = "module_name")
+    @Mapping(source = "name", target = "module_name")
     @Mapping(source = "module_description", target = "module_description")
     @Mapping(source = "state_entity_id.state_entity_name", target = "state_entity_name")
     @Override
@@ -21,7 +21,7 @@ public interface ModuleMapper extends Convert<Module, ModuleRequestDTO, ModuleRe
 
     @Mapping(target = "module_id", ignore = true)
     @Mapping(target = "uuid", ignore = true)
-    @Mapping(target = "module_name", source = "module_name")
+    @Mapping(target = "name", source = "module_name")
     @Mapping(target = "module_description", source = "module_description")
     @Mapping(target = "state_entity_id.uuid", source = "stateEntityuuid") // Asignamos el UUID del estado directamente
     @Override

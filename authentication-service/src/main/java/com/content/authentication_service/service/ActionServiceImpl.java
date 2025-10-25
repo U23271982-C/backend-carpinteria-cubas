@@ -3,7 +3,6 @@ package com.content.authentication_service.service;
 import com.content.authentication_service.dto.request.ActionRequestDTO;
 import com.content.authentication_service.dto.response.ActionResponseDTO;
 import com.content.authentication_service.mapper.ActionMapper;
-import com.content.authentication_service.model.Action;
 import com.content.authentication_service.repository.ActionRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ public class ActionServiceImpl implements ServiceAbs<ActionRequestDTO, ActionRes
     public List<ActionResponseDTO> allList() {
         return actionRepository.findAll()
                 .stream()
-                .filter(action -> action.getState_entity_id().getState_entity_id() != 3)
+                .filter(action -> action.getState_entity_id().getStateId() != 3)
                 .map(actionMapper::toDTO)
                 .toList(); // Excluir eliminados;
     }
@@ -52,11 +51,4 @@ public class ActionServiceImpl implements ServiceAbs<ActionRequestDTO, ActionRes
         return null;
     }
 
-    public Action findByUUID(UUID uuid){
-        return actionRepository.findAll()
-                .stream()
-                .filter(action -> action.getUuid().equals(uuid) && action.getState_entity_id().getState_entity_id() == 1)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontro action"));
-    }
 }

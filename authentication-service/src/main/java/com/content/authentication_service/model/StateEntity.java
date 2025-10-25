@@ -17,7 +17,7 @@ public class StateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer state_entity_id;
+    private Integer stateId;
 
     @Column(name = "uuid", nullable = false, unique = true, updatable = false)
     private UUID uuid;

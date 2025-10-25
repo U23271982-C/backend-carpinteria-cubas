@@ -51,25 +51,4 @@ public class StateEntityServiceImpl implements ServiceAbs<StateEntityRequestDTO,
         return null;
     }
 
-    public StateEntity getStateActive(){
-        return stateEntityRepository.findAll()
-                .stream()
-                .filter(stateEntity -> stateEntity.getState_entity_id() == 1)
-                .findFirst()
-                .orElseThrow(()-> new RuntimeException("StateEntity not found"));
-    }
-
-    public StateEntity getByUUID(UUID uuid){
-        return stateEntityRepository.findAll()
-                .stream()
-                .filter(stateEntity -> stateEntity.getUuid().equals(uuid) && stateEntity.getState_entity_id() != 3)
-                .findFirst()
-                .orElseThrow(()-> new RuntimeException("StateEntity not found"));
-    }
-
-    public StateEntity deleteEntity(){
-        StateEntity stateEntity = new StateEntity();
-        stateEntity.setState_entity_id(3); // Estado eliminado
-        return stateEntity;
-    }
 }

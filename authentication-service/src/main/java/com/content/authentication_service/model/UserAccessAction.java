@@ -23,9 +23,9 @@ public class UserAccessAction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_module_access_id", nullable = false)
-    private UserModuleAccess user_module_access_id;
+    private UserModuleAccess umaId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "action_id", nullable = false)
-    private Action action_id;
+    private Action actionId;
 }

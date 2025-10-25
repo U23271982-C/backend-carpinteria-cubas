@@ -28,7 +28,6 @@ public class ModuleController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('REPORTES_ELIMINAR')")
     public ResponseEntity<List<ModuleResponseDTO>> findAll(){
         List<ModuleResponseDTO> response = moduleServiceImpl.allList();
         return ResponseEntity.ok(response);

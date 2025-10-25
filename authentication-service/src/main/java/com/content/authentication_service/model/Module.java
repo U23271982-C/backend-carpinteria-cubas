@@ -23,7 +23,7 @@ public class Module {
     private UUID uuid;
 
     @Column(name="module_name", length = 50)
-    private String module_name;
+    private String name;
 
     @Column(name="module_description", length = 100)
     private String module_description;

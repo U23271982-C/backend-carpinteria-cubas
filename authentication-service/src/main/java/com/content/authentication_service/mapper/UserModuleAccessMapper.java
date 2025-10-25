@@ -13,8 +13,8 @@ public interface UserModuleAccessMapper extends Convert<UserModuleAccess, UserMo
     UserModuleAccessMapper INSTANCE = org.mapstruct.factory.Mappers.getMapper(UserModuleAccessMapper.class);
 
     @Mapping(source = "uuid", target = "uuid")
-    @Mapping(source = "user_employee_id.user_employee_name", target = "employee_name")
-    @Mapping(source = "module_id.module_name", target = "module_name")
+    @Mapping(source = "user_employee_id.username", target = "employee_name")
+    @Mapping(source = "module_id.name", target = "module_name")
     @Mapping(source = "user_access_actions", target = "access_permissions")
     @Override
     UserModuleAccessResponseDTO toDTO(UserModuleAccess entity);

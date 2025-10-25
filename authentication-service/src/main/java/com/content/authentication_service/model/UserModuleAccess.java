@@ -30,6 +30,6 @@ public class UserModuleAccess {
     @JoinColumn(name = "module_id", nullable = false)
     private Module module_id;
 
-    @OneToMany(mappedBy = "user_module_access_id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "umaId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserAccessAction> user_access_actions;
 }

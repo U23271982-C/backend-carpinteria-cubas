@@ -28,7 +28,7 @@ public interface UserClientMapper extends Convert<UserClient, UserClientRequestD
     @Mapping(target = "user_client_full_name", source = "fullName")
     @Mapping(target = "user_client_phone", source = "phone")
     @Mapping(target = "user_client_address", source = "address")
-    @Mapping(target = "state_entity_id.state_entity_id", ignore = true) // Asignamos el ID del estado directamente
+    @Mapping(target = "state_entity_id.stateId", ignore = true) // Asignamos el ID del estado directamente
     @Mapping(target = "user_client_created_at", expression = "java(java.time.LocalDate.now())")
     @Override
     UserClient toModel(UserClientRequestDTO dto);

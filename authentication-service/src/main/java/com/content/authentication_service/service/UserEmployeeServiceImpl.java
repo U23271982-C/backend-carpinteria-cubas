@@ -5,6 +5,8 @@ import com.content.authentication_service.dto.response.UserEmployeeResponseDTO;
 import com.content.authentication_service.mapper.UserEmployeeMapper;
 import com.content.authentication_service.model.*;
 import com.content.authentication_service.model.Module;
+import com.content.authentication_service.repository.StateEntityRepository;
+import com.content.authentication_service.repository.UserEmployeePositionRepository;
 import com.content.authentication_service.repository.UserEmployeeRepository;
 import com.content.authentication_service.repository.UserModuleAccessRepository;
 import com.content.authentication_service.service.abstractservice.ServiceAbs;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,49 +31,46 @@ import java.util.UUID;
 @Transactional
 public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDTO, UserEmployeeResponseDTO>, UserDetailsService {
 
-    private final UserEmployeeMapper userEmployeeMapper;
     private final UserEmployeeRepository userEmployeeRepository;
-    private final StateEntityServiceImpl stateEntityService;
-    private final UserEmployeePositionServiceImpl userEmployeePositionServiceImpl;
+    private final StateEntityRepository stateEntityRepository;
     private final UserModuleAccessRepository userModuleAccessRepository;
+    private final UserEmployeePositionRepository userEmployeePositionRepository;
+    private final UserEmployeeMapper userEmployeeMapper;
     private final PasswordEncoder passwordEncoder;
-
 
 
     @Override
     public UserEmployeeResponseDTO create(UserEmployeeRequestDTO dto) {
         // Convertir DTO a entidad
-        if(existsByUserEmployeeName(dto.getUser_name())){
+        if (userEmployeeRepository.findByUsername(dto.getUser_name()).isPresent()) {
             throw new RuntimeException("El nombre de usuario ya existe");
         }
-        UserEmployee userEmployee = userEmployeeMapper.toModel(dto);
-        // Generar y asignar UUID
-        UUID uuid = UUID.randomUUID();
-        userEmployee.setUuid(uuid);
-
-        if (userEmployee.getState_entity_id().getUuid() == null) {
-            log.info("No se proporcionó state_entity_id, asignando estado predeterminado (activo)");
-            userEmployee.setState_entity_id(stateEntityService.getStateActive());
+        UserEmployeePosition userEmployeePosition = userEmployeePositionRepository.findByUuid(dto.getPositionUUID()).orElseThrow(() -> new UsernameNotFoundException("El usuario no existe"));
+        if (dto.getStateUUID() != null) {
+            throw  new RuntimeException("El State Entity no debe ser proporcionado al crear un usuario empleado");
         }
-
-        if (userEmployee.getUser_employee_position_id().getUuid() != null) {
-            log.info("No se proporcionó user_employee_position_id");
-            userEmployee.setUser_employee_position_id(userEmployeePositionServiceImpl.getByUUIDActive(userEmployee.getUser_employee_position_id().getUuid()));
-        } else {
-            throw new RuntimeException("user_employee_position_id es obligatorio");
+        if (userEmployeePosition.getState_entity_id().getStateId() == 1) {
+            throw new RuntimeException("La posición del empleado no es válida o está inactiva");
         }
-
-        if (userEmployee.getFull_name() == null || userEmployee.getFull_name().isEmpty()) {
+        if (dto.getFull_name()== null || dto.getFull_name().isEmpty()) {
             throw new RuntimeException("El nombre completo es obligatorio");
         }
 
-        if (userEmployee.getUser_employee_name() == null || userEmployee.getUser_employee_name().isEmpty()) {
+        if (dto.getUser_name() == null || dto.getUser_name().isEmpty()) {
             throw new RuntimeException("El nombre de usuario es obligatorio");
         }
 
-        if (userEmployee.getPassword() == null || userEmployee.getPassword().isEmpty()) {
+        if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
             throw new RuntimeException("La contraseña es obligatoria");
         }
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            throw new RuntimeException("Las contraseñas no coinciden");
+        }
+        UserEmployee userEmployee = userEmployeeMapper.toModel(dto);
+        UUID uuid = UUID.randomUUID();
+        userEmployee.setUuid(uuid);
+        userEmployee.setState_entity_id(stateEntityRepository.findByStateId(1).orElse(null)); // Asignar estado activo por defecto
+        userEmployee.setUser_employee_position_id(userEmployeePosition);
         String encryptedPassword = passwordEncoder.encode(userEmployee.getPassword());
         userEmployee.setPassword(encryptedPassword);
 
@@ -84,20 +84,20 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
     public List<UserEmployeeResponseDTO> allList() {
         return userEmployeeRepository.findAll()
                 .stream()
-                .filter(userEmployee -> userEmployee.getState_entity_id().getState_entity_id() != 3)
+                .filter(userEmployee -> userEmployee.getState_entity_id().getStateId() != 3)
                 .map(userEmployeeMapper::toDTO)
                 .toList(); // Excluir eliminados;
     }
 
     @Override
     public UserEmployeeResponseDTO readById(UUID uuid) {
-        return userEmployeeMapper.toDTO(findByUuid(uuid));
+        return userEmployeeMapper.toDTO(userEmployeeRepository.findByUuid(uuid).orElseThrow(()-> new RuntimeException("Usuario empleado no encontrado")));
     }
 
     @Override
     public void remove(UUID uuid) {
-        UserEmployee userEmployee = findByUuid(uuid);
-        userEmployee.setState_entity_id(stateEntityService.deleteEntity());
+        UserEmployee userEmployee = userEmployeeRepository.findByUuid(uuid).orElseThrow(()-> new RuntimeException("Usuario empleado no encontrado"));
+        userEmployee.setState_entity_id(stateEntityRepository.findByStateId(3).orElseThrow());
         List<UserModuleAccess> userModuleAccessList = userModuleAccessRepository.findAll()
                 .stream()
                 .filter(uma -> uma.getUser_employee_id().equals(userEmployee))
@@ -108,53 +108,34 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
 
     @Override
     public UserEmployeeResponseDTO update(UUID uuid, UserEmployeeRequestDTO dto) {
-        UserEmployee existingUserEmployee = findByUuid(uuid);
+        UserEmployee existingUserEmployee = userEmployeeRepository.findByUuid(uuid).orElseThrow(()-> new RuntimeException("Usuario empleado no encontrado"));
+        UserEmployeePosition userEmployeePosition = userEmployeePositionRepository.findByUuid(dto.getPositionUUID()).orElseThrow(()-> new RuntimeException("El position no existe"));
 
+        if (existingUserEmployee == null) {
+            throw new RuntimeException("Usuario empleado no encontrado");
+        }
         if (dto.getFull_name() != null) {
             existingUserEmployee.setFull_name(dto.getFull_name());
         }
-
         if (dto.getUser_name() != null) {
-            existingUserEmployee.setUser_employee_name(dto.getUser_name());
+            existingUserEmployee.setUsername(dto.getUser_name());
         }
         if (dto.getPhone() != null) {
             existingUserEmployee.setUser_employee_phone(dto.getPhone());
         }
-        if (dto.getPositionUUID() != null) {
-            existingUserEmployee.setUser_employee_position_id(userEmployeePositionServiceImpl.getByUUIDActive(dto.getPositionUUID()));
+        if (userEmployeePosition.getState_entity_id().getStateId() == 1) {
+            existingUserEmployee.setUser_employee_position_id(userEmployeePosition);
         }
         if (dto.getStateUUID() != null) {
-            existingUserEmployee.setState_entity_id(stateEntityService.getByUUID(dto.getStateUUID()));
+            existingUserEmployee.setState_entity_id(stateEntityRepository.findByUuid(dto.getStateUUID()).orElseThrow(()-> new RuntimeException("Estado entidad no encontrado")));
         }
-        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty() && dto.getPassword().equals(dto.getConfirmPassword())) {
             existingUserEmployee.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         return userEmployeeMapper.toDTO(userEmployeeRepository.save(existingUserEmployee));
     }
 
-    public UserEmployee findByUuid(UUID uuid){
-        return userEmployeeRepository.findAll()
-                .stream()
-                .filter(user -> user.getUuid().equals(uuid) &&
-                        user.getState_entity_id().getState_entity_id() != 3)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con UUID: " + uuid));
-    }
 
-    public UserEmployee getByUserAndPassword(String username, String password){
-        UserEmployee userEmployee = userEmployeeRepository.findAll()
-                .stream()
-                .filter(user -> user.getUser_employee_name().equals(username) &&
-                        user.getState_entity_id().getState_entity_id() == 1)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con nombre de usuario: " + username));
-
-        if (passwordEncoder.matches(password, userEmployee.getPassword())) {
-            return userEmployee;
-        } else {
-            throw new RuntimeException("Contraseña incorrecta para el usuario: " + username);
-        }
-    }
 
     /**
      *
@@ -164,40 +145,23 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEmployee userEmployee = userEmployeeRepository.findAll()
-                .stream()
-                .filter(user -> user.getUser_employee_name().equals(username) &&
-                        user.getState_entity_id().getState_entity_id() == 1)
-                .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        List<GrantedAuthority> authorities = getUserAuthorities(userEmployee);
+        UserEmployee userEmployee = userEmployeeRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado" + username));
+        if (userEmployee.getState_entity_id().getStateId() != 1) {
+            throw new UsernameNotFoundException("El usuario no está activo: " + username);
+        }
+        /**
+         * Construir la lista de autoridades (permisos) del usuario en base a sus accesos a módulos y acciones
+         */
 
-        return new org.springframework.security.core.userdetails.User(
-                userEmployee.getUser_employee_name(),
-                userEmployee.getPassword(),
-                authorities
-        );
-    }
-
-    /**
-     * Método para obtener las autoridades (permisos) de un usuario basado en sus accesos a módulos y acciones.
-     *
-     * @param user El usuario del cual se obtendrán las autoridades.
-     * @return Una lista de GrantedAuthority que representa los permisos del usuario.
-     */
-
-
-    private List<GrantedAuthority> getUserAuthorities(UserEmployee user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-
         // Recorrer todos los accesos a módulos del usuario
-        for (UserModuleAccess moduleAccess : user.getUser_module_accesses()) {
+        for (UserModuleAccess moduleAccess : userEmployee.getUser_module_accesses()) {
             Module module = moduleAccess.getModule_id();
-            String moduleName = module.getModule_name().toUpperCase().replace(" ", "_");
+            String moduleName = module.getName().toUpperCase().replace(" ", "_");
 
             // Recorrer las acciones asignadas en este módulo
             for (UserAccessAction accessAction : moduleAccess.getUser_access_actions()) {
-                Action action = accessAction.getAction_id();
+                Action action = accessAction.getActionId();
                 String actionName = action.getAction_name().toUpperCase().replace(" ", "_");
 
                 // Crear authority en el formato: [MODULO]_[ACCION]
@@ -205,33 +169,6 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
                 authorities.add(new SimpleGrantedAuthority(permission));
             }
         }
-
-        return authorities;
+        return new User(userEmployee.getUsername(), userEmployee.getPassword(), authorities);
     }
-
-    /**
-     * Verifica si un usuario con el nombre de usuario dado existe y no está eliminado.
-     *
-     * @param userEmployeeName El nombre de usuario a verificar.
-     * @return true si el usuario existe y no está eliminado; false en caso contrario.
-     */
-
-    public boolean existsByUserEmployeeName(String userEmployeeName){
-        return userEmployeeRepository.findAll()
-                .stream()
-                .anyMatch(userEmployee -> userEmployee.getUser_employee_name().equals(userEmployeeName) &&
-                        userEmployee.getState_entity_id().getState_entity_id() == 1);
-    }
-
-
-    /**
-     * Guarda un objeto UserEmployee en el repositorio.
-     *
-     * @param userEmployee El objeto UserEmployee a guardar.
-     */
-
-    public void save(UserEmployee userEmployee){
-        userEmployeeRepository.save(userEmployee);
-    }
-
 }
