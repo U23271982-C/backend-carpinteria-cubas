@@ -49,7 +49,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
         if (dto.getStateUUID() != null) {
             throw  new RuntimeException("El State Entity no debe ser proporcionado al crear un usuario empleado");
         }
-        if (userEmployeePosition.getState_entity_id().getStateId() == 1) {
+        if (userEmployeePosition.getState_entity_id().getStateId() != 1) {
             throw new RuntimeException("La posición del empleado no es válida o está inactiva");
         }
         if (dto.getFull_name()== null || dto.getFull_name().isEmpty()) {
@@ -123,7 +123,7 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
         if (dto.getPhone() != null) {
             existingUserEmployee.setUser_employee_phone(dto.getPhone());
         }
-        if (userEmployeePosition.getState_entity_id().getStateId() == 1) {
+        if (userEmployeePosition.getState_entity_id().getStateId() != 1) {
             existingUserEmployee.setUser_employee_position_id(userEmployeePosition);
         }
         if (dto.getStateUUID() != null) {
@@ -134,8 +134,6 @@ public class UserEmployeeServiceImpl implements ServiceAbs<UserEmployeeRequestDT
         }
         return userEmployeeMapper.toDTO(userEmployeeRepository.save(existingUserEmployee));
     }
-
-
 
     /**
      *

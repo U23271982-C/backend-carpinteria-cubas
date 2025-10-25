@@ -19,6 +19,7 @@ public interface UserEmployeeMapper extends Convert<UserEmployee, UserEmployeeRe
     @Mapping(source = "user_employee_position_id.position_name", target = "position")
     @Mapping(source = "user_employee_phone", target = "phone")
     @Mapping(source = "state_entity_id.state_entity_name", target = "state")
+    @Mapping(source = "lastPasswordChangeTimestamp", target = "lastPasswordChange")
     @Override
     UserEmployeeResponseDTO toDTO (UserEmployee model);
 
