@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.content.employee_service.utility.ValidateGroup;
+import com.netflix.appinfo.AmazonInfo;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -58,6 +59,10 @@ public class EmployeeRequestDTO {
     @Email(message = "La dirección de email debe ser válida", groups = {ValidateGroup.OnCreate.class, ValidateGroup.OnUpdate.class})
     @NotBlank(message = "La dirección de email es obligatoria", groups = ValidateGroup.OnCreate.class)
     private String direction_email;
+
+    @NotNull(message = "El ID de la dirección no puede ser nulo", groups = ValidateGroup.OnCreate.class)
+    @Size(min = 1, max = 255, message = "La dirección debe estar en un rango de 1 a 255 caracteres")
+    private String direction_name;
 
     private UUID state_entity_uuid;
 }

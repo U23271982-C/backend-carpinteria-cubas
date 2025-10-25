@@ -15,6 +15,7 @@ public class EmployeeResponseDTO {
     private LocalDateTime birth_date;
     private LocalDateTime register_date;
     private String identification_number;
+    private String direction_name;
     private String direction_email;
     private UUID identification_type_uuid;
     private UUID post_uuid;

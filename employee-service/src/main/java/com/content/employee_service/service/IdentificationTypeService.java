@@ -10,6 +10,7 @@ import com.content.employee_service.model.PersonType;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.IdentificationTypeRepository;
 import com.content.employee_service.repository.PersonTypeRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class IdentificationTypeService implements
     private final IdentificationTypeMapper mapper;
 
     private final PersonTypeRepository personTypeRepository;
-
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public IdentificationTypeResponseDTO create(IdentificationTypeRequestDTO dto) {
         log.info("IdentificationTypeService.create()");
@@ -40,7 +41,11 @@ public class IdentificationTypeService implements
         IdentificationType model = mapper.toModel(dto);
         // Asignamos el UUID y el tipo de persona
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build());
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
         model.setPerson_type_id(person_type_reading);
 
         IdentificationType modelSave = repository.save(model);
@@ -82,10 +87,18 @@ public class IdentificationTypeService implements
         log.info("IdentificationTypeService.updateByUUID()");
 
         IdentificationType model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(state_entity_exiting);
+        }
         // Corroboramos todas las relaciones
         if(dto.getPerson_type_uuid() != null) {
-            personTypeRepository.findByUuid(dto.getPerson_type_uuid())
+            PersonType person_type_reading = personTypeRepository.findByUuid(dto.getPerson_type_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de persona no existe"));
+            model_existente.setPerson_type_id(person_type_reading);
         }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
@@ -101,7 +114,20 @@ public class IdentificationTypeService implements
      * @return
      */
     private IdentificationType searchEntityByUUID(UUID uuid) {
-        return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
-                (String.format("No se encontró el tipo de identificación con el id público: %s", uuid)));
+        return repository.findByUuid(uuid)
+                .filter(entity -> entity.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                        () -> {
+                            if (repository.findByUuid(uuid).isPresent()) {
+                                // El empleado existe, pero fue filtrado (estado == 3)
+                                throw new EServiceLayer("El tipo de identificación está eliminado");
+                            } else {
+                                // El empleado nunca fue encontrado
+                                return new EServiceLayer(
+                                        String.format("No se encontró el tipo de identificación con el id público: %s", uuid)
+                                );
+                            }
+                        }
+                );
     }
 }

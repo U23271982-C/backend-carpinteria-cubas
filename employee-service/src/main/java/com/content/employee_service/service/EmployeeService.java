@@ -29,6 +29,8 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
 
     private final DistricRepository districRepository;
 
+    private final StateEntityRepository stateEntityRepository;
+
     @Transactional
     @Override
     public EmployeeResponseDTO create(EmployeeRequestDTO dto) {
@@ -55,7 +57,11 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         Employee model = mapper.toModel(dto);
         // Asignamos un UUID y un estado
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build()); // ACTIVO
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
         // Asignamos los valores de las relaciones
         model.setIdentification_type_id(identification_type_reading);
         model.setPost_id(post_reading);
@@ -100,19 +106,30 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         log.info("EmployeeService.updateByUUID()");
         // Buscamos el employee por su UUID
         Employee model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(state_entity_exiting);
+        }
         // Corroboramos todas las relaciones
         if(dto.getIdentification_type_uuid() != null) {
-            identificationTypeRepository.findByUuid(dto.getIdentification_type_uuid())
+            IdentificationType identification_type_existing = identificationTypeRepository.findByUuid(dto.getIdentification_type_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de identificación no existe"));
+            model_existente.setIdentification_type_id(identification_type_existing);
         } if (dto.getPost_id_uuid() != null) {
-            postRepository.findByUuid(dto.getPost_id_uuid())
+            Post post_existing = postRepository.findByUuid(dto.getPost_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de cargo no existe"));
+            model_existente.setPost_id(post_existing);
         } if (dto.getContract_id_uuid() != null) {
-            contractRepository.findByUuid(dto.getContract_id_uuid())
+            Contract contract_existing = contractRepository.findByUuid(dto.getContract_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de contrato no existe"));
+            model_existente.setContract_id(contract_existing);
         } if (dto.getDistric_id_uuid() != null) {
-            districRepository.findByUuid(dto.getDistric_id_uuid())
+            Distric distric_existing = districRepository.findByUuid(dto.getDistric_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El tipo de distrito no existe"));
+            model_existente.setDistric_id(distric_existing);
         }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
@@ -122,13 +139,26 @@ public class EmployeeService implements ServiceAbs<EmployeeRequestDTO, EmployeeR
         return mapper.toDTO(model_existente);
     }
 
-    /**
+    /**mejo
      * Busca el empleado por su UUID
      * @param uuid
      * @return
      */
     private Employee searchEntityByUUID(UUID uuid) {
-        return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
-                (String.format("No se encontró el empleado con el id público: %s", uuid)));
+        return repository.findByUuid(uuid)
+                .filter(employee -> employee.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                    () -> {
+                        if (repository.findByUuid(uuid).isPresent()) {
+                            // El empleado existe, pero fue filtrado (estado == 3)
+                            throw new EServiceLayer("El empleado está eliminado");
+                        } else {
+                            // El empleado nunca fue encontrado
+                            return new EServiceLayer(
+                                    String.format("No se encontró el empleado con el id público: %s", uuid)
+                            );
+                        }
+                    }
+                );
     }
 }

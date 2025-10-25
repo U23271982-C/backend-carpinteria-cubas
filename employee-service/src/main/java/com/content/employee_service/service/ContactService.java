@@ -10,6 +10,7 @@ import com.content.employee_service.model.Employee;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.ContactRepository;
 import com.content.employee_service.repository.EmployeeRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
     private final ContactRepository repository;
 
     private final EmployeeRepository employeeRepository;
-
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public ContactResponseDTO create(ContactRequestDTO dto) {
         log.info("ContactService.create()");
@@ -36,7 +37,12 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
         Contact model = mapper.toModel(dto);
         // Asignamos un UUID y un estado
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build()); // ACTIVO
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
+
         model.setEmployee_id(employee_reading);
 
         model = repository.save(model);
@@ -78,10 +84,18 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
         log.info("ContactService.updateByUUID()");
         // Buscamos el contacto por su UUID
         Contact model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(state_entity_exiting);
+        }
         // Corroboramos si existe el empleado
         if (dto.getEmployee_id_uuid() != null) {
-            employeeRepository.findByUuid(dto.getEmployee_id_uuid())
+            Employee employee_reading = employeeRepository.findByUuid(dto.getEmployee_id_uuid())
                     .orElseThrow(() -> new EServiceLayer("El empleado no existe"));
+            model_existente.setEmployee_id(employee_reading);
         }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
@@ -98,7 +112,20 @@ public class ContactService implements ServiceAbs<ContactRequestDTO, ContactResp
      */
     private Contact searchEntityByUUID(UUID uuid){
         return repository.findByUuid(uuid)
-                .orElseThrow(() -> new RuntimeException("El contacto no existe"));
+                .filter(entity -> entity.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                        () -> {
+                            if (repository.findByUuid(uuid).isPresent()) {
+                                // El empleado existe, pero fue filtrado (estado == 3)
+                                throw new EServiceLayer("El contacto está eliminado");
+                            } else {
+                                // El empleado nunca fue encontrado
+                                return new EServiceLayer(
+                                        String.format("No se encontró el contacto con el id público: %s", uuid)
+                                );
+                            }
+                        }
+                );
     }
 
     /**

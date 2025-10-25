@@ -7,6 +7,7 @@ import com.content.employee_service.mapper.mapperImpl.ContractTypeMapper;
 import com.content.employee_service.model.ContractType;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.ContractTypeRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +23,18 @@ public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, C
     private final ContractTypeRepository contractTypeRepository;
     private final ContractTypeMapper contractTypeMapper;
 
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public ContractTypeResponseDTO create(ContractTypeRequestDTO dto) {
         log.info("ContractTypeService.create()");
 
         ContractType model = contractTypeMapper.toModel(dto);
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build());
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
 
         ContractType modelSave = contractTypeRepository.save(model);
         return contractTypeMapper.toDTO(modelSave);
@@ -69,6 +75,13 @@ public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, C
         log.info("ContractTypeService.updateByUUID()");
         // Buscamos el contrato por su UUID
         ContractType model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(state_entity_exiting);
+        }
         // Actualizamos los datos
         contractTypeMapper.updateFromDto(dto, model_existente);
 
@@ -84,7 +97,20 @@ public class ContractTypeService implements ServiceAbs<ContractTypeRequestDTO, C
      * @return
      */
     private ContractType searchEntityByUUID(UUID uuid) {
-        return contractTypeRepository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
-                (String.format("No se encontró el tipo de contrato con el id público: %s", uuid)));
+        return contractTypeRepository.findByUuid(uuid)
+                .filter(entity -> entity.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                        () -> {
+                            if (contractTypeRepository.findByUuid(uuid).isPresent()) {
+                                // El empleado existe, pero fue filtrado (estado == 3)
+                                throw new EServiceLayer("El tipo de contrato está eliminado");
+                            } else {
+                                // El empleado nunca fue encontrado
+                                return new EServiceLayer(
+                                        String.format("No se encontró el tipo de contrato con el id público: %s", uuid)
+                                );
+                            }
+                        }
+                );
     }
 }

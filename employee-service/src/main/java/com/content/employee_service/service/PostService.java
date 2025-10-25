@@ -7,6 +7,7 @@ import com.content.employee_service.mapper.mapperImpl.PostMapper;
 import com.content.employee_service.model.Post;
 import com.content.employee_service.model.StateEntity;
 import com.content.employee_service.repository.PostRepository;
+import com.content.employee_service.repository.StateEntityRepository;
 import com.content.employee_service.service.abstractService.ServiceAbs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class PostService implements ServiceAbs<PostRequestDTO, PostResponseDTO> 
     private final PostRepository repository;
     private final PostMapper mapper;
 
+    private final StateEntityRepository stateEntityRepository;
     @Override
     public PostResponseDTO create(PostRequestDTO dto) {
         log.info("PostService.create()");
@@ -28,7 +30,11 @@ public class PostService implements ServiceAbs<PostRequestDTO, PostResponseDTO> 
         Post model = mapper.toModel(dto);
         // Asignamos un UUID y un estado
         model.setUuid(UUID.randomUUID());
-        model.setState_entity_id(StateEntity.builder().state_entity_id(1).build()); // ACTIVO
+        // Asignamos el estado activo (ID = 1)
+        StateEntity state_entity_reading = stateEntityRepository.findById(1)
+                .orElseThrow(() -> new EServiceLayer("El estado no existe"));
+
+        model.setState_entity_id(state_entity_reading);
         // Guardamos el modelo en la BD
         model = repository.save(model);
 
@@ -67,6 +73,13 @@ public class PostService implements ServiceAbs<PostRequestDTO, PostResponseDTO> 
         log.info("PostService.updateByUUID()");
         // Buscamos el tipo de contrato por su UUID
         Post model_existente = searchEntityByUUID(uuid);
+        // Actualizamos el estado del tipo de persona si se requiere
+        if (dto.getState_entity_uuid() != null) {
+            StateEntity state_entity_exiting = stateEntityRepository.findByUuid(dto.getState_entity_uuid())
+                    .orElseThrow(() -> new EServiceLayer("El estado de entidad no existe"));
+
+            model_existente.setState_entity_id(state_entity_exiting);
+        }
         // Actualizamos los datos
         mapper.updateFromDto(dto, model_existente);
         // Guardamos los cambios
@@ -76,7 +89,20 @@ public class PostService implements ServiceAbs<PostRequestDTO, PostResponseDTO> 
     }
 
     private Post searchEntityByUUID(UUID uuid) {
-        return repository.findByUuid(uuid).orElseThrow(() -> new EServiceLayer
-                (String.format("No se encontró el Cargo con el id público: %s", uuid)));
+        return repository.findByUuid(uuid)
+                .filter(entity -> entity.getState_entity_id().getState_entity_id()!= 3)
+                .orElseThrow(
+                        () -> {
+                            if (repository.findByUuid(uuid).isPresent()) {
+                                // El empleado existe, pero fue filtrado (estado == 3)
+                                throw new EServiceLayer("El cargo está eliminado");
+                            } else {
+                                // El empleado nunca fue encontrado
+                                return new EServiceLayer(
+                                        String.format("No se encontró el cargo con el id público: %s", uuid)
+                                );
+                            }
+                        }
+                );
     }
 }
